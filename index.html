@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Garuda Store</title>
-<script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem("gs_theme"))==="dark"?"dark":"cream"}catch(e){document.documentElement.dataset.theme="cream"}</script>
+<script>try{document.documentElement.dataset.theme=JSON.parse(localStorage.getItem("gs_theme"))==="dark"?"dark":"red"}catch(e){document.documentElement.dataset.theme="red"}</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{orange:Object.fromEntries([50,100,200,300,400,500,600,700,800,900].map(n=>[n,`rgb(var(--o${n}) / <alpha-value>)`]))},borderColor:{DEFAULT:"var(--bd)"}}}}</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,23 +32,9 @@ body{font-family:Inter,system-ui,sans-serif}
 .dotp{display:inline-block;width:9px;height:9px;border-radius:9999px;background:rgb(var(--o500));animation:blink 1s infinite}
 .vsel{border:2px solid rgb(var(--o500))!important;background:rgb(var(--o50))}.zok{border-color:#16a34a!important;color:#15803d;font-weight:700;background:#f0fdf4}select.inp{cursor:pointer}select.inp:disabled{opacity:.6}
 /* ===== TEMA: merah (default) & dark ===== */
-:root{--o50:252 246 236;--o100:246 236 218;--o200:236 218 190;--o300:219 190 152;--o400:196 154 111;--o500:168 116 72;--o600:140 94 58;--o700:112 74 44;--o800:88 58 36;--o900:64 42 26;--bd:#e8dfd0;--cf1:#c49a6f;
- --gh:linear-gradient(180deg,#f7efdf,#eadcc3);--gp:linear-gradient(90deg,#b98a5e,#c9a074,#d9b98f);--ga:linear-gradient(90deg,#b98a5e,#c9a074)}
-html:not([data-theme=dark]) body{background:#faf6ee;color:#4a3a2c}
-html:not([data-theme=dark]) .hd{color:#5a4030;border-bottom:1px solid #dccdb2;box-shadow:0 2px 12px rgba(120,90,50,.12)}
-html:not([data-theme=dark]) .hd .bg-white{background:#fffdf8}
-html:not([data-theme=dark]) .text-slate-800{color:#4a3a2c}
-html:not([data-theme=dark]) .text-slate-700{color:#5a4838}
-html:not([data-theme=dark]) .text-slate-600{color:#6e5b49}
-html:not([data-theme=dark]) .text-slate-500{color:#8a7662}
-html:not([data-theme=dark]) .bg-slate-50{background:#fbf7ef}
-html:not([data-theme=dark]) .bg-slate-100{background:#f5eee1}
-html:not([data-theme=dark]) .bg-slate-200{background:#ebe2d1}
-html:not([data-theme=dark]) .bg-white{background:#fffdf8}
-html:not([data-theme=dark]) .border-slate-200,html:not([data-theme=dark]) .border-slate-300{border-color:#e4d9c6}
-html:not([data-theme=dark]) .inp,html:not([data-theme=dark]) input,html:not([data-theme=dark]) select,html:not([data-theme=dark]) textarea{background:#fffdf8;border-color:#e0d4bf}
-html:not([data-theme=dark]) .inp:disabled{background:#f1e9da;color:#a8967f}
-html:not([data-theme=dark]) .card:hover{box-shadow:0 10px 25px rgba(120,90,50,.15)}
+:root{--o50:255 245 245;--o100:255 227 227;--o200:255 194 194;--o300:255 138 138;--o400:240 82 82;--o500:217 15 28;--o600:184 13 24;--o700:143 10 19;--o800:110 8 15;--o900:80 6 11;--bd:#e5e7eb;--cf1:#d90f1c;
+ --gh:linear-gradient(180deg,#e11d2a,#b80d18);--gp:linear-gradient(90deg,#b80d18,#e11d2a,#ff5a4f);--ga:linear-gradient(90deg,#b80d18,#e11d2a)}
+html:not([data-theme=dark]) body{background:#fafafa}
 html[data-theme=dark]{--o50:30 38 10;--o100:44 56 12;--o200:76 96 16;--o300:190 235 40;--o400:214 255 60;--o500:200 255 0;--o600:170 225 0;--o700:214 255 70;--o800:225 255 120;--o900:235 255 170;--bd:#33383e;--cf1:#c8ff00;
  --gh:linear-gradient(135deg,#0b0d0f,#1c2126 70%,#2a3310);--gp:linear-gradient(90deg,#0b0d0f,#1d2410,#3c4d06);--ga:linear-gradient(90deg,#0b0d0f,#2b3a05);color-scheme:dark}
 html[data-theme=dark] body{background:#0f1113;color:#e5e7eb}
@@ -72,6 +58,41 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
 .mk{width:34px;height:34px;border-radius:9999px;color:#fff;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);font-size:14px}
 .leaflet-container{font:inherit;z-index:0;isolation:isolate}
 #gc{background:#05060f;cursor:crosshair}
+
+/* ===== RESPONSIF HP / LAPTOP ===== */
+html,body{max-width:100%;overflow-x:clip}
+img,canvas,video{max-width:100%}
+.gs-util{background:rgba(0,0,0,.14);margin:0 -1rem;padding-left:1rem;padding-right:1rem}
+.gs-nav button,.gs-nav a{white-space:nowrap}
+@media(max-width:639px){
+ .gs-util [data-i="theme"],.gs-util [data-i="help"],.gs-util #langLabel{display:none}
+ .gs-util .flex{gap:.9rem}
+ .gs-nav{gap:.5rem 1rem;font-size:.8rem}
+ .dd{position:fixed!important;top:auto!important;left:.5rem!important;right:.5rem!important;width:auto!important;max-width:none!important;max-height:70vh;overflow-y:auto}
+ main{padding-left:.75rem!important;padding-right:.75rem!important}
+ main table{display:block;overflow-x:auto;max-width:100%}
+}
+/* ===== KATALOG: gambar pas dengan card ===== */
+.pcard{display:flex;flex-direction:column;height:100%}
+.pimg{position:relative;aspect-ratio:1/1;background:#fff;border-bottom:1px solid var(--bd);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pimg img{width:100%;height:100%;object-fit:contain;padding:.4rem;transition:transform .3s}
+.pcard:hover .pimg img{transform:scale(1.05)}
+.pbody{display:flex;flex-direction:column;flex:1;padding:.75rem}
+/* ===== KARTU PROMO (gratis ongkir dll) ===== */
+.adc{position:relative;overflow:hidden;border-radius:1rem;padding:1rem 1.1rem;display:flex;align-items:center;gap:.9rem;color:#fff;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.14);transition:transform .25s,box-shadow .25s}
+.adc:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,0,0,.22)}
+.adc .ico{flex:none;width:4.5rem;height:4.5rem;border-radius:1rem;background:#fff;display:flex;align-items:center;justify-content:center;padding:.4rem;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.adc .ico.wide{width:6.2rem}
+.adc .ico img{width:100%;height:100%;object-fit:contain;background:transparent!important}
+.adc p{font-weight:800;font-size:.95rem;line-height:1.3;position:relative;z-index:1}
+.adc .bgi{position:absolute;right:-.4rem;bottom:-1rem;font-size:5.2rem;opacity:.16;transform:rotate(-12deg)}
+.adc .tag{position:absolute;top:.5rem;right:.7rem;font-size:.6rem;font-weight:800;letter-spacing:.05em;background:rgba(255,255,255,.25);border-radius:9999px;padding:.1rem .5rem}
+.adc.g1{background:linear-gradient(135deg,#15803d,#4ade80)}
+.adc.g2{background:linear-gradient(135deg,#1d4ed8,#60a5fa)}
+.adc.g3{background:linear-gradient(135deg,#c2410c,#fbbf24)}
+/* ===== GAME: pas di laptop ===== */
+#gWrap{width:min(100%,480px)}
+@media(min-width:1024px){#gWrap{width:max(340px,calc(min(100vh - 250px,680px)*.75))}}
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
@@ -79,19 +100,9 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
 <!-- ================= HEADER ================= -->
 <header class="hd text-white sticky top-0 z-40 shadow-lg">
   <div class="max-w-7xl mx-auto px-4">
-    <!-- Baris 1: navbar -->
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-1 py-2 text-sm">
-      <button onclick="show('home')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-house mr-1"></i><span data-i="home"></span></button>
-      <button onclick="show('katalog')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-box-open mr-1"></i><span data-i="catalog"></span></button>
-      <button onclick="show('about')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-store mr-1"></i><span data-i="about"></span></button>
-      <button onclick="show('orders')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-truck-fast mr-1"></i><span data-i="myOrders"></span></button>
-      <button onclick="show('game')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-rocket mr-1"></i><span data-i="game"></span></button>
-      <div class="flex items-center gap-3 text-lg">
-        <a href="https://www.facebook.com/" target="_blank" rel="noopener" title="Facebook" class="hover:scale-110 transition"><i class="fa-brands fa-facebook"></i></a>
-        <a href="https://www.instagram.com/" target="_blank" rel="noopener" title="Instagram" class="hover:scale-110 transition"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/" target="_blank" rel="noopener" title="TikTok" class="hover:scale-110 transition"><i class="fa-brands fa-tiktok"></i></a>
-      </div>
-      <div class="ml-auto flex items-center gap-5">
+    <!-- Baris 1: navbar kanan (notifikasi sampai akun) -->
+    <div class="gs-util flex items-center justify-end py-1.5 text-xs sm:text-sm border-b border-white/25">
+      <div class="flex flex-wrap items-center justify-end gap-x-5 gap-y-1">
         <!-- Notifikasi -->
         <div class="relative">
           <button onclick="toggleDD('dd-notif')" class="hover:opacity-80 relative"><i class="fa-regular fa-bell mr-1"></i><span data-i="notif"></span>
@@ -104,7 +115,7 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
         <div class="relative">
           <button onclick="toggleDD('dd-theme')" class="hover:opacity-80"><i class="fa-solid fa-palette mr-1"></i><span data-i="theme"></span></button>
           <div id="dd-theme" class="dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm">
-            <button onclick="setTheme('cream')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#a87448 50%,#f7efdf 50%)"></span><span data-i="thCream"></span><i id="thk-cream" class="fa-solid fa-check ml-auto text-green-600"></i></button>
+            <button onclick="setTheme('red')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#d90f1c 50%,#fff 50%)"></span><span data-i="thRed"></span><i id="thk-red" class="fa-solid fa-check ml-auto text-green-600"></i></button>
             <button onclick="setTheme('dark')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#14171a 50%,#c8ff00 50%)"></span><span data-i="thDark"></span><i id="thk-dark" class="fa-solid fa-check ml-auto text-green-600"></i></button>
           </div>
         </div>
@@ -123,6 +134,19 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
           <div id="dd-acc" class="dd hid absolute right-0 mt-3 w-72 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm"></div>
         </div>
         <button id="logoutBtn" onclick="logout()" class="hid font-bold hover:opacity-80"><i class="fa-solid fa-right-from-bracket mr-1"></i><span data-i="logout"></span></button>
+      </div>
+    </div>
+    <!-- Baris 2: navbar utama (halaman utama sampai sosmed) -->
+    <div class="gs-nav flex flex-wrap items-center gap-x-5 gap-y-1 py-2 text-sm">
+      <button onclick="show('home')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-house mr-1"></i><span data-i="home"></span></button>
+      <button onclick="show('katalog')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-box-open mr-1"></i><span data-i="catalog"></span></button>
+      <button onclick="show('about')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-store mr-1"></i><span data-i="about"></span></button>
+      <button onclick="show('orders')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-truck-fast mr-1"></i><span data-i="myOrders"></span></button>
+      <button onclick="show('game')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-rocket mr-1"></i><span data-i="game"></span></button>
+      <div class="flex items-center gap-3 text-lg">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener" title="Facebook" class="hover:scale-110 transition"><i class="fa-brands fa-facebook"></i></a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener" title="Instagram" class="hover:scale-110 transition"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/" target="_blank" rel="noopener" title="TikTok" class="hover:scale-110 transition"><i class="fa-brands fa-tiktok"></i></a>
       </div>
     </div>
     <!-- Baris 2: logo, cari, keranjang -->
@@ -163,13 +187,13 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
     <div class="hidden md:flex absolute right-6 inset-y-0 items-center gap-3"><img data-img="jersey" alt="" class="h-36 w-36 object-contain bg-white rounded-2xl p-1 shadow-xl -rotate-6"><img data-img="sepatu" alt="" class="h-40 w-40 object-contain bg-white rounded-2xl p-1 shadow-xl rotate-3"><img data-img="bola" alt="" class="h-36 w-36 object-cover bg-white rounded-2xl p-1 shadow-xl -rotate-3"></div>
   </div>
 
-  <div class="grid sm:grid-cols-3 gap-4 text-center text-sm">
-    <div class="bg-white rounded-xl p-3 border flex items-center justify-center gap-3"><img data-img="kirim" alt="" class="h-16 w-16 object-contain"><p class="font-semibold text-left" data-i="ad1"></p></div>
-    <div class="bg-white rounded-xl p-3 border flex items-center justify-center gap-3"><img data-img="bayar" alt="" class="h-14 w-28 object-contain"><p class="font-semibold text-left" data-i="ad2"></p></div>
-    <div class="bg-white rounded-xl p-3 border flex items-center justify-center gap-3"><img data-img="asli" alt="" class="h-16 w-16 object-contain"><p class="font-semibold text-left" data-i="ad3"></p></div>
+  <div class="grid sm:grid-cols-3 gap-4 text-sm">
+    <div class="adc g1"><span class="tag">GRATIS</span><div class="ico"><img data-img="kirim" alt=""></div><p data-i="ad1"></p><i class="fa-solid fa-truck-fast bgi"></i></div>
+    <div class="adc g2"><span class="tag">QRIS</span><div class="ico wide"><img data-img="bayar" alt=""></div><p data-i="ad2"></p><i class="fa-solid fa-qrcode bgi"></i></div>
+    <div class="adc g3"><span class="tag">100% ASLI</span><div class="ico"><img data-img="asli" alt=""></div><p data-i="ad3"></p><i class="fa-solid fa-shield-halved bgi"></i></div>
   </div>
 
-  <div><h2 class="text-xl font-bold mb-3" data-i="featured"></h2><div id="homeGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div></div>
+  <div><h2 class="text-xl font-bold mb-3" data-i="featured"></h2><div id="homeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div></div>
 </section>
 
 <!-- ============ KATALOG ============ -->
@@ -178,7 +202,7 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
     <h2 class="text-2xl font-bold"><i class="fa-solid fa-box-open text-orange-500 mr-2"></i><span data-i="catalog"></span> <span id="catCount" class="text-sm text-slate-400 font-normal"></span></h2>
     <div id="chips" class="flex flex-wrap gap-2 text-sm"></div>
   </div>
-  <p id="qInfo" class="hid text-sm text-slate-600"></p><div id="katGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+  <p id="qInfo" class="hid text-sm text-slate-600"></p><div id="katGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
 </section>
 
 <!-- ============ TENTANG TOKO ============ -->
@@ -230,7 +254,7 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
       <span class="bg-white border rounded-full px-3 py-1"><i class="fa-solid fa-layer-group text-blue-500 mr-1"></i><span data-i="gLvl"></span>: <b id="gLvl">1</b></span>
     </div>
   </div>
-  <div class="relative mx-auto rounded-2xl overflow-hidden border-2 border-slate-800 shadow-xl bg-black" style="max-width:480px">
+  <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6"><div id="gWrap" class="relative rounded-2xl overflow-hidden border-2 border-slate-800 shadow-xl bg-black">
     <canvas id="gc" width="480" height="640" style="display:block;width:100%;height:auto;touch-action:none"></canvas>
     <div id="gOv" class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6" style="background:rgba(3,5,20,.78)">
       <i class="fa-solid fa-rocket text-5xl mb-3" style="color:rgb(var(--o400))"></i>
@@ -239,7 +263,9 @@ html[data-theme=dark] .bg-green-500{color:#0b0d0f}
     </div>
     <button type="button" id="gPauseBtn" onclick="gamePause()" class="hid absolute top-2 right-2 w-9 h-9 rounded-full bg-white/20 text-white"><i class="fa-solid fa-pause"></i></button>
   </div>
-  <p class="text-xs text-center text-slate-500" data-i="gHelp"></p><p class="text-xs text-center text-slate-500" data-i="gItems"></p>
+  <aside class="hidden lg:block w-80 shrink-0 bg-white border rounded-2xl p-5 shadow-sm space-y-3 text-sm text-slate-600"><h3 class="font-bold text-slate-800"><i class="fa-solid fa-gamepad text-orange-500 mr-2"></i>Panduan</h3><p data-i="gHelp"></p><p data-i="gItems"></p></aside>
+  </div>
+  <p class="lg:hidden text-xs text-center text-slate-500" data-i="gHelp"></p><p class="lg:hidden text-xs text-center text-slate-500" data-i="gItems"></p>
 </section>
 
 <!-- ============ AUTH ============ -->
@@ -640,52 +666,55 @@ function remountAddr(){mountAddr('regAddrBox','r');mountAddr('coAddrBox','c');wa
 function resetAddr(p){if(!$(p+'zip'))return;['zip','prov','city','dist','vill','street'].forEach(f=>$(p+f).value='')}
 
 /* ============ STORAGE ============ */
-/* ============ SUPABASE (database online) ============ */
-const SB_URL='https://lgzxltobehnwmsdkwzsu.supabase.co';
-const SB_KEY='sb_publishable_cdIB6CfwbgD1ruP8G1cILw_llM-3BYc';
-/* key yang dibagi ke semua perangkat. Sisanya (session, cart, lang, theme, dll) tetap lokal per perangkat */
-const SB_SHARED=['users','orders','products5','reviews','notifs2','reports','access','promobg'];
-const SB_H={apikey:SB_KEY,'Content-Type':'application/json'};
-let sbDirty={},sbTimer=null,sbSeen='1970-01-01T00:00:00+00:00',sbN=0;
-function sbBadge(ok){let b=document.getElementById('sbBadge');if(!b){if(!document.body)return;b=document.createElement('div');b.id='sbBadge';b.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;font-size:11px;padding:3px 10px;border-radius:9999px;background:#fffdf8;border:1px solid #e0d4bf;color:#6e5b49;box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none';document.body.appendChild(b)}
-  b.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Database online':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'}
-function sbPush(k){sbDirty[k]=++sbN;clearTimeout(sbTimer);sbTimer=setTimeout(sbFlush,350)}
-async function sbFlush(){const ks=Object.keys(sbDirty);if(!ks.length)return;const ver={};ks.forEach(k=>ver[k]=sbDirty[k]);
-  const rows=ks.map(k=>({key:k,value:ld(k,null)}));
-  try{const r=await fetch(SB_URL+'/rest/v1/kv?on_conflict=key',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},SB_H),body:JSON.stringify(rows)});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    ks.forEach(k=>{if(sbDirty[k]===ver[k])delete sbDirty[k]});sbBadge(true)}
-  catch(e){console.warn('Supabase simpan gagal:',e);sbBadge(false);clearTimeout(sbTimer);sbTimer=setTimeout(sbFlush,6000)}}
-async function sbPull(first){
-  try{const r=await fetch(SB_URL+'/rest/v1/kv?select=key,value,updated_at&order=updated_at.asc&updated_at=gt.'+encodeURIComponent(sbSeen),{headers:SB_H});
-    if(!r.ok)throw new Error('HTTP '+r.status);const rows=await r.json();let ch=false;const got={};
-    rows.forEach(o=>{got[o.key]=1;if(o.updated_at>sbSeen)sbSeen=o.updated_at;if(!SB_SHARED.includes(o.key)||sbDirty[o.key])return;
-      const nv=JSON.stringify(o.value);if(localStorage.getItem('gs_'+o.key)!==nv){try{localStorage.setItem('gs_'+o.key,nv)}catch(e){}ch=true}});
-    sbBadge(true);
-    if(first){SB_SHARED.forEach(k=>{if(got[k])return;
-      if(k==='products5'&&typeof P!=='undefined')sv(k,P);else if(localStorage.getItem('gs_'+k)!==null)sbPush(k)})}
-    if(ch)onStorage({key:'gs_sync'})}
-  catch(e){console.warn('Supabase ambil data gagal:',e);sbBadge(false)}}
-function sbInit(){sbBadge(true);sbPull(true);setInterval(()=>{if(!document.hidden)sbPull()},6000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sbPull()});window.addEventListener('online',()=>{sbFlush();sbPull()})}
-
-/* ============ SHA-256 (hash password, tanpa simpan teks asli) ============ */
-const SHA_K=[],SHA_H=[];(function(){let n=2,c=0;const ip=x=>{for(let i=2;i*i<=x;i++)if(x%i===0)return false;return true};
-  while(c<64){if(ip(n)){SHA_K[c]=(Math.cbrt(n)%1*4294967296)|0;if(c<8)SHA_H[c]=(Math.sqrt(n)%1*4294967296)|0;c++}n++}})();
-function sha256(str){const m=unescape(encodeURIComponent(str)),l=m.length,w=[];
-  for(let i=0;i<l;i++)w[i>>2]|=m.charCodeAt(i)<<(24-(i%4)*8);
-  w[l>>2]|=0x80<<(24-(l%4)*8);w[(((l+8)>>6)+1)*16-1]=l*8;
-  const H=SHA_H.slice(),K=SHA_K,rr=(x,n)=>(x>>>n)|(x<<(32-n));
-  for(let j=0;j<w.length;j+=16){const W=[];let[a,b,c,d,e,f,g,h]=H;
-    for(let i=0;i<64;i++){if(i<16)W[i]=w[j+i]|0;else{const s0=rr(W[i-15],7)^rr(W[i-15],18)^(W[i-15]>>>3),s1=rr(W[i-2],17)^rr(W[i-2],19)^(W[i-2]>>>10);W[i]=(W[i-16]+s0+W[i-7]+s1)|0}
-      const t1=(h+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b)^(a&c)^(b&c)))|0;
-      h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0}
-    H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
-  return H.map(x=>('00000000'+(x>>>0).toString(16)).slice(-8)).join('')}
-function hp(u,p){return 'h1$'+sha256(String(u).toLowerCase()+'|garuda-store|'+p)}
-
 function ld(k,d){try{const v=localStorage.getItem('gs_'+k);return v?JSON.parse(v):d}catch(e){return d}}
-function sv(k,v){try{localStorage.setItem('gs_'+k,JSON.stringify(v))}catch(e){}if(SB_SHARED.indexOf(k)>-1)sbPush(k)}
+function sv(k,v){try{localStorage.setItem('gs_'+k,JSON.stringify(v))}catch(e){}syncDirty(k)}
+
+/* ============ SINKRONISASI CLOUD - SUPABASE (akun & data bisa dibuka di device apa saja) ============ */
+const SUPABASE_URL="";   /* contoh: https://abcdefgh.supabase.co */
+const SUPABASE_KEY="";   /* Publishable key (sb_publishable_...) atau anon key */
+const SYNC_URL=(SUPABASE_URL&&SUPABASE_KEY)?SUPABASE_URL.replace(/\/+$/,''):"";
+function setNet(ok){let e=document.getElementById('netPill');if(!e){e=document.createElement('div');e.id='netPill';e.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:9999px;padding:4px 12px;font:600 12px system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)';document.body.appendChild(e)}
+  e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'}
+if(!SYNC_URL)setNet(false);
+const SYNC_KEYS=['users','orders','notifs2','reviews','access','reports','products5','promobg'];
+let syncMeta=ld('syncMeta',{}),syncDirtyKeys=new Set(ld('syncDirty',[])),syncTimer=null,syncBusy=false;
+function kvq(path,method,body,prefer){
+  const h={apikey:SUPABASE_KEY,'Content-Type':'application/json'};
+  if(!/^sb_/.test(SUPABASE_KEY))h.Authorization='Bearer '+SUPABASE_KEY;
+  if(prefer)h.Prefer=prefer;
+  return fetch(SYNC_URL+'/rest/v1/kv'+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined}).then(r=>{if(!r.ok)throw new Error('sync '+r.status);return r.status===204?null:r.text().then(x=>x?JSON.parse(x):null)});
+}
+const mergeUsers=(a,b)=>{const m={};(a||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);(b||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);return Object.keys(m).map(q=>m[q])};
+function syncDirty(k){if(!SYNC_URL||SYNC_KEYS.indexOf(k)<0)return;syncDirtyKeys.add(k);try{localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]))}catch(e){}clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
+async function syncNow(){
+  if(!SYNC_URL||syncBusy)return;syncBusy=true;
+  try{
+    let changed=false;const meta={};((await kvq('?select=key,t'))||[]).forEach(r=>meta[r.key]=Number(r.t));
+    for(const k of SYNC_KEYS){
+      const rt=meta[k]||0,known=syncMeta[k],has=localStorage.getItem('gs_'+k)!==null,dirty=syncDirtyKeys.has(k);
+      if((dirty&&(known||!rt))||(!rt&&!known&&has)){
+        let v=ld(k,null);if(v===null){syncDirtyKeys.delete(k);continue}
+        if(k==='users'&&rt){const rem=await kvq('?select=value&key=eq.users');v=mergeUsers(rem&&rem[0]?rem[0].value:[],v);localStorage.setItem('gs_users',JSON.stringify(v));changed=true}
+        const snap=JSON.stringify(v),t=Date.now();
+        await kvq('?on_conflict=key','POST',{key:k,value:v,t},'resolution=merge-duplicates,return=minimal');
+        syncMeta[k]=t;if(JSON.stringify(ld(k,null))===snap)syncDirtyKeys.delete(k);
+      }else if(rt&&rt!==known){
+        const rem=await kvq('?select=value&key=eq.'+k);
+        if(rem&&rem[0]){
+          let v=rem[0].value;
+          if(k==='users'){const lu=ld('users',null);if(lu&&lu.some(x=>!v.some(y=>String(y.u).toLowerCase()===String(x.u).toLowerCase()))){v=mergeUsers(v,lu);syncDirtyKeys.add('users')}}
+          if(JSON.stringify(ld(k,null))!==JSON.stringify(v)){localStorage.setItem('gs_'+k,JSON.stringify(v));changed=true}
+          syncMeta[k]=rt;
+        }
+      }
+    }
+    localStorage.setItem('gs_syncMeta',JSON.stringify(syncMeta));localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]));
+    setNet(true);
+    if(changed)onStorage({key:'gs_sync'});
+    if(syncDirtyKeys.size){clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
+  }catch(e){setNet(false)}
+  syncBusy=false;
+}
 /* Reset data sekali (versi 2): hapus semua akun, sesi, keranjang, pesanan & notifikasi lama */
 (function(){try{if(localStorage.getItem('gs_ver')!=='2'){['users','session','cart','orders','notifs'].forEach(function(k){localStorage.removeItem('gs_'+k)});localStorage.setItem('gs_ver','2')}}catch(e){}})();
 
@@ -885,9 +914,9 @@ function applyLang(){
 
 /* ============ PRODUK ============ */
 function badge(p){return p.old?`<span class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded">-${Math.round((1-p.price/p.old)*100)}%</span>`:''}
-function card(p){return `<div onclick="openProd(${p.id})" class="card cursor-pointer bg-white rounded-xl overflow-hidden border relative">
-  <div class="relative h-40 bg-white flex items-center justify-center p-2 border-b"><img src="${src(p)}" alt="${esc(pname(p))}" class="max-h-full max-w-full object-contain">${badge(p)}${p.stock<=0?`<span class="absolute inset-0 bg-white/70 flex items-center justify-center font-extrabold text-red-600">${t('soldOut')}</span>`:''}</div>
-  <div class="p-3"><p class="text-sm font-semibold line-clamp-2 h-10">${esc(pname(p))}</p>
+function card(p){return `<div onclick="openProd(${p.id})" class="card pcard cursor-pointer bg-white rounded-xl overflow-hidden border relative">
+  <div class="pimg"><img src="${src(p)}" alt="${esc(pname(p))}" loading="lazy">${badge(p)}${p.stock<=0?`<span class="absolute inset-0 bg-white/70 flex items-center justify-center font-extrabold text-red-600">${t('soldOut')}</span>`:''}</div>
+  <div class="pbody"><p class="text-sm font-semibold line-clamp-2 h-10">${esc(pname(p))}</p>
   <p class="text-orange-600 font-bold mt-1">${Rp(p.price)}</p>${p.old?`<p class="text-xs text-slate-400 line-through">${Rp(p.old)}</p>`:''}
   ${rateHTML(p)}<p class="text-xs text-slate-400 mt-1">${p.sold} ${t('sold')}</p></div></div>`}
 function mini(p){return `<div onclick="openProd(${p.id})" class="flex items-center gap-3 p-2 rounded-lg hover:bg-orange-50 cursor-pointer"><img src="${src(p)}" alt="" class="w-12 h-12 object-contain bg-white border rounded-lg"><div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${esc(pname(p))}</p><p class="text-xs text-slate-400">${p.sold} ${t('sold')}</p></div><span class="text-sm font-bold text-orange-600">${Rp(p.price)}</span></div>`}
@@ -960,7 +989,7 @@ Object.assign(I.id,{waDigits:'digit tanpa 0 di depan',phoneBad:'Nomor WhatsApp t
 
 Object.assign(I.id,{myOrders:"Pesanan Saya",noOrders:"Belum ada pesanan.",trackOrder:"Lacak Pesanan",stCreated:"Pesanan Dibuat",stProc:"Diproses",stShip:"Dikirim",stDone:"Selesai",stProcTxt:"Pesanan sedang dikemas oleh penjual.",stShipTxt:"Paket dalam perjalanan menuju kota tujuan:",stDoneTxt:"Pesanan sudah diterima pembeli. Terima kasih sudah berbelanja!",recvBtn:"Pesanan Diterima / Selesaikan",recvWait:"Tombol Selesaikan aktif setelah pesanan dikirim.",confirmDone:"Pesanan sudah diterima dengan baik? Status akan menjadi Selesai dan tidak dapat diubah lagi.",doneByBuyer:"Diselesaikan oleh pembeli",ordDetail:"Rincian Pesanan",resi:"No. Resi",ordHistory:"Riwayat Status",ordAdmin:"Tampilan admin: semua pesanan. Hanya pembeli yang dapat menyelesaikan pesanan.",ordGuest:"Anda masuk sebagai tamu: hanya pesanan dari perangkat ini yang tampil.",vcLogin:"Masuk dengan akun Anda untuk memakai voucher",vcNext:"Voucher berikutnya di pembelian ke-",vcNew:"Voucher baru",vcAt:"pembelian ke-",vcNote:"Voucher hanya berlaku 1 kali dan khusus akun pemilik. Didapat saat membuat akun, lalu di pembelian ke-5, ke-8, dan seterusnya (setiap kelipatan 3 pembelian)."});Object.assign(I.en,{myOrders:"My Orders",noOrders:"No orders yet.",trackOrder:"Track Order",stCreated:"Order Placed",stProc:"Processing",stShip:"Shipped",stDone:"Completed",stProcTxt:"Your order is being packed by the seller.",stShipTxt:"Your parcel is on its way to the destination city:",stDoneTxt:"Order received by the buyer. Thank you for shopping!",recvBtn:"Order Received / Complete",recvWait:"The Complete button is enabled once the order is shipped.",confirmDone:"Did you receive the order in good condition? Status will become Completed and cannot be changed.",doneByBuyer:"Completed by buyer",ordDetail:"Order Details",resi:"Tracking No.",ordHistory:"Status History",ordAdmin:"Admin view: all orders. Only the buyer can complete an order.",ordGuest:"You are a guest: only orders from this device are shown.",vcLogin:"Log in to your account to use a voucher",vcNext:"Next voucher at purchase #",vcNew:"New voucher",vcAt:"purchase #",vcNote:"A voucher is valid once and only for its owner account. Earned on sign-up, then at purchase #5, #8, and every 3 purchases after that."});Object.assign(I.zh,{vcNote:"优惠码仅限使用 1 次，且仅限账户本人。注册时获得，第 5、第 8 次购买后各获得一张，之后每 3 次购买获得一张。"});
 
-Object.assign(I.id,{theme:'Tema',thCream:'Cream Lembut & Latte',thDark:'Charcoal & Neon',switchAcc:'Ganti Akun'});Object.assign(I.en,{theme:'Theme',thCream:'Soft Cream & Latte',thDark:'Charcoal & Neon'});Object.assign(I.zh,{theme:'\u4e3b\u9898'});Object.assign(I.en,{switchAcc:'Switch Account'});Object.assign(I.zh,{switchAcc:'\u5207\u6362\u8d26\u53f7'});
+Object.assign(I.id,{theme:'Tema',thRed:'Merah Bold & Putih',thDark:'Charcoal & Neon',switchAcc:'Ganti Akun'});Object.assign(I.en,{theme:'Theme',thRed:'Bold Red & White',thDark:'Charcoal & Neon'});Object.assign(I.zh,{theme:'\u4e3b\u9898'});Object.assign(I.en,{switchAcc:'Switch Account'});Object.assign(I.zh,{switchAcc:'\u5207\u6362\u8d26\u53f7'});
 
 /* ============ KERANJANG ============ */
 /* ---- halaman pembelian (sebelum transaksi) ---- */
@@ -1186,7 +1215,7 @@ function checkoutCart(){
 }
 function showOk(o){
   $('okId').textContent=o.id;$('okTotal').textContent=Rp(o.total);$('okPay').textContent=payName(o.pay);
-  const cf=$('confetti');cf.innerHTML='';const cs=[getComputedStyle(document.documentElement).getPropertyValue('--cf1').trim()||'#a87448','#fbbf24','#22c55e','#3b82f6','#eab308','#ef4444','#a855f7'];
+  const cf=$('confetti');cf.innerHTML='';const cs=[getComputedStyle(document.documentElement).getPropertyValue('--cf1').trim()||'#d90f1c','#fbbf24','#22c55e','#3b82f6','#eab308','#ef4444','#a855f7'];
   for(let i=0;i<34;i++){const s=document.createElement('span');s.className='conf';s.style.left=Math.random()*100+'%';s.style.background=cs[i%cs.length];s.style.animationDelay=(Math.random()*.8)+'s';cf.appendChild(s)}
   openM('m-ok');
 }
@@ -1256,7 +1285,7 @@ waDigits:"去掉开头 0 的位数",noZip:"不知道邮政编码？请依次选�
 zipPickV:"已找到邮政编码。请在下方下拉菜单中选择您的村/街道。",zipAuto:"邮政编码已根据地址自动填写",qFor:"搜索结果：",qFound:"件商品",qClear:"清除搜索",reviews:"条评价",rvGive:"请评分：",rvDone:"谢谢，您已评价过。",rvLogin:"请登录后发表评价。",rvCmt:"请写一句简短评论（可选）：",rvThanks:"评价已提交",
 nAll:"全部动态",nAdm:"管理员动态",nGuestVc:"创建新账号即可获得优惠码。",guest:"访客",myOrders:"我的订单",noOrders:"暂无订单。",trackOrder:"跟踪订单",stCreated:"订单已创建",stProc:"处理中",stShip:"已发货",stDone:"已完成",
 stProcTxt:"卖家正在打包您的订单。",stShipTxt:"包裹正在运往目的地城市：",stDoneTxt:"买家已收到订单。感谢您的购买！",recvBtn:"已收货 / 完成订单",recvWait:"订单发货后即可点击“完成订单”按钮。",confirmDone:"订单是否已完好收到？状态将变为“已完成”，且无法再更改。",doneByBuyer:"由买家确认完成",
-ordDetail:"订单详情",resi:"运单号",ordHistory:"状态记录",ordAdmin:"管理员视图：显示所有订单。只有买家可以完成订单。",ordGuest:"您以访客身份登录：仅显示本设备的订单。",vcLogin:"请登录账号后使用优惠码",vcNext:"下一张优惠码：第 ",vcNew:"新优惠码",vcAt:"第 ",thCream:"柔和奶油",thDark:"炭黑霓虹",
+ordDetail:"订单详情",resi:"运单号",ordHistory:"状态记录",ordAdmin:"管理员视图：显示所有订单。只有买家可以完成订单。",ordGuest:"您以访客身份登录：仅显示本设备的订单。",vcLogin:"请登录账号后使用优惠码",vcNext:"下一张优惠码：第 ",vcNew:"新优惠码",vcAt:"第 ",thRed:"红白醒目",thDark:"炭黑霓虹",
 /* kunci baru */
 game:"游戏",gameTitle:"太空大战",gTip:"击落敌机，收集道具，尽可能坚持更久！",gStart:"开始游戏",gPause:"已暂停",gResume:"继续",gOver:"游戏结束",gFinal:"最终得分",gRetry:"再玩一次",gScore:"得分",gHi:"最高分",gLives:"生命",gLvl:"关卡",
 gHelp:"操作：方向键 / WASD，或用鼠标 / 手指拖动。子弹自动发射。按 P 键暂停。",gItems:"道具：P = 武器升级 · S = 护盾 · + = 额外生命",
@@ -1304,7 +1333,7 @@ function curAcc(){
   const u=users.find(x=>x.u===session.name);
   return u?{name:u.u,phone:u.phone||'',email:u.email||'',addr:u.addr}:{name:session.name,phone:session.phone||'',email:session.email||'',addr:session.addr};
 }
-function setTheme(k,silent){k=k==='dark'?'dark':'cream';document.documentElement.dataset.theme=k;sv('theme',k);$('dd-theme').classList.add('hid');$('thk-cream').classList.toggle('hid',k!=='cream');$('thk-dark').classList.toggle('hid',k!=='dark');if(!silent)toast(t(k==='dark'?'thDark':'thCream'))}
+function setTheme(k,silent){k=k==='dark'?'dark':'red';document.documentElement.dataset.theme=k;sv('theme',k);$('dd-theme').classList.add('hid');$('thk-red').classList.toggle('hid',k!=='red');$('thk-dark').classList.toggle('hid',k!=='dark');if(!silent)toast(t(k==='dark'?'thDark':'thRed'))}
 function switchAcc(){addNotif('fa-repeat',{f:'t',a:['switchAcc']});session=null;sv('session',null);$('dd-acc').classList.add('hid');authLabel();renderNotif();authTab('admin');show('auth')}
 function renderAcc(){
   if(session&&session.role==='admin'){$('dd-acc').innerHTML=`<div class="px-4 py-3 border-b font-bold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></span>${esc(session.name)}</div><button onclick="$('dd-acc').classList.add('hid');show('admin')" class="w-full text-left px-4 py-3 hover:bg-orange-50 font-semibold"><i class="fa-solid fa-gauge mr-2 text-orange-500"></i>${t('adminDash')}</button><button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;return}
@@ -1318,15 +1347,16 @@ function renderAcc(){
     +`<button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;
 }
 function enter(role,name,spec,x){x=x||{};session={role,name,addr:x.addr,phone:x.phone,email:x.email};sv('session',session);authLabel();toast(nmsg({m:spec}));addNotif('fa-right-to-bracket',spec);show(role==='admin'?'admin':'home');renderNotif();setTimeout(()=>{checkAccess();unreadHint()},700)}
-function doLogin(e){
+function doLogin(e,re){
   e.preventDefault();const u=$('lu').value.trim(),p=$('lp').value;
   if(u.toLowerCase()==='amrizal'&&p==='117'){$('lerr').classList.add('hid');e.target.reset();return enter('admin','Amrizal',{f:'loginA',a:['Amrizal']})}
-  const x=users.find(a=>a.u.toLowerCase()===u.toLowerCase()&&(a.p===hp(a.u,p)||a.p===p));if(x&&x.p===p){x.p=hp(x.u,p);sv('users',users)}
+  const x=users.find(a=>a.u.toLowerCase()===u.toLowerCase()&&a.p===p);
   if(x){$('lerr').classList.add('hid');e.target.reset();return enter('user',x.u,{f:'loginU',a:[x.u]},{addr:x.addr,phone:x.phone,email:x.email})}
+  if(SYNC_URL&&!re){const f=e.target;syncNow().then(()=>doLogin({preventDefault(){},target:f},1));return}
   $('lerr').textContent=t('loginBad');$('lerr').classList.remove('hid');
 }
-function doRegister(e){
-  e.preventDefault();const u=$('ru').value.trim(),p=$('rp').value,c=$('rc').value,er=$('rerr');
+function doRegister(e,re){
+  e.preventDefault();if(SYNC_URL&&!re){const f=e.target;syncNow().then(()=>doRegister({preventDefault(){},target:f},1));return}const u=$('ru').value.trim(),p=$('rp').value,c=$('rc').value,er=$('rerr');
   const bad=m=>{er.textContent=m;er.classList.remove('hid')};
   if(u.toLowerCase()==='amrizal'||users.some(a=>a.u.toLowerCase()===u.toLowerCase()))return bad(t('userTaken'));
   if(p.length<3)return bad(t('pwShort'));
@@ -1335,7 +1365,7 @@ function doRegister(e){
   const em=$('rem').value.trim();if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return bad(t('emailBad'));
   const ad=getAddr('r');if(!ad)return bad(t('addrReq'));
   const code=genVc();
-  users.push({u,p:hp(u,p),phone:ph,email:em,addr:ad,vs:[{code,used:false,why:'signup'}],ts:Date.now()});sv('users',users);er.classList.add('hid');e.target.reset();resetAddr('r');mountAddr('regAddrBox','r');waSet('r','');
+  users.push({u,p,phone:ph,email:em,addr:ad,vs:[{code,used:false,why:'signup'}],ts:Date.now()});sv('users',users);er.classList.add('hid');e.target.reset();resetAddr('r');mountAddr('regAddrBox','r');waSet('r','');
   enter('user',u,{f:'regOk',a:[code]},{addr:ad,phone:ph,email:em});
 }
 function enterGuest(){enter('guest','Tamu',{f:'loginG',a:[]})}
@@ -1370,7 +1400,7 @@ function renderCust(){
     if(live)act=`<span class="text-xs text-green-600 font-semibold block"><i class="fa-solid fa-unlock mr-1"></i>${t('accOk')} · ${t('accLeft')} ${Math.max(1,Math.ceil((r.exp-Date.now())/60000))} ${t('accMin')}</span><button onclick="closeAccess('${r.id}')" class="mt-1 text-xs text-red-600 underline">${t('accClose')}</button>`;
     else if(r&&r.st==='pending')act=`<span class="text-xs text-orange-600 font-semibold"><span class="dotp mr-1"></span>${t('accWait')}</span>`;
     else act=`${r&&r.st==='denied'?`<span class="text-xs text-red-600 font-semibold block">${t('accNo')}</span>`:r?`<span class="text-xs text-slate-500 block">${t('accExp')}</span>`:''}<button onclick="reqAccess(${i})" class="mt-1 text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-key mr-1"></i>${t(r?'accAgain':'accAsk')}</button>`;
-    return `<tr><td class="p-3 font-semibold">${esc(u.u)}</td><td class="p-3">${esc(u.phone||'-')}</td><td class="p-3">${esc(u.email||'-')}</td><td class="p-3 text-xs">${region}</td><td class="p-3">${ordCount(u.u)}</td><td class="p-3 font-mono">${live?'<span class="text-xs text-slate-400">&#128274; terenkripsi</span>':'***'}</td><td class="p-3 text-xs max-w-xs">${live?esc(a.street?fmtAddr(a):'-'):lock}</td><td class="p-3">${act}</td></tr>`}).join('')
+    return `<tr><td class="p-3 font-semibold">${esc(u.u)}</td><td class="p-3">${esc(u.phone||'-')}</td><td class="p-3">${esc(u.email||'-')}</td><td class="p-3 text-xs">${region}</td><td class="p-3">${ordCount(u.u)}</td><td class="p-3 font-mono">${live?esc(u.p):'***'}</td><td class="p-3 text-xs max-w-xs">${live?esc(a.street?fmtAddr(a):'-'):lock}</td><td class="p-3">${act}</td></tr>`}).join('')
    :`<tr><td colspan="8" class="p-6 text-center text-slate-400">${t('noCust')}</td></tr>`}
 function reqAccess(i){const u=users[i];if(!u||!session||session.role!=='admin')return;const c=accOf(u.u);if(c&&c.st==='pending')return toast(t('accWait'));
   const r={id:uid(),user:u.u,by:session.name,st:'pending',ts:Date.now(),exp:0};ACC.unshift(r);sv('access',ACC);
@@ -1469,7 +1499,7 @@ async function mapInit(el){
   L.marker(STORE_LL,{icon:ic('#475569','fa-store')}).addTo(map).bindTooltip(t('mapStore'));
   L.marker(g,{icon:ic('#16a34a','fa-house')}).addTo(map).bindTooltip(t('mapHome'));
   const pts=await getRoute(STORE_LL,g);if(!el.isConnected){map.remove();return}
-  const line=L.polyline(pts,{color:'#a87448',weight:4,opacity:.8,dashArray:'8 8'}).addTo(map);map.fitBounds(line.getBounds(),{padding:[30,30]});
+  const line=L.polyline(pts,{color:'#d90f1c',weight:4,opacity:.8,dashArray:'8 8'}).addTo(map);map.fitBounds(line.getBounds(),{padding:[30,30]});
   const cum=[0];for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+hv(pts[i-1],pts[i]));const tot=cum[cum.length-1]||.001;
   const cm=L.marker(pts[0],{icon:ic('#f59e0b','fa-motorcycle'),zIndexOffset:1000}).addTo(map);const t0=shipTs(o);
   const upd=()=>{const f=Math.min(.96,Math.max(.03,(Date.now()-t0)/DEMO_MS)),d=f*tot;let i=1;while(i<cum.length-1&&cum[i]<d)i++;const s=(d-cum[i-1])/((cum[i]-cum[i-1])||1);
@@ -1635,7 +1665,8 @@ window.onload=()=>{
   MS.forEach(id=>$(id).addEventListener('mousedown',e=>{if(e.target.id===id){if(id==='m-co')askCancel();else closeM(id)}}));
   $('m-cancel').addEventListener('mousedown',e=>{if(e.target.id==='m-cancel')closeM('m-cancel')});
   document.addEventListener('input',e=>{if(/^c(zip|prov|city|dist|vill|street)$/.test(e.target.id))renderCO()});
-  authTab('admin');applyLang();setTheme(document.documentElement.dataset.theme,true);show('home');applyPromoBg();checkAccess();setInterval(()=>{if(curView==='admin')renderCust()},20000);window.addEventListener('storage',onStorage);sbInit()
+  authTab('admin');applyLang();setTheme(document.documentElement.dataset.theme,true);show('home');applyPromoBg();checkAccess();setInterval(()=>{if(curView==='admin')renderCust()},20000);window.addEventListener('storage',onStorage);
+  if(SYNC_URL){syncNow();setInterval(()=>{if(!document.hidden)syncNow()},6000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncNow()})}
 };
 </script>
 </body>
