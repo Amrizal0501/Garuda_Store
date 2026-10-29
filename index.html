@@ -683,8 +683,8 @@ function sv(k,v){try{localStorage.setItem('gs_'+k,JSON.stringify(v))}catch(e){}s
 const SUPABASE_URL="https://lgzxltobehnwmsdkwzsu.supabase.co";   /* contoh: https://abcdefgh.supabase.co */
 const SUPABASE_KEY="sb_publishable_cdIB6CfwbgD1ruP8G1cILw_llM-3BYc";   /* Publishable key (sb_publishable_...) atau anon key */
 const SYNC_URL=(SUPABASE_URL&&SUPABASE_KEY)?SUPABASE_URL.replace(/\/+$/,'').replace(/\/rest\/v1$/,''):"";
-function setNet(ok){let e=document.getElementById('netPill');if(!e){e=document.createElement('div');e.id='netPill';e.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:9999px;padding:4px 12px;font:600 12px system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)';document.body.appendChild(e)}
-  e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'}
+function setNet(ok,msg){let e=document.getElementById('netPill');if(!e){e=document.createElement('div');e.id='netPill';e.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;max-width:92vw;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:9999px;padding:4px 12px;font:600 12px system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)';document.body.appendChild(e)}
+  e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'+(msg?'<br><small style="color:#b91c1c;font-weight:500">'+String(msg).replace(/</g,'&lt;')+'</small>':'')}
 if(!SYNC_URL)setNet(false);
 const SYNC_KEYS=['users','orders','notifs2','reviews','access','reports','products5','promobg'];
 let syncMeta=ld('syncMeta',{}),syncDirtyKeys=new Set(ld('syncDirty',[])),syncTimer=null,syncBusy=false;
@@ -692,7 +692,7 @@ function kvq(path,method,body,prefer){
   const h={apikey:SUPABASE_KEY,'Content-Type':'application/json'};
   if(!/^sb_/.test(SUPABASE_KEY))h.Authorization='Bearer '+SUPABASE_KEY;
   if(prefer)h.Prefer=prefer;
-  return fetch(SYNC_URL+'/rest/v1/kv'+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined}).then(r=>{if(!r.ok)throw new Error('sync '+r.status);return r.status===204?null:r.text().then(x=>x?JSON.parse(x):null)});
+  return fetch(SYNC_URL+'/rest/v1/kv'+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined}).then(r=>{if(!r.ok)return r.text().then(x=>{throw new Error(r.status+' '+x.slice(0,140))});return r.status===204?null:r.text().then(x=>x?JSON.parse(x):null)});
 }
 const mergeUsers=(a,b)=>{const m={};(a||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);(b||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);return Object.keys(m).map(q=>m[q])};
 function syncDirty(k){if(!SYNC_URL||SYNC_KEYS.indexOf(k)<0)return;syncDirtyKeys.add(k);try{localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]))}catch(e){}clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
@@ -722,7 +722,7 @@ async function syncNow(){
     setNet(true);
     if(changed)onStorage({key:'gs_sync'});
     if(syncDirtyKeys.size){clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
-  }catch(e){setNet(false)}
+  }catch(e){setNet(false,e&&e.message)}
   syncBusy=false;
 }
 /* Reset data sekali (versi 2): hapus semua akun, sesi, keranjang, pesanan & notifikasi lama */
