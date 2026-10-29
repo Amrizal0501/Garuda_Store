@@ -801,6 +801,9 @@ const SUPD={Jersey:'Pabrik Konveksi Jersey',Sepatu:'Distributor Sepatu Olahraga'
 let P=ld('products5',DEF), cart=ld('cart',[]), orders=ld('orders',[]), notifs=ld('notifs',[]), users=ld('users',[]);
 users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});
 let session=ld('session',null); // {role:'admin'|'user'|'guest', name}
+/* Web selalu dibuka sebagai Tamu. Admin hanya aktif setelah login di tab/jendela ini (hilang saat ditutup). */
+(function(){let adm=false;try{adm=sessionStorage.getItem('gs_adm')==='1'}catch(e){}
+  if(!session||(session.role==='admin'&&!adm)){session={role:'guest',name:'Tamu'};sv('session',session)}})();
 let cur=null, qty=1, coItems=[], pay='QRIS', curView='home', catF='all';
 let RPT=ld('reports',[]),ACC=ld('access',[]),PBG=ld('promobg',null);
 
@@ -1344,7 +1347,7 @@ function curAcc(){
   return u?{name:u.u,phone:u.phone||'',email:u.email||'',addr:u.addr}:{name:session.name,phone:session.phone||'',email:session.email||'',addr:session.addr};
 }
 function setTheme(k,silent){k=k==='dark'?'dark':'red';document.documentElement.dataset.theme=k;sv('theme',k);$('dd-theme').classList.add('hid');$('thk-red').classList.toggle('hid',k!=='red');$('thk-dark').classList.toggle('hid',k!=='dark');if(!silent)toast(t(k==='dark'?'thDark':'thRed'))}
-function switchAcc(){addNotif('fa-repeat',{f:'t',a:['switchAcc']});session=null;sv('session',null);$('dd-acc').classList.add('hid');authLabel();renderNotif();authTab('admin');show('auth')}
+function switchAcc(){addNotif('fa-repeat',{f:'t',a:['switchAcc']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session=null;sv('session',null);$('dd-acc').classList.add('hid');authLabel();renderNotif();authTab('admin');show('auth')}
 function renderAcc(){
   if(session&&session.role==='admin'){$('dd-acc').innerHTML=`<div class="px-4 py-3 border-b font-bold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></span>${esc(session.name)}</div><button onclick="$('dd-acc').classList.add('hid');show('admin')" class="w-full text-left px-4 py-3 hover:bg-orange-50 font-semibold"><i class="fa-solid fa-gauge mr-2 text-orange-500"></i>${t('adminDash')}</button><button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;return}
   const a=curAcc()||{},u=(session&&session.role==='user')?users.find(x=>x.u===session.name):null;
@@ -1356,7 +1359,7 @@ function renderAcc(){
     +row('fa-ticket',t('vcMine'),u?vsHTML(u):'-')
     +`<button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;
 }
-function enter(role,name,spec,x){x=x||{};session={role,name,addr:x.addr,phone:x.phone,email:x.email};sv('session',session);authLabel();toast(nmsg({m:spec}));addNotif('fa-right-to-bracket',spec);show(role==='admin'?'admin':'home');renderNotif();setTimeout(()=>{checkAccess();unreadHint()},700)}
+function enter(role,name,spec,x){x=x||{};session={role,name,addr:x.addr,phone:x.phone,email:x.email};sv('session',session);try{if(role==='admin')sessionStorage.setItem('gs_adm','1');else sessionStorage.removeItem('gs_adm')}catch(e){}authLabel();toast(nmsg({m:spec}));addNotif('fa-right-to-bracket',spec);show(role==='admin'?'admin':'home');renderNotif();setTimeout(()=>{checkAccess();unreadHint()},700)}
 function doLogin(e,re){
   e.preventDefault();const u=$('lu').value.trim(),p=$('lp').value;
   if(u.toLowerCase()==='amrizal'&&p==='117'){$('lerr').classList.add('hid');e.target.reset();return enter('admin','Amrizal',{f:'loginA',a:['Amrizal']})}
@@ -1379,7 +1382,7 @@ function doRegister(e,re){
   enter('user',u,{f:'regOk',a:[code]},{addr:ad,phone:ph,email:em});
 }
 function enterGuest(){enter('guest','Tamu',{f:'loginG',a:[]})}
-function logout(){addNotif('fa-right-from-bracket',{f:'t',a:['logout']});session=null;sv('session',null);$('dd-acc').classList.add('hid');authLabel();renderNotif();toast(t('loggedOut'));show('home')}
+function logout(){addNotif('fa-right-from-bracket',{f:'t',a:['logout']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session={role:'guest',name:'Tamu'};sv('session',session);$('dd-acc').classList.add('hid');authLabel();renderNotif();toast(t('loggedOut'));show('home')}
 
 /* ============ ADMIN ============ */
 function renderAdmin(){
