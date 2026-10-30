@@ -251,6 +251,7 @@ img,canvas,video{max-width:100%}
 <section id="v-orders" class="hid space-y-4">
   <h2 class="text-2xl font-bold"><i class="fa-solid fa-truck-fast text-orange-500 mr-2"></i><span data-i="myOrders"></span></h2>
   <p id="ordNote" class="text-sm text-slate-500"></p>
+  <div id="myRpt" class="space-y-3"></div>
   <div id="ordList" class="space-y-4"></div>
 </section>
 <!-- ============ GAME ============ -->
@@ -322,7 +323,7 @@ img,canvas,video{max-width:100%}
 
 <!-- ============ ADMIN ============ -->
 <section id="v-admin" class="hid space-y-6">
-  <div class="flex items-center justify-between"><h2 class="text-2xl font-bold"><i class="fa-solid fa-user-shield text-orange-500 mr-2"></i><span data-i="adminPanel"></span></h2></div>
+  <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-2xl font-bold"><i class="fa-solid fa-user-shield text-orange-500 mr-2"></i><span data-i="adminPanel"></span></h2><button onclick="show('stockin')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl"><i class="fa-solid fa-truck-ramp-box mr-1"></i><span data-i="stockIn"></span></button></div>
   <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
     <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="revenue"></p><h3 id="aRev" class="text-2xl font-bold mt-1"></h3></div>
     <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="orders"></p><h3 id="aOrd" class="text-2xl font-bold mt-1"></h3></div>
@@ -342,6 +343,31 @@ img,canvas,video{max-width:100%}
   <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><div class="p-4 border-b"><p class="font-bold"><i class="fa-solid fa-users text-orange-500 mr-2"></i><span data-i="custTitle"></span></p><p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-shield-halved text-orange-500 mr-1"></i><span data-i="custHint"></span></p></div><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3" data-i="cUser"></th><th class="p-3" data-i="cPhone"></th><th class="p-3" data-i="cEmail"></th><th class="p-3" data-i="cRegion"></th><th class="p-3" data-i="orders"></th><th class="p-3" data-i="password"></th><th class="p-3" data-i="cAddrFull"></th><th class="p-3" data-i="cAction"></th></tr></thead><tbody id="cTable" class="divide-y"></tbody></table></div>
   <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><div class="p-4 font-bold border-b"><i class="fa-solid fa-triangle-exclamation text-orange-500 mr-2"></i><span data-i="rptTitle"></span></div><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3" data-i="date"></th><th class="p-3">ID</th><th class="p-3" data-i="pname"></th><th class="p-3" data-i="name"></th><th class="p-3" data-i="rvText"></th><th class="p-3" data-i="status"></th></tr></thead><tbody id="rTable" class="divide-y"></tbody></table></div>
   <div class="bg-white rounded-2xl border shadow-sm p-5 flex flex-wrap items-center gap-4"><div class="relative w-40 h-20 rounded-xl overflow-hidden shrink-0" style="background:var(--gp)"><div id="pbgPrev" class="promo-bg"></div></div><div class="flex-1 min-w-[12rem]"><p class="font-bold"><i class="fa-solid fa-image text-orange-500 mr-2"></i><span data-i="promoBgT"></span></p><p class="text-xs text-slate-500" data-i="promoBgHint"></p><input id="pbgF" type="file" accept="image/*" onchange="setPromoBg(this)" class="block mt-2 text-sm"></div><button onclick="resetPromoBg()" class="px-4 py-2 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50" data-i="promoBgReset"></button></div>
+</section>
+
+<!-- ============ BARANG MASUK (ADMIN) ============ -->
+<section id="v-stockin" class="hid space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-2xl font-bold"><i class="fa-solid fa-truck-ramp-box text-orange-500 mr-2"></i><span data-i="siTitle"></span></h2><button onclick="show('admin')" class="px-4 py-2 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50"><i class="fa-solid fa-arrow-left mr-1"></i><span data-i="siBack"></span></button></div>
+  <p class="text-sm text-slate-500" data-i="siHint"></p>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="siSumLow"></p><h3 id="siCLow" class="text-2xl font-bold mt-1 text-red-600"></h3></div>
+    <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="siSumIn"></p><h3 id="siCIn" class="text-2xl font-bold mt-1 text-green-600"></h3></div>
+    <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="siSumTx"></p><h3 id="siCTx" class="text-2xl font-bold mt-1"></h3></div>
+  </div>
+  <form id="siForm" onsubmit="siSubmit(event)" class="bg-white rounded-2xl p-5 border shadow-sm space-y-4">
+    <div class="grid sm:grid-cols-6 gap-3 items-end">
+      <div class="sm:col-span-3"><label class="lbl" data-i="siProd"></label><select id="siP" onchange="siFillVar();siPreview()" class="inp"></select></div>
+      <div id="siVBox" class="hid sm:col-span-3"><label class="lbl" id="siVL"></label><select id="siV" onchange="siPreview()" class="inp"></select></div>
+      <div class="sm:col-span-2"><label class="lbl" data-i="siQty"></label><input id="siQ" type="number" min="1" step="1" required oninput="siPreview()" class="inp"></div>
+      <div class="sm:col-span-2"><label class="lbl" data-i="siDate"></label><input id="siD" type="date" class="inp"></div>
+      <div class="sm:col-span-2"><label class="lbl" data-i="siSup"></label><input id="siS" maxlength="80" class="inp"></div>
+      <div class="sm:col-span-6"><label class="lbl" data-i="siNote"></label><input id="siN" maxlength="160" class="inp"></div>
+    </div>
+    <div id="siPrev"></div>
+    <button class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-2.5 rounded-xl"><i class="fa-solid fa-plus mr-1"></i><span data-i="siBtn"></span></button>
+  </form>
+  <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><div class="p-4 font-bold border-b" data-i="siTbl"></div><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3">SKU</th><th class="p-3" data-i="pname"></th><th class="p-3" data-i="stock"></th><th class="p-3" data-i="minStock"></th><th class="p-3" data-i="siGap"></th><th class="p-3" data-i="status"></th><th class="p-3"></th></tr></thead><tbody id="siTable" class="divide-y"></tbody></table></div>
+  <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><div class="p-4 font-bold border-b" data-i="siHist"></div><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3" data-i="siColDate"></th><th class="p-3" data-i="siProd"></th><th class="p-3" data-i="siColQty"></th><th class="p-3" data-i="siColChg"></th><th class="p-3" data-i="siSup"></th><th class="p-3" data-i="siNote"></th><th class="p-3" data-i="siColBy"></th><th class="p-3"></th></tr></thead><tbody id="siHist" class="divide-y"></tbody></table></div>
 </section>
 </main>
 
@@ -687,7 +713,7 @@ const SYNC_URL=(SUPABASE_URL&&SUPABASE_KEY)?SUPABASE_URL.replace(/\/+$/,'').repl
 function setNet(ok,msg){let e=document.getElementById('netPill');if(!e){e=document.createElement('div');e.id='netPill';e.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;max-width:92vw;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:9999px;padding:4px 12px;font:600 12px system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)';document.body.appendChild(e)}
   e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'+(msg?'<br><small style="color:#b91c1c;font-weight:500">'+String(msg).replace(/</g,'&lt;')+'</small>':'')}
 if(!SYNC_URL)setNet(false);
-const SYNC_KEYS=['users','orders','notifs2','reviews','access','reports','products5','promobg'];
+const SYNC_KEYS=['users','orders','notifs2','reviews','access','reports','products5','promobg','stockin','mod'];
 let syncMeta=ld('syncMeta',{}),syncDirtyKeys=new Set(ld('syncDirty',[])),syncTimer=null,syncBusy=false;
 function kvq(path,method,body,prefer){
   const h={apikey:SUPABASE_KEY,'Content-Type':'application/json'};
@@ -806,7 +832,7 @@ let session=ld('session',null); // {role:'admin'|'user'|'guest', name}
 (function(){let adm=false;try{adm=sessionStorage.getItem('gs_adm')==='1'}catch(e){}
   if(!session||(session.role==='admin'&&!adm)){session={role:'guest',name:'Tamu'};sv('session',session)}})();
 let cur=null, qty=1, coItems=[], pay='QRIS', curView='home', catF='all';
-let RPT=ld('reports',[]),ACC=ld('access',[]),PBG=ld('promobg',null);
+let RPT=ld('reports',[]),ACC=ld('access',[]),PBG=ld('promobg',null),STK=ld('stockin',[]),MOD=ld('mod',{});
 
 const Rp=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n);
 const $=id=>document.getElementById(id);
@@ -849,7 +875,7 @@ normNF();
 function pushTo(a,n){a.unshift(n);a.length=Math.min(a.length,60)}
 const pn=id=>{const p=P.find(x=>x.id===id);return p?pname(p):'?'};
 const fm=(s,...a)=>a.reduce((r,v,i)=>r.split('{'+i+'}').join(v),s);
-const VN={orders:'myOrders',home:'home',katalog:'catalog',about:'about',auth:'login',admin:'adminPanel',game:'game'};
+const VN={stockin:'stockIn',orders:'myOrders',home:'home',katalog:'catalog',about:'about',auth:'login',admin:'adminPanel',game:'game'};
 /* pesan notifikasi disimpan sebagai {f:nama,a:[argumen]} lalu dirender sesuai bahasa yang aktif */
 const NMF={
  t:k=>t(k),
@@ -962,7 +988,7 @@ const nz=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,
 function matchQ(p,q){const hay=[p.name,pname(p),p.ne||'',p.nz||'',p.cat,catName(p.cat),p.sku].join(' '),w=nz(hay),h=hay.toLowerCase();return q.every(k=>w.some(x=>x.startsWith(k))||(/[\u4e00-\u9fff]/.test(k)&&h.includes(k)))}
 function doSearch(){catF='all';show('katalog')}
 function liveSearch(){catF='all';if(curView!=='katalog')show('katalog');else renderKatalog()}
-function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='admin')renderAdmin();if(curView==='orders')renderOrders()}
+function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='admin')renderAdmin();if(curView==='orders')renderOrders();if(curView==='stockin')renderStockIn()}
 
 /* popup detail produk */
 function openProd(id){
@@ -1084,7 +1110,7 @@ function calcCO(){
   kg=Math.max(1,Math.ceil(kg));
   const z=zoneOf(),s=CO.ship?COUR.find(c=>c.k===CO.ship):null;
   const ship=s&&z?shipFee(s,z,kg):0,adm=admFee(CO.pay),ins=CO.ins?INS_FEE:0;
-  const fees=ship+adm+ins,vd=CO.vc?Math.min(fees,VC_MAX):0;
+  const fees=ship+adm+ins,vd=CO.vc?vcDisc(CO.vc,sub,fees):0;
   return{sub,kg,z,s,ship,adm,ins,fees,vd,total:sub+fees-vd};
 }
 const curUser=()=>session&&session.role==='user'?users.find(x=>x.u===session.name):null;
@@ -1095,7 +1121,7 @@ const nextMile=n=>{let m=n+1;while(!isMile(m))m++;return m};
 const ordCount=name=>orders.filter(x=>x.owner===name).length;
 function genVc(){let c;do{c='GARUDA-'+Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('')}while(users.some(x=>(x.vs||[]).some(v=>v.code===c)));return c}
 function awardVc(){const me=curUser();if(!me)return;const n=ordCount(me.u);if(!isMile(n))return;const code=genVc();(me.vs=me.vs||[]).push({code,used:false,why:n});sv('users',users);notifyUser(me.u,'fa-ticket',{f:'vcNew',a:[code,n]});renderNotif();setTimeout(()=>toast('\ud83c\udf9f '+t('vcNew')+': '+code),900)}
-const vsHTML=u=>(u.vs||[]).map(v=>v.used?`<p><s class="text-slate-400">${esc(v.code)}</s> <span class="text-xs text-slate-400">(${t('vcUsed')})</span></p>`:`<p><b class="text-orange-600 tracking-wide">${esc(v.code)}</b> <button onclick="copyNo('${esc(v.code)}')" class="ml-1 text-xs text-slate-500 underline">${t('payCopy')}</button></p>`).join('')||'-';
+const vsHTML=u=>(u.vs||[]).map(v=>v.used?`<p><s class="text-slate-400">${esc(v.code)}</s> <span class="text-xs text-slate-400">(${t('vcUsed')})</span></p>`:`<p><b class="text-orange-600 tracking-wide">${esc(v.code)}</b>${v.amt?` <span class="text-xs text-green-600 font-semibold">(${Rp(v.amt)} · ${v.pct}%)</span>`:''} <button onclick="copyNo('${esc(v.code)}')" class="ml-1 text-xs text-slate-500 underline">${t('payCopy')}</button></p>`).join('')||'-';
 /* tujuan pengiriman: hanya ditanyakan untuk nomor WhatsApp LUAR Indonesia (luar negeri belum tersedia) */
 const isForeign=()=>!!$('cwcc')&&ccOf('c')[0]!=='IDN';
 const destOf=()=>isForeign()?CO.dest:'in';
@@ -1121,13 +1147,13 @@ function renderCO(){
   renderCoItems();renderDest();
   const z=zoneOf();
   if(!z||(CO.ship==='toko'&&z.id!==1))CO.ship=null;
-  if(!CO.ship)CO.pay=null;
+  if(!CO.ship||(CO.pay==='COD'&&codOff()))CO.pay=null;
   const c=calcCO();
   $('coShip').innerHTML=!z?`<p class="text-sm text-slate-400">${t('shipHint')}</p>`:COUR.filter(s=>!s.local||z.id===1).map(s=>{
     const f=shipFee(s,z,c.kg),eta=s.local?'0-1':`${z.d[0]+s.add}-${z.d[1]+s.add*2}`,sel=CO.ship===s.k;
     return `<button type="button" onclick="pickShip('${s.k}')" class="w-full flex items-center justify-between gap-3 p-3 rounded-xl border-2 text-left ${sel?'border-orange-500 bg-orange-50':'border-slate-200 hover:border-orange-300'}"><div><p class="font-semibold text-sm"><i class="fa-solid ${s.local?'fa-store':'fa-truck'} text-orange-500 mr-2"></i>${esc(cName(s))}</p><p class="text-xs text-slate-500">${t('eta')} ${eta} ${t('days')} · ${c.kg} kg</p></div><b class="text-sm ${f?'':'text-green-600'}">${f?Rp(f):t('free')}</b></button>`}).join('');
   if(z&&z.free)$('coShip').insertAdjacentHTML('afterbegin',`<p class="text-xs text-green-600 font-semibold"><i class="fa-solid fa-gift mr-1"></i>${t('freeMaros')}</p>`);
-  $('payOpts').innerHTML=PAYS.map(m=>{const feeLabel=`${t('adminFee')} ${Rp(admFee(m))}`;return `<button type="button" ${CO.ship?'':'disabled'} onclick="pickPay('${m}')" class="py-2.5 px-2 rounded-lg border-2 font-semibold ${CO.pay===m?'border-orange-500 bg-orange-50 text-orange-600':'border-slate-200 hover:border-orange-300'} disabled:opacity-40 disabled:cursor-not-allowed">${esc(payName(m))}<br><span class="text-xs font-normal text-slate-500">${feeLabel}</span></button>`}).join('');
+  $('payOpts').innerHTML=(codOff()?`<p class="col-span-2 text-xs text-red-600 font-semibold"><i class="fa-solid fa-ban mr-1"></i>${t('codOffNote')}</p>`:'')+PAYS.filter(m=>m!=='COD'||!codOff()).map(m=>{const feeLabel=`${t('adminFee')} ${Rp(admFee(m))}`;return `<button type="button" ${CO.ship?'':'disabled'} onclick="pickPay('${m}')" class="py-2.5 px-2 rounded-lg border-2 font-semibold ${CO.pay===m?'border-orange-500 bg-orange-50 text-orange-600':'border-slate-200 hover:border-orange-300'} disabled:opacity-40 disabled:cursor-not-allowed">${esc(payName(m))}<br><span class="text-xs font-normal text-slate-500">${feeLabel}</span></button>`}).join('');
   const pi=$('payInfo');
   if(CO.pay){pi.classList.remove('hid');pi.innerHTML=`<i class="fa-solid ${PAYI[CO.pay]} text-4xl text-slate-700 mb-2"></i><p>${t(PAYK[CO.pay])}</p>`}
   else{pi.classList.add('hid');if(!CO.ship)pi.innerHTML=''}
@@ -1147,7 +1173,7 @@ function renderCO(){
 }
 function validateCheckoutFields(){renderCO()}
 function pickShip(k){CO.ship=k;renderCO()}
-function pickPay(m){if(!CO.ship)return;CO.pay=m;renderCO()}
+function pickPay(m){if(!CO.ship)return;if(m==='COD'&&codOff())return toast(t('codOffToast'));CO.pay=m;renderCO()}
 function applyVc(code){
   code=(code||$('coVc').value).trim().toUpperCase();if(!code)return;
   const me=curUser(),v=me&&(me.vs||[]).find(x=>x.code===code);
@@ -1176,6 +1202,7 @@ function payNow(e){
   const a=getAddr('c');if(!a)return toast(t('addrReq'));
   if(!CO.ship)return toast(t('mLead')+': '+t('mShip'));
   if(!CO.pay)return toast(t('mLead')+': '+t('mPay'));
+  if(CO.pay==='COD'&&codOff())return toast(t('codOffToast'));
   if(!CO.agree)return toast(t('mLead')+': '+t('mAgree'));
   if(!checkStock())return;
   if(CO.vc&&!vcFind(CO.vc)){CO.vc=null;CO.vcErr='vcUsed';return renderCO()}
@@ -1238,11 +1265,11 @@ function closeOk(goNotif){closeM('m-ok');if(goNotif){window.scrollTo({top:0,beha
 
 /* ============ NAVIGASI & AUTH ============ */
 function show(v,f){
-  if(v==='admin'&&!(session&&session.role==='admin'))v='auth';
+  if((v==='admin'||v==='stockin')&&!(session&&session.role==='admin'))v='auth';
   const changed=curView!==v;if(curView==='game'&&v!=='game')gamePause(true);
   curView=v;if(f)catF=f;
-  ['home','katalog','about','orders','auth','admin','game'].forEach(x=>$('v-'+x).classList.toggle('hid',x!==v));
-  if(v==='katalog')renderKatalog();if(v==='admin')renderAdmin();if(v==='orders')renderOrders();if(v==='game')gameInit();
+  ['home','katalog','about','orders','auth','admin','game','stockin'].forEach(x=>$('v-'+x).classList.toggle('hid',x!==v));
+  if(v==='katalog')renderKatalog();if(v==='admin')renderAdmin();if(v==='stockin')renderStockIn();if(v==='orders')renderOrders();if(v==='game')gameInit();
   if(changed)addNotif('fa-clock-rotate-left',{f:'visit',a:[v]});
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1351,7 +1378,7 @@ function curAcc(){
 function setTheme(k,silent){k=k==='dark'?'dark':'red';document.documentElement.dataset.theme=k;sv('theme',k);$('dd-theme').classList.add('hid');$('thk-red').classList.toggle('hid',k!=='red');$('thk-dark').classList.toggle('hid',k!=='dark');if(!silent)toast(t(k==='dark'?'thDark':'thRed'))}
 function switchAcc(){addNotif('fa-repeat',{f:'t',a:['switchAcc']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session=null;sv('session',null);$('dd-acc').classList.add('hid');authLabel();renderNotif();authTab('admin');show('auth')}
 function renderAcc(){
-  if(session&&session.role==='admin'){$('dd-acc').innerHTML=`<div class="px-4 py-3 border-b font-bold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></span>${esc(session.name)}</div><button onclick="$('dd-acc').classList.add('hid');show('admin')" class="w-full text-left px-4 py-3 hover:bg-orange-50 font-semibold"><i class="fa-solid fa-gauge mr-2 text-orange-500"></i>${t('adminDash')}</button><button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;return}
+  if(session&&session.role==='admin'){$('dd-acc').innerHTML=`<div class="px-4 py-3 border-b font-bold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></span>${esc(session.name)}</div><button onclick="$('dd-acc').classList.add('hid');show('admin')" class="w-full text-left px-4 py-3 hover:bg-orange-50 font-semibold"><i class="fa-solid fa-gauge mr-2 text-orange-500"></i>${t('adminDash')}</button><button onclick="$('dd-acc').classList.add('hid');show('stockin')" class="w-full text-left px-4 py-3 hover:bg-orange-50 font-semibold"><i class="fa-solid fa-truck-ramp-box mr-2 text-orange-500"></i>${t('stockIn')}</button><button onclick="switchAcc()" class="w-full text-left px-4 py-3 border-t text-orange-600 font-semibold hover:bg-orange-50"><i class="fa-solid fa-repeat mr-2"></i>${t('switchAcc')}</button><button onclick="logout()" class="w-full text-left px-4 py-3 border-t text-red-600 font-semibold hover:bg-red-50"><i class="fa-solid fa-right-from-bracket mr-2"></i>${t('logout')}</button>`;return}
   const a=curAcc()||{},u=(session&&session.role==='user')?users.find(x=>x.u===session.name):null;
   const row=(ic,l,v)=>`<div class="flex gap-3 px-4 py-2"><i class="fa-solid ${ic} text-orange-500 w-4 mt-1"></i><div class="min-w-0"><p class="text-[11px] uppercase font-semibold text-slate-400">${l}</p><p class="break-words">${v}</p></div></div>`;
   $('dd-acc').innerHTML=`<div class="px-4 py-3 border-b font-bold flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-extrabold">${esc((a.name||'?').charAt(0).toUpperCase())}</span>${esc(a.name||'')}</div>`
@@ -1366,6 +1393,7 @@ function doLogin(e,re){
   e.preventDefault();const u=$('lu').value.trim(),p=$('lp').value;
   if(u.toLowerCase()==='amrizal'&&p==='117'){$('lerr').classList.add('hid');e.target.reset();return enter('admin','Amrizal',{f:'loginA',a:['Amrizal']})}
   const x=users.find(a=>a.u.toLowerCase()===u.toLowerCase()&&a.p===p);
+  if(x&&isFrozen(x.u)){$('lerr').textContent=t('acctFrozen');$('lerr').classList.remove('hid');return}
   if(x){$('lerr').classList.add('hid');e.target.reset();return enter('user',x.u,{f:'loginU',a:[x.u]},{addr:x.addr,phone:x.phone,email:x.email})}
   if(SYNC_URL&&!re){const f=e.target;syncNow().then(()=>doLogin({preventDefault(){},target:f},1));return}
   $('lerr').textContent=t('loginBad');$('lerr').classList.remove('hid');
@@ -1415,7 +1443,7 @@ function renderCust(){
     if(live)act=`<span class="text-xs text-green-600 font-semibold block"><i class="fa-solid fa-unlock mr-1"></i>${t('accOk')} · ${t('accLeft')} ${Math.max(1,Math.ceil((r.exp-Date.now())/60000))} ${t('accMin')}</span><button onclick="closeAccess('${r.id}')" class="mt-1 text-xs text-red-600 underline">${t('accClose')}</button>`;
     else if(r&&r.st==='pending')act=`<span class="text-xs text-orange-600 font-semibold"><span class="dotp mr-1"></span>${t('accWait')}</span>`;
     else act=`${r&&r.st==='denied'?`<span class="text-xs text-red-600 font-semibold block">${t('accNo')}</span>`:r?`<span class="text-xs text-slate-500 block">${t('accExp')}</span>`:''}<button onclick="reqAccess(${i})" class="mt-1 text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-key mr-1"></i>${t(r?'accAgain':'accAsk')}</button>`;
-    return `<tr><td class="p-3 font-semibold">${esc(u.u)}</td><td class="p-3">${esc(u.phone||'-')}</td><td class="p-3">${esc(u.email||'-')}</td><td class="p-3 text-xs">${region}</td><td class="p-3">${ordCount(u.u)}</td><td class="p-3 font-mono">${live?esc(u.p):'***'}</td><td class="p-3 text-xs max-w-xs">${live?esc(a.street?fmtAddr(a):'-'):lock}</td><td class="p-3">${act}</td></tr>`}).join('')
+    return `<tr><td class="p-3 font-semibold">${esc(u.u)}${modBadges(u.u)}</td><td class="p-3">${esc(u.phone||'-')}</td><td class="p-3">${esc(u.email||'-')}</td><td class="p-3 text-xs">${region}</td><td class="p-3">${ordCount(u.u)}</td><td class="p-3 font-mono">${live?esc(u.p):'***'}</td><td class="p-3 text-xs max-w-xs">${live?esc(a.street?fmtAddr(a):'-'):lock}</td><td class="p-3">${act}</td></tr>`}).join('')
    :`<tr><td colspan="8" class="p-6 text-center text-slate-400">${t('noCust')}</td></tr>`}
 function reqAccess(i){const u=users[i];if(!u||!session||session.role!=='admin')return;const c=accOf(u.u);if(c&&c.st==='pending')return toast(t('accWait'));
   const r={id:uid(),user:u.u,by:session.name,st:'pending',ts:Date.now(),exp:0};ACC.unshift(r);sv('access',ACC);
@@ -1427,7 +1455,7 @@ function openAccess(rid){const r=ACC.find(x=>x.id===rid);if(!r||r.st!=='pending'
 function renderAccModal(){const r=ACC.find(x=>x.id===accCur);if(!r||!$('accBody'))return;$('accBody').innerHTML=fm(t('accBody'),`<b>${esc(r.by)}</b>`)}
 /* popup di sisi pelanggan: muncul otomatis saat ada permintaan yang menunggu (juga ada di notifikasi) */
 const accSeen=new Set();
-function checkAccess(){if(!session||session.role!=='user')return;const r=ACC.find(x=>x.user===session.name&&x.st==='pending');if(r&&!accSeen.has(r.id)&&!isOpen('m-acc')){accSeen.add(r.id);openAccess(r.id)}}
+function checkAccess(){if(checkFrozen())return;if(!session||session.role!=='user')return;const r=ACC.find(x=>x.user===session.name&&x.st==='pending');if(r&&!accSeen.has(r.id)&&!isOpen('m-acc')){accSeen.add(r.id);openAccess(r.id)}}
 function respondAccess(rid,ok){const r=ACC.find(x=>x.id===rid);if(!r||r.st!=='pending'){closeM('m-acc');return}
   r.st=ok?'allowed':'denied';r.exp=ok?Date.now()+ACC_MIN*60000:0;r.rt=Date.now();sv('access',ACC);
   (NF.u[r.user]||[]).forEach(n=>{if(n.rid===rid)n.rd=true});sv('notifs2',NF);
@@ -1458,10 +1486,6 @@ function resetPromoBg(){PBG=null;sv('promobg',null);applyPromoBg();toast(t('prom
 function renderPromoCtl(){applyPromoBg()}
 
 /* ============ LAPORAN KERUSAKAN (admin) ============ */
-function renderRpt(){const el=$('rTable');if(!el)return;
-  el.innerHTML=RPT.length?RPT.map((r,i)=>`<tr><td class="p-3">${fmtD(r.ts)}</td><td class="p-3 font-semibold text-orange-600">${esc(r.oid)}</td><td class="p-3">${esc(r.pn&&!P.find(x=>x.id===r.pid)?r.pn:pn(r.pid))}</td><td class="p-3">${esc(r.u)}</td><td class="p-3 text-xs max-w-xs">${esc(r.c||'')}<div class="mt-1">${mediaThumbs(r)}</div></td><td class="p-3">${r.st==='done'?`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">${t('rptDone')}</span>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">${t('rptNew')}</span><button onclick="rptDone(${i})" class="block mt-1 text-xs text-orange-600 font-semibold hover:underline">${t('rptMark')}</button>`}</td></tr>`).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('rptNone')}</td></tr>`}
-function rptDone(i){if(RPT[i]){RPT[i].st='done';sv('reports',RPT);renderRpt()}}
-
 /* ============ PESANAN SAYA (lacak, peta kurir, selesaikan, ulasan) ============ */
 const mid=o=>String(o.id).replace(/\W/g,'');
 function ordItems(o){return o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id);return `${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}`}):(o.items||[]).map(esc)}
@@ -1471,7 +1495,7 @@ function ordCard(o,adm){
   const where=o.status==='Diproses'?t('stProcTxt'):o.status==='Dikirim'?`${t('stShipTxt')} <b>${esc(city)}</b> \u00b7 ${esc(cNameK(o))}`:t('stDoneTxt');
   const mapHTML=o.status==='Dikirim'?`<div class="rounded-xl border overflow-hidden"><div class="px-3 py-2 bg-orange-50 text-sm font-semibold text-orange-700"><i class="fa-solid fa-motorcycle mr-1"></i>${t('mapToday')}</div><div id="map-${mid(o)}" data-oid="${esc(o.id)}" class="h-64 w-full bg-slate-100 flex items-center justify-center text-sm text-slate-400">${t('mapLoad')}</div><div id="mapInfo-${mid(o)}" class="px-3 py-2 text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 justify-between"></div></div>`:'';
   const items=o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id),done=(o.rvd||[]).includes(ci.id);
-    return `<li class="flex items-center justify-between gap-2"><span>\u2022 ${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}</span>${o.status==='Selesai'&&!adm&&p?(done?`<span class="text-xs text-green-600 font-semibold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i>${t('rvSent')}</span>`:`<button onclick="openReview('${esc(o.id)}',${ci.id})" class="text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i>${t('rvBtn')}</button>`):''}</li>`}).join(''):(o.items||[]).map(x=>`<li>\u2022 ${esc(x)}</li>`).join('');
+    return `<li class="flex items-center justify-between gap-2"><span>\u2022 ${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}</span>${o.status==='Selesai'&&!adm&&p?itemBtns(o,ci,done):''}</li>`}).join(''):(o.items||[]).map(x=>`<li>\u2022 ${esc(x)}</li>`).join('');
   return `<div class="bg-white border rounded-2xl shadow-sm overflow-hidden"><div class="px-5 py-3 border-b flex flex-wrap justify-between gap-2"><div><b class="text-orange-600">${esc(o.id)}</b> <span class="text-xs text-slate-400 ml-2">${esc(fmtD(o.date))}</span>${adm?`<span class="text-xs text-slate-500 ml-2">${esc(o.name)}</span>`:''}</div><span class="px-3 py-0.5 rounded-full text-xs font-bold ${o.status==='Selesai'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}">${stLbl(o.status)}</span></div>
   <div class="p-5 space-y-4"><div class="grid grid-cols-4 text-center text-xs">${S.map((s,k)=>`<div><div class="mx-auto w-10 h-10 rounded-full flex items-center justify-center ${k<=ix?'bg-orange-500 text-white':'bg-slate-200 text-slate-400'}"><i class="fa-solid ${s[0]}"></i></div><p class="mt-1 font-semibold ${k<=ix?'text-orange-600':'text-slate-400'}">${t(s[1])}</p></div>`).join('')}</div>
   <div class="bg-orange-50 rounded-xl p-3 text-sm"><i class="fa-solid fa-location-dot text-orange-500 mr-1"></i>${where}${o.resi?`<div class="text-xs text-slate-500 mt-1">${t('resi')}: <b>${esc(o.resi)}</b></div>`:''}</div>
@@ -1482,6 +1506,7 @@ function ordCard(o,adm){
   ${adm?'':(o.status==='Dikirim'?`<button onclick="finishOrder('${esc(o.id)}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-circle-check mr-1"></i>${t('recvBtn')}</button>`:o.status==='Diproses'?`<p class="text-xs text-slate-400 text-center">${t('recvWait')}</p>`:'')}</div></div>`}
 function renderOrders(){mapsClear();const adm=session&&session.role==='admin',L=orders.filter(o=>adm||ownsO(o));
   $('ordNote').textContent=adm?t('ordAdmin'):(session&&session.role==='user'?'':t('ordGuest'));
+  renderMyRpt();
   $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`;
   setTimeout(initMaps,30)}
 function finishOrder(id){const o=orders.find(x=>x.id===id);if(!o||(session&&session.role==='admin')||o.status!=='Dikirim'||!ownsO(o))return;
@@ -1527,29 +1552,11 @@ function idb(){return new Promise((ok,no)=>{const r=indexedDB.open('gs_media',1)
 async function mPut(k,b){const d=await idb();return new Promise((ok,no)=>{const x=d.transaction('m','readwrite');x.objectStore('m').put(b,k);x.oncomplete=()=>ok();x.onerror=()=>no(x.error)})}
 async function mGet(k){const d=await idb();return new Promise((ok,no)=>{const r=d.transaction('m').objectStore('m').get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
 let RVS=null;
-function openReview(oid,pid){const o=orders.find(x=>x.id===oid);if(!o||!ownsO(o)||o.status!=='Selesai')return;RVS={oid,pid,s:0,c:'',imgs:[],vfile:null,vname:'',dmg:false};renderRvModal();openM('m-rv')}
-function renderRvModal(){if(!RVS)return;const p=P.find(x=>x.id===RVS.pid);if(!p)return;
-  $('rvBody').innerHTML=`<div class="flex items-center gap-3"><img src="${src(p)}" alt="" class="w-14 h-14 object-contain bg-white border rounded-lg"><b>${esc(pname(p))}</b></div>
-  <div><p class="lbl">${t('rvRate')}</p><div class="flex gap-1 text-2xl text-yellow-400 mt-1">${[1,2,3,4,5].map(i=>`<button type="button" onclick="RVS.s=${i};renderRvModal()" class="hover:scale-110"><i class="fa-${RVS.s>=i?'solid':'regular'} fa-star"></i></button>`).join('')}</div></div>
-  <div><p class="lbl">${t('rvText')}</p><textarea rows="3" oninput="RVS.c=this.value" class="inp">${esc(RVS.c)}</textarea></div>
-  <div><p class="lbl">${t('rvPhotos')}</p><input type="file" accept="image/*" multiple onchange="rvPick(this)" class="block mt-1 text-sm"><div class="mt-2 flex gap-2 flex-wrap">${RVS.imgs.map((s,i)=>`<span class="relative"><img src="${s}" alt="" class="w-16 h-16 object-cover rounded-lg border"><button type="button" onclick="RVS.imgs.splice(${i},1);renderRvModal()" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs leading-5">&times;</button></span>`).join('')}</div></div>
-  <label class="flex items-start gap-2 p-3 border-2 rounded-xl cursor-pointer ${RVS.dmg?'border-red-400 bg-red-50':'border-slate-200'}"><input type="checkbox" ${RVS.dmg?'checked':''} onchange="RVS.dmg=this.checked;renderRvModal()" class="mt-1 w-4 h-4 accent-red-500"><span class="text-sm"><b class="text-red-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${t('rvDmg')}</b><br><span class="text-xs text-slate-500">${t('rvDmgNote')}</span></span></label>
-  <div><p class="lbl"><i class="fa-solid fa-video text-orange-500 mr-1"></i>${t('rvVideo')}${RVS.dmg?' *':''}</p><input type="file" accept="video/*" onchange="rvVid(this)" class="block mt-1 text-sm">${RVS.vname?`<p class="text-xs text-green-600 mt-1"><i class="fa-solid fa-circle-check mr-1"></i>${esc(RVS.vname)} (${t('rvChosen')})</p>`:''}</div>
-  <div class="flex gap-2 pt-1"><button type="button" onclick="closeM('m-rv')" class="px-5 py-3 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50">${t('cancel')}</button><button type="button" onclick="rvSubmit()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl">${t('rvSubmit')}</button></div>`}
 async function rvPick(inp){for(const f of [...inp.files]){if(RVS.imgs.length>=3)break;try{RVS.imgs.push(await readImg(f,520))}catch(e){}}renderRvModal()}
 function rvVid(inp){const f=inp.files[0];if(!f)return;if(f.size>40*1024*1024){inp.value='';return toast(t('rvTooBig'))}RVS.vfile=f;RVS.vname=f.name;renderRvModal()}
-async function rvSubmit(){const R=RVS;if(!R)return;const o=orders.find(x=>x.id===R.oid);if(!o)return;
-  if(!R.s&&!R.dmg)return toast(t('rvNeedRate'));
-  if(R.dmg&&!R.vfile)return toast(t('rvNeedVid'));
-  let vid=null;if(R.vfile){vid='v'+Date.now();try{await mPut(vid,R.vfile)}catch(e){vid=null;toast(t('rvVidFail'))}}
-  const p=P.find(x=>x.id===R.pid),c=R.c.trim();
-  if(R.s){(RV[R.pid]=RV[R.pid]||[]).unshift({u:o.name,s:R.s,c:c.slice(0,200),imgs:R.imgs,vid,oid:o.id,ts:Date.now()});sv('reviews',RV)}
-  if(R.dmg){RPT.unshift({id:uid(),oid:o.id,pid:R.pid,pn:p?p.name:'',u:o.name,wa:o.wa,c:c.slice(0,300),imgs:R.imgs,vid,ts:Date.now(),st:'new'});sv('reports',RPT);notifyAdmin('fa-triangle-exclamation',{f:'dmgN',a:[o.id,R.pid]},{who:{r:'user',n:o.name}})}
-  (o.rvd=o.rvd||[]).push(R.pid);sv('orders',orders);
-  toast(t(R.dmg?'rvRepOk':'rvOk'));addNotif('fa-star',{f:'rvN',a:[R.pid,R.s]});RVS=null;closeM('m-rv');renderAll()}
 function zoomImg(s){$('mediaBox').innerHTML=`<img src="${s}" alt="" class="max-h-[80vh] mx-auto rounded-xl">`;openM('m-media')}
 let vidURL=null;
-async function viewVid(k){try{const b=await mGet(k);if(!b)return toast(t('rvVidFail'));if(vidURL)URL.revokeObjectURL(vidURL);vidURL=URL.createObjectURL(b);$('mediaBox').innerHTML=`<video src="${vidURL}" controls autoplay class="max-h-[80vh] w-full rounded-xl bg-black"></video>`;openM('m-media')}catch(e){toast(t('rvVidFail'))}}
+async function viewVid(k){try{const b=await mGet(k);if(!b)return toast(t('vidDevice'));if(vidURL)URL.revokeObjectURL(vidURL);vidURL=URL.createObjectURL(b);$('mediaBox').innerHTML=`<video src="${vidURL}" controls autoplay class="max-h-[80vh] w-full rounded-xl bg-black"></video>`;openM('m-media')}catch(e){toast(t('rvVidFail'))}}
 function closeMedia(){closeM('m-media');$('mediaBox').innerHTML=''}
 
 /* ============ PRODUK (admin) ============ */
@@ -1667,7 +1674,7 @@ function gDraw(){const cv=$('gc');if(!cv)return;const c=cv.getContext('2d'),g=c.
 
 /* ============ SINKRONISASI ANTAR TAB (admin <-> pelanggan/tamu) ============ */
 function onStorage(e){if(e.key&&e.key.indexOf('gs_')!==0)return;
-  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);P=ld('products5',P);PBG=ld('promobg',PBG);
+  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);STK=ld('stockin',STK);MOD=ld('mod',MOD);P=ld('products5',P);PBG=ld('promobg',PBG);
   renderNotif();renderAll();applyPromoBg();checkAccess()}
 
 
@@ -1743,6 +1750,281 @@ function renderSitePanel(){const m=$('sBody');if(!m)return;const used=c=>P.filte
   <div class="flex gap-2 mt-3"><input id="newCat" class="inp" placeholder="Nama kategori baru, contoh: Kaos Kaki" maxlength="30"><button onclick="addCat($('newCat').value)" class="bg-green-500 text-white font-bold px-4 rounded-lg whitespace-nowrap">Tambah</button></div>
   <p class="text-xs text-slate-500 mt-2">Kategori bawaan tidak bisa dihapus. Kategori tambahan bisa dihapus selama belum dipakai produk.</p></div>
   <p class="text-xs text-slate-500">Semua perubahan tersimpan otomatis dan muncul di semua device dalam sekitar 10 detik.</p></div>`}
+
+Object.assign(I.id,{
+stockIn:"Barang Masuk",siTitle:"Barang Masuk (Tambah Stok)",siHint:"Catat barang yang baru datang dari produsen / supplier. Stok langsung bertambah dan posisinya terhadap stok minimum dihitung otomatis.",siBack:"Kembali ke Dashboard",
+siSumLow:"Produk di bawah minimum",siSumIn:"Barang masuk bulan ini (pcs)",siSumTx:"Jumlah catatan masuk",siProd:"Produk",siVar:"Varian / Ukuran",siQty:"Jumlah Masuk (pcs)",siSup:"Pemasok / Produsen",siDate:"Tanggal Masuk",siNote:"Catatan (opsional)",siBtn:"Simpan Barang Masuk",
+siNow:"Stok sekarang",siAfter:"Stok setelah masuk",siMin:"Stok minimum",siGap:"Selisih dari minimum",siOk:"Aman: stok sudah di atas / sama dengan minimum.",siShort:"Masih kurang {0} pcs dari stok minimum.",
+siToastOk:"Tersimpan! Stok {0} sekarang {1} (minimum {2}), sudah aman.",siToastLow:"Tersimpan! Stok {0} sekarang {1}, masih kurang {2} pcs dari minimum {3}.",
+siTbl:"Posisi Stok terhadap Minimum",siPick:"Tambah stok",siHist:"Riwayat Barang Masuk",siNone:"Belum ada barang masuk.",siColDate:"Tanggal",siColQty:"Jumlah",siColChg:"Stok (sebelum → sesudah)",siColBy:"Dicatat oleh",
+siCancel:"Batalkan",siCx:"Dibatalkan",siCxConf:"Batalkan catatan barang masuk ini? Stok akan dikurangi kembali.",siCxFail:"Tidak bisa dibatalkan: stok saat ini lebih kecil dari jumlah yang tadinya masuk.",siNeedQty:"Jumlah masuk harus angka bulat minimal 1.",
+inN:"Barang masuk: {0} +{1} pcs (stok sekarang {2})",
+kDmg:"Barang rusak",kRet:"Pengembalian barang",rpBtn:"Lapor / Kembalikan",rpBusy:"Laporan diproses",rpDesc:"Ceritakan masalahnya",rpProblem:"Ada masalah dengan barang ini?",
+rpNone:"Tidak ada (hanya ulasan)",rpNoneN:"Kirim rating dan ulasan saja.",rpDmgOpt:"Laporkan barang rusak / tidak sesuai",rpDmgN:"Lampirkan foto ATAU video sebagai bukti, cukup salah satu.",
+rpRetOpt:"Kembalikan barang",rpRetN:"Wajib video unboxing. Ongkir pengembalian 50% ditanggung pelanggan.",rpFalse:"Laporan harus jujur. Laporan yang tidak terbukti dapat berakibat peringatan, pembekuan akun, dan penonaktifan COD.",
+rpMediaDmg:"Bukti foto (cukup foto atau video) *",rpVidDmg:"Video bukti (opsional jika sudah ada foto)",rpVidRet:"Video unboxing * (wajib)",
+rpReason:"Alasan pengembalian",rpPick:"- Pilih alasan -",rsDmg:"Barang rusak / cacat",rsWrong:"Tidak sesuai pesanan",rsSize:"Ukuran tidak cocok",rsOther:"Lainnya",
+rpFeeBox:"Ongkir pengembalian: Anda menanggung {0}% yaitu {1}.",rpRetRule:"Sisa ongkir ditanggung toko. Pengembalian maksimal {0} hari sejak pesanan selesai, barang dalam kemasan asli.",
+rpAgree:"Saya bersedia menanggung ongkir pengembalian {0} dan menyatakan laporan ini benar.",
+rpNeedMedia:"Lampirkan minimal 1 foto atau video sebagai bukti.",rpNeedRs:"Pilih alasan pengembalian.",rpNeedAgree:"Centang persetujuan ongkir pengembalian dulu.",rpExpired:"Batas pengembalian {0} hari sejak pesanan selesai sudah lewat.",rpDup:"Laporan untuk barang ini masih diproses.",
+rpOk:"Laporan terkirim! Pantau statusnya di Pesanan Saya dan notifikasi.",rvNeedVid:"Video unboxing wajib untuk pengembalian barang.",rpSentN:"Mengirim {0}: {1}",retN:"Permintaan pengembalian baru: {0} · {1}",myRpt:"Laporan & Pengembalian Saya",
+rst_new:"Menunggu diperiksa",rst_check:"Sedang diperiksa admin",rst_ok:"Terbukti",rst_no:"Tidak terbukti",rst_done:"Ditangani",
+rptN_new:"Laporan {0} untuk {1} sudah kami terima dan akan diperiksa admin.",rptN_check:"Laporan {0} untuk {1} sedang diperiksa admin.",
+rptN_check_ret:"Pengembalian untuk {1} sedang diproses admin. Siapkan barang beserta kemasan asli. Ongkir pengembalian {2} ditanggung Anda, kirim ke:",
+rptN_ok:"Laporan {0} untuk {1} TERBUKTI. Anda mendapat voucher {2} senilai {3} ({4}% dari harga barang). Pakai di halaman transaksi.",
+rptN_ok_nv:"Laporan {0} untuk {1} TERBUKTI. Hubungi toko via WhatsApp 0895801321630 dengan nomor pesanan untuk kompensasi (voucher hanya untuk akun terdaftar).",
+rptN_no:"Laporan {0} untuk {1} TIDAK TERBUKTI setelah diperiksa. Laporan yang tidak benar dapat berakibat peringatan dan pembekuan akun.",rptNoteL:"Catatan admin",
+warnN:"Peringatan ke-{0}: laporan Anda tidak terbukti. Jika mencapai {1} peringatan, metode COD dinonaktifkan dan akun bisa dibekukan.",
+codOffN:"Metode COD dinonaktifkan untuk akun Anda karena banyak peringatan. Anda tetap bisa memakai QRIS, Transfer Bank, atau E-Wallet.",
+frzN:"Akun Anda dibekukan karena laporan tidak terbukti dan peringatan sebelumnya. Hubungi toko via WhatsApp 0895801321630.",unfrzN:"Akun Anda sudah diaktifkan kembali oleh admin.",
+acctFrozen:"Akun ini dibekukan karena laporan tidak terbukti. Hubungi toko via WhatsApp 0895801321630.",codOffNote:"COD tidak tersedia untuk akun Anda karena banyak peringatan.",codOffToast:"COD tidak tersedia untuk akun ini. Pilih metode pembayaran lain.",
+vidDevice:"Video tersimpan di perangkat pelanggan dan tidak terbuka di perangkat ini. Minta pelanggan mengirimnya via WhatsApp.",
+rptCheck:"Periksa",rptProve:"Terbukti",rptReject:"Tidak terbukti",rptPct:"Voucher (% dari harga barang)",rptNote:"Catatan untuk pelanggan (opsional)",rptWarnBtn:"Beri peringatan",rptFreezeBtn:"Bekukan akun",
+rptFreezeNeed:"Beri peringatan dulu sebelum membekukan akun.",rptFrzConf:"Bekukan akun ini? Pelanggan tidak bisa login sampai diaktifkan kembali.",rptGuest:"Pelanggan tamu: tidak bisa diberi peringatan / pembekuan.",
+rptVcGiven:"Voucher {0} ({1})",rptVcGuest:"Tamu: voucher tidak bisa diberikan, hubungi via WA.",rptWarned:"Peringatan diberikan",rptAmt:"Nilai barang",rptFee:"Ongkir kembali",
+unfreeze:"Aktifkan kembali",resetWarn:"Reset peringatan",warnL:"peringatan",frozenL:"Dibekukan",codOffL:"COD nonaktif",
+aWarnN:"Peringatan diberikan ke {0} (total {1})",aFrzN:"Akun {0} dibekukan",aUnfrzN:"Akun {0} diaktifkan kembali",aRptStN:"{0} {1}: {2}"
+});
+Object.assign(I.en,{
+stockIn:"Incoming Stock",siTitle:"Incoming Stock (Add Stock)",siHint:"Record goods that just arrived from the manufacturer / supplier. Stock increases immediately and its position against the minimum stock is calculated automatically.",siBack:"Back to Dashboard",
+siSumLow:"Products below minimum",siSumIn:"Received this month (pcs)",siSumTx:"Incoming records",siProd:"Product",siVar:"Variant / Size",siQty:"Quantity Received (pcs)",siSup:"Supplier / Manufacturer",siDate:"Date Received",siNote:"Note (optional)",siBtn:"Save Incoming Stock",
+siNow:"Current stock",siAfter:"Stock after receiving",siMin:"Minimum stock",siGap:"Difference from minimum",siOk:"Safe: stock is at or above the minimum.",siShort:"Still {0} pcs short of the minimum stock.",
+siToastOk:"Saved! {0} stock is now {1} (minimum {2}), all good.",siToastLow:"Saved! {0} stock is now {1}, still {2} pcs short of the minimum {3}.",
+siTbl:"Stock Position vs Minimum",siPick:"Add stock",siHist:"Incoming Stock History",siNone:"No incoming stock yet.",siColDate:"Date",siColQty:"Qty",siColChg:"Stock (before → after)",siColBy:"Recorded by",
+siCancel:"Cancel",siCx:"Cancelled",siCxConf:"Cancel this incoming stock record? The stock will be reduced again.",siCxFail:"Cannot cancel: current stock is lower than the quantity that came in.",siNeedQty:"Quantity must be a whole number of at least 1.",
+inN:"Incoming stock: {0} +{1} pcs (stock now {2})",
+kDmg:"Damaged item",kRet:"Item return",rpBtn:"Report / Return",rpBusy:"Report in progress",rpDesc:"Describe the problem",rpProblem:"Any problem with this item?",
+rpNone:"None (review only)",rpNoneN:"Send a rating and review only.",rpDmgOpt:"Report damaged / not as described",rpDmgN:"Attach a photo OR a video as proof, either one is enough.",
+rpRetOpt:"Return the item",rpRetN:"Unboxing video required. Customer pays 50% of the return shipping.",rpFalse:"Reports must be honest. Reports that are not proven may lead to a warning, account freeze, and COD being disabled.",
+rpMediaDmg:"Photo proof (a photo or a video is enough) *",rpVidDmg:"Video proof (optional if you added a photo)",rpVidRet:"Unboxing video * (required)",
+rpReason:"Reason for return",rpPick:"- Choose a reason -",rsDmg:"Damaged / defective",rsWrong:"Not as ordered",rsSize:"Wrong size",rsOther:"Other",
+rpFeeBox:"Return shipping: you pay {0}%, which is {1}.",rpRetRule:"The store covers the rest of the shipping. Returns within {0} days after the order is completed, in original packaging.",
+rpAgree:"I agree to pay the return shipping of {0} and confirm this report is true.",
+rpNeedMedia:"Attach at least 1 photo or video as proof.",rpNeedRs:"Choose a return reason.",rpNeedAgree:"Please tick the return shipping agreement first.",rpExpired:"The {0}-day return period after order completion has passed.",rpDup:"A report for this item is still being processed.",
+rpOk:"Report sent! Track its status in My Orders and notifications.",rvNeedVid:"An unboxing video is required for an item return.",rpSentN:"Sent {0}: {1}",retN:"New return request: {0} · {1}",myRpt:"My Reports & Returns",
+rst_new:"Waiting to be checked",rst_check:"Being checked by admin",rst_ok:"Proven",rst_no:"Not proven",rst_done:"Handled",
+rptN_new:"Your {0} report for {1} was received and will be checked by admin.",rptN_check:"Your {0} report for {1} is being checked by admin.",
+rptN_check_ret:"Your return for {1} is being processed. Prepare the item with its original packaging. You pay the return shipping of {2}, send it to:",
+rptN_ok:"Your {0} report for {1} is PROVEN. You received voucher {2} worth {3} ({4}% of the item price). Use it at checkout.",
+rptN_ok_nv:"Your {0} report for {1} is PROVEN. Contact the store on WhatsApp 0895801321630 with your order number for compensation (vouchers are for registered accounts only).",
+rptN_no:"Your {0} report for {1} was NOT PROVEN after checking. False reports may lead to a warning and account freeze.",rptNoteL:"Admin note",
+warnN:"Warning #{0}: your report was not proven. At {1} warnings, COD is disabled and the account may be frozen.",
+codOffN:"COD is disabled for your account because of multiple warnings. You can still use QRIS, Bank Transfer or E-Wallet.",
+frzN:"Your account was frozen because of an unproven report and earlier warnings. Contact the store on WhatsApp 0895801321630.",unfrzN:"Your account has been reactivated by admin.",
+acctFrozen:"This account is frozen because of an unproven report. Contact the store on WhatsApp 0895801321630.",codOffNote:"COD is not available for your account because of multiple warnings.",codOffToast:"COD is not available for this account. Choose another payment method.",
+vidDevice:"The video is stored on the customer's device and cannot be opened here. Ask the customer to send it via WhatsApp.",
+rptCheck:"Check",rptProve:"Proven",rptReject:"Not proven",rptPct:"Voucher (% of item price)",rptNote:"Note for customer (optional)",rptWarnBtn:"Give warning",rptFreezeBtn:"Freeze account",
+rptFreezeNeed:"Give a warning first before freezing the account.",rptFrzConf:"Freeze this account? The customer cannot log in until reactivated.",rptGuest:"Guest customer: cannot be warned / frozen.",
+rptVcGiven:"Voucher {0} ({1})",rptVcGuest:"Guest: voucher cannot be issued, contact via WA.",rptWarned:"Warning given",rptAmt:"Item value",rptFee:"Return shipping",
+unfreeze:"Reactivate",resetWarn:"Reset warnings",warnL:"warnings",frozenL:"Frozen",codOffL:"COD off",
+aWarnN:"Warning given to {0} (total {1})",aFrzN:"Account {0} frozen",aUnfrzN:"Account {0} reactivated",aRptStN:"{0} {1}: {2}"
+});
+Object.assign(I.zh,{
+stockIn:"入库",siTitle:"入库（增加库存）",siHint:"记录刚从厂家 / 供应商到货的商品。库存会立即增加，并自动计算与最低库存的差距。",siBack:"返回后台",
+siSumLow:"低于最低库存的商品",siSumIn:"本月入库（件）",siSumTx:"入库记录数",siProd:"商品",siVar:"规格 / 尺码",siQty:"入库数量（件）",siSup:"供应商 / 厂家",siDate:"入库日期",siNote:"备注（可选）",siBtn:"保存入库",
+siNow:"当前库存",siAfter:"入库后库存",siMin:"最低库存",siGap:"与最低库存的差距",siOk:"安全：库存已达到或高于最低库存。",siShort:"距离最低库存还差 {0} 件。",
+siToastOk:"已保存！{0} 当前库存 {1}（最低 {2}），库存充足。",siToastLow:"已保存！{0} 当前库存 {1}，距最低库存 {3} 还差 {2} 件。",
+siTbl:"库存与最低库存对比",siPick:"增加库存",siHist:"入库记录",siNone:"暂无入库记录。",siColDate:"日期",siColQty:"数量",siColChg:"库存（入库前 → 入库后）",siColBy:"记录人",
+siCancel:"撤销",siCx:"已撤销",siCxConf:"撤销这条入库记录？库存将被扣回。",siCxFail:"无法撤销：当前库存低于当时入库的数量。",siNeedQty:"入库数量必须是不小于 1 的整数。",
+inN:"入库：{0} +{1} 件（当前库存 {2}）",
+kDmg:"商品损坏",kRet:"退货",rpBtn:"投诉 / 退货",rpBusy:"投诉处理中",rpDesc:"请描述问题",rpProblem:"这件商品有问题吗？",
+rpNone:"没有（仅评价）",rpNoneN:"只提交评分和评价。",rpDmgOpt:"举报商品损坏 / 与描述不符",rpDmgN:"上传照片或视频作为证明，二选一即可。",
+rpRetOpt:"退货",rpRetN:"必须上传开箱视频。退货运费由顾客承担 50%。",rpFalse:"请如实举报。未被证实的举报可能导致警告、账号冻结和取消货到付款。",
+rpMediaDmg:"照片证明（照片或视频任选其一）*",rpVidDmg:"视频证明（已有照片时可不传）",rpVidRet:"开箱视频 *（必填）",
+rpReason:"退货原因",rpPick:"- 请选择原因 -",rsDmg:"损坏 / 有缺陷",rsWrong:"与订单不符",rsSize:"尺码不合适",rsOther:"其他",
+rpFeeBox:"退货运费：您承担 {0}%，即 {1}。",rpRetRule:"其余运费由商店承担。订单完成后 {0} 天内可退货，须保持原包装。",
+rpAgree:"我同意承担退货运费 {0}，并保证本次举报属实。",
+rpNeedMedia:"请至少上传 1 张照片或 1 段视频作为证明。",rpNeedRs:"请选择退货原因。",rpNeedAgree:"请先勾选退货运费确认。",rpExpired:"订单完成后 {0} 天的退货期限已过。",rpDup:"该商品的投诉仍在处理中。",
+rpOk:"已提交！可在「我的订单」和通知中查看进度。",rvNeedVid:"退货必须上传开箱视频。",rpSentN:"已提交{0}：{1}",retN:"新的退货申请：{0} · {1}",myRpt:"我的投诉与退货",
+rst_new:"等待审核",rst_check:"管理员审核中",rst_ok:"属实",rst_no:"不属实",rst_done:"已处理",
+rptN_new:"您对 {1} 的{0}已收到，管理员将进行审核。",rptN_check:"您对 {1} 的{0}正在由管理员审核。",
+rptN_check_ret:"您对 {1} 的退货正在处理。请准备好商品和原包装。退货运费 {2} 由您承担，请寄到：",
+rptN_ok:"您对 {1} 的{0}属实。您获得优惠券 {2}，面值 {3}（商品价格的 {4}%），可在结算时使用。",
+rptN_ok_nv:"您对 {1} 的{0}属实。请通过 WhatsApp 0895801321630 提供订单号联系商店领取补偿（优惠券仅限注册账号）。",
+rptN_no:"您对 {1} 的{0}经核查不属实。不实举报可能导致警告和账号冻结。",rptNoteL:"管理员备注",
+warnN:"第 {0} 次警告：您的举报不属实。达到 {1} 次警告后将取消货到付款，账号也可能被冻结。",
+codOffN:"由于多次警告，您的账号已取消货到付款。您仍可使用 QRIS、银行转账或电子钱包。",
+frzN:"由于举报不属实及此前的警告，您的账号已被冻结。请通过 WhatsApp 0895801321630 联系商店。",unfrzN:"您的账号已被管理员重新启用。",
+acctFrozen:"该账号因举报不属实已被冻结。请通过 WhatsApp 0895801321630 联系商店。",codOffNote:"由于多次警告，您的账号无法使用货到付款。",codOffToast:"该账号无法使用货到付款，请选择其他支付方式。",
+vidDevice:"视频保存在顾客的设备上，无法在此打开。请让顾客通过 WhatsApp 发送。",
+rptCheck:"审核",rptProve:"属实",rptReject:"不属实",rptPct:"优惠券（商品价格的 %）",rptNote:"给顾客的备注（可选）",rptWarnBtn:"发出警告",rptFreezeBtn:"冻结账号",
+rptFreezeNeed:"冻结账号前请先发出警告。",rptFrzConf:"冻结该账号？顾客在重新启用前无法登录。",rptGuest:"游客：无法警告 / 冻结。",
+rptVcGiven:"优惠券 {0}（{1}）",rptVcGuest:"游客：无法发放优惠券，请通过 WA 联系。",rptWarned:"已发出警告",rptAmt:"商品价值",rptFee:"退货运费",
+unfreeze:"重新启用",resetWarn:"清除警告",warnL:"次警告",frozenL:"已冻结",codOffL:"已取消COD",
+aWarnN:"已向 {0} 发出警告（共 {1} 次）",aFrzN:"账号 {0} 已冻结",aUnfrzN:"账号 {0} 已重新启用",aRptStN:"{0} {1}：{2}"
+});
+
+/* ======================================================================
+   FITUR BARU: BARANG MASUK, LAPORAN RUSAK, PENGEMBALIAN, PERINGATAN AKUN
+   ====================================================================== */
+const RET_SHIP_PCT=50,RET_BASE_FREE=10000,VC_RPT_MAX=60,WARN_COD=3,RET_DAYS=7;
+const mk=n=>String(n||'').toLowerCase();
+const qa=s=>encodeURIComponent(s).replace(/'/g,'%27');
+const modOf=n=>MOD[mk(n)]||{w:0,fz:false};
+const isFrozen=n=>!!modOf(n).fz;
+const warnCnt=n=>modOf(n).w||0;
+const codOffFor=n=>warnCnt(n)>=WARN_COD;
+const codOff=()=>!!(session&&session.role==='user'&&codOffFor(session.name));
+const userExists=n=>!!n&&users.some(x=>mk(x.u)===mk(n));
+const bdg=(c,x)=>`<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${c}">${x}</span>`;
+const pnx=(id,n)=>{const p=P.find(z=>z.id===id);return p?pname(p):(n||'?')};
+function setMod(n,patch){const k=mk(n),o=MOD[k]||{};MOD[k]=Object.assign({w:0,fz:false,wl:[]},o,patch);sv('mod',MOD)}
+function checkFrozen(){if(session&&session.role==='user'&&isFrozen(session.name)){session={role:'guest',name:'Tamu'};sv('session',session);authLabel();renderNotif();toast(t('acctFrozen'));show('home');return true}return false}
+function vcDisc(code,sub,fees){const v=vcFind(code);if(!v)return Math.min(fees,VC_MAX);return v.amt?Math.min(v.amt,sub+fees):Math.min(fees,VC_MAX)}
+
+/* ---------- BARANG MASUK (admin) ---------- */
+const todayStr=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+const fmtDay=ts=>new Date(ts).toLocaleDateString(LOC());
+const varTracked=p=>!!(p&&p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));
+function siSel(){return P.find(x=>String(x.id)===String($('siP').value))}
+function siFillVar(keep){const p=siSel(),box=$('siVBox'),s=$('siV');
+  if(!p||!varTracked(p)){box.classList.add('hid');s.innerHTML='';return}
+  box.classList.remove('hid');$('siVL').textContent=t(p.opts.l)||t('siVar');
+  s.innerHTML=p.opts.list.map(x=>`<option value="${esc(x[0])}">${esc(otr(x[0]))} (${t('stock')}: ${typeof x[3]==='number'?x[3]:p.stock})</option>`).join('');
+  if(keep&&p.opts.list.some(x=>x[0]===keep))s.value=keep}
+function siPreview(){const p=siSel(),el=$('siPrev');if(!p){el.innerHTML='';return}
+  const q=Math.max(0,Math.floor(+$('siQ').value||0)),v=varTracked(p)?$('siV').value:'',vx=v&&p.opts.list.find(l=>l[0]===v);
+  const m=minStock(p),after=p.stock+q,diff=after-m,box=(l,v2,c)=>`<div class="rounded-xl border bg-white p-3"><p class="text-[11px] uppercase text-slate-400 font-semibold">${l}</p><p class="text-xl font-extrabold ${c||''}">${v2}</p></div>`;
+  el.innerHTML=`<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">${box(t('siNow'),p.stock)}${box(t('siAfter'),after,'text-orange-600')}${box(t('siMin'),m)}${box(t('siGap'),(diff>0?'+':'')+diff,diff>=0?'text-green-600':'text-red-600')}</div>
+  <p class="mt-2 text-sm font-semibold ${diff>=0?'text-green-700':'text-red-600'}"><i class="fa-solid ${diff>=0?'fa-circle-check':'fa-triangle-exclamation'} mr-1"></i>${diff>=0?t('siOk'):fm(t('siShort'),-diff)}</p>${vx&&typeof vx[3]==='number'?`<p class="text-xs text-slate-500">${esc(otr(v))}: ${vx[3]} → <b>${vx[3]+q}</b></p>`:''}`}
+function siPick(id){$('siP').value=id;siFillVar();siPreview();$('siQ').focus();$('siForm').scrollIntoView({behavior:'smooth',block:'center'})}
+function siSubmit(e){e.preventDefault();if(!session||session.role!=='admin')return;
+  const p=siSel();if(!p)return;const q=Math.floor(+$('siQ').value);
+  if(!(q>=1)||q>100000)return toast(t('siNeedQty'));
+  const v=varTracked(p)?$('siV').value:'',vx=v?p.opts.list.find(l=>l[0]===v):null,before=p.stock;
+  p.stock+=q;if(vx&&typeof vx[3]==='number')vx[3]+=q;
+  const d=$('siD').value||todayStr(),ts=new Date(d+'T12:00:00').getTime()||Date.now(),sup=$('siS').value.trim().slice(0,80),note=$('siN').value.trim().slice(0,160);
+  STK.unshift({id:uid(),pid:p.id,pn:p.name,sku:p.sku,v,q,sup,note,ts,before,after:p.stock,by:session.name});STK.length=Math.min(STK.length,300);
+  if(sup)p.sup=Object.assign({},p.sup||{},{n:sup});
+  checkLow(p);sv('products5',P);sv('stockin',STK);
+  addNotif('fa-truck-ramp-box',{f:'inN',a:[p.id,q,p.stock]});
+  const m=minStock(p);toast(p.stock>=m?fm(t('siToastOk'),pname(p),p.stock,m):fm(t('siToastLow'),pname(p),p.stock,m-p.stock,m));
+  $('siQ').value='';$('siN').value='';renderAll()}
+function siCancel(id){const x=STK.find(a=>a.id===id);if(!x||x.x)return;const p=P.find(z=>z.id===x.pid);
+  if(!p||p.stock<x.q)return toast(t('siCxFail'));
+  const vx=x.v&&p.opts&&p.opts.list.find(l=>l[0]===x.v);if(vx&&typeof vx[3]==='number'&&vx[3]<x.q)return toast(t('siCxFail'));
+  if(!confirm(t('siCxConf')))return;
+  p.stock-=x.q;if(vx&&typeof vx[3]==='number')vx[3]-=x.q;x.x=true;x.xts=Date.now();checkLow(p);sv('products5',P);sv('stockin',STK);renderAll()}
+function renderStockIn(){if(!$('siP'))return;
+  const sel=$('siP'),cur=sel.value,curV=$('siV').value;
+  sel.innerHTML=P.map(p=>`<option value="${p.id}">${esc(p.sku)} · ${esc(pname(p))}</option>`).join('');
+  if(cur&&P.some(x=>String(x.id)===cur))sel.value=cur;
+  siFillVar(curV);if(!$('siD').value)$('siD').value=todayStr();
+  const low=P.filter(p=>p.stock<minStock(p)).length,n=new Date(),ms=new Date(n.getFullYear(),n.getMonth(),1).getTime(),live=STK.filter(x=>!x.x);
+  $('siCLow').textContent=low;$('siCIn').textContent=live.filter(x=>x.ts>=ms).reduce((s,x)=>s+x.q,0);$('siCTx').textContent=live.length;
+  siPreview();
+  $('siTable').innerHTML=P.map(p=>{const m=minStock(p),d=p.stock-m,lw=d<0;
+    return `<tr><td class="p-3 font-semibold text-orange-600">${esc(p.sku)}</td><td class="p-3"><img src="${src(p)}" alt="" class="inline w-9 h-9 object-contain mr-2 bg-white border rounded">${esc(pname(p))}</td><td class="p-3"><b>${p.stock}</b>${varTracked(p)?`<div class="text-[10px] text-slate-400 mt-1">${p.opts.list.map(x=>esc(otr(x[0]))+': '+x[3]).join(' · ')}</div>`:''}</td><td class="p-3">${m}</td><td class="p-3 font-bold ${lw?'text-red-600':'text-green-600'}">${d>0?'+':''}${d}</td><td class="p-3">${bdg(lw?'bg-red-100 text-red-700':'bg-green-100 text-green-700',lw?t('below'):t('stockOk'))}</td><td class="p-3 text-right"><button onclick="siPick(${p.id})" class="text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-plus mr-1"></i>${t('siPick')}</button></td></tr>`}).join('');
+  $('siHist').innerHTML=STK.length?STK.slice(0,100).map(x=>`<tr class="${x.x?'opacity-50':''}"><td class="p-3 whitespace-nowrap">${fmtDay(x.ts)}</td><td class="p-3">${esc(pnx(x.pid,x.pn))}${x.v?` <span class="text-xs text-slate-500">(${esc(otr(x.v))})</span>`:''}</td><td class="p-3 font-bold text-green-600">+${x.q}</td><td class="p-3 whitespace-nowrap">${x.before} → ${x.after}</td><td class="p-3 text-xs">${esc(x.sup||'-')}</td><td class="p-3 text-xs max-w-xs">${esc(x.note||'')}</td><td class="p-3 text-xs">${esc(x.by||'')}</td><td class="p-3">${x.x?`<span class="text-xs text-slate-400">${t('siCx')}</span>`:`<button onclick="siCancel('${x.id}')" class="text-xs text-red-600 underline">${t('siCancel')}</button>`}</td></tr>`).join(''):`<tr><td colspan="8" class="p-6 text-center text-slate-400">${t('siNone')}</td></tr>`}
+
+/* ---------- LAPORAN RUSAK / PENGEMBALIAN: sisi pelanggan ---------- */
+const finTs=o=>{const l=(o.log||[]).slice().reverse().find(x=>x.s==='Selesai');return l&&typeof l.t==='number'?l.t:(typeof o.date==='number'?o.date:Date.now())};
+const retExpired=o=>Date.now()-finTs(o)>RET_DAYS*86400000;
+const retFee=o=>{const b=o.ongkir>0?o.ongkir:RET_BASE_FREE;return Math.round(b*RET_SHIP_PCT/100/500)*500};
+const rOwn=r=>r.own||(orders.find(x=>x.id===r.oid)||{}).owner;
+const rptOpen=(oid,pid)=>RPT.find(r=>r.oid===oid&&r.pid===pid&&(r.st==='new'||r.st==='check'));
+function itemBtns(o,ci,done){const id=esc(o.id),act=rptOpen(o.id,ci.id);
+  const rv=done?`<span class="text-xs text-green-600 font-semibold whitespace-nowrap"><i class="fa-solid fa-check mr-1"></i>${t('rvSent')}</span>`:`<button onclick="openReview('${id}',${ci.id})" class="text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-star mr-1"></i>${t('rvBtn')}</button>`;
+  const rp=act?`<span class="text-xs text-red-600 font-semibold whitespace-nowrap"><i class="fa-solid fa-hourglass-half mr-1"></i>${t('rpBusy')}</span>`:`<button onclick="openReview('${id}',${ci.id},'rpt')" class="text-xs border border-red-400 text-red-600 hover:bg-red-50 font-bold px-2.5 py-1 rounded-lg whitespace-nowrap"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${t('rpBtn')}</button>`;
+  return `<span class="flex gap-1 flex-wrap justify-end">${rv}${rp}</span>`}
+function openReview(oid,pid,mode){const o=orders.find(x=>x.id===oid);if(!o||!ownsO(o)||o.status!=='Selesai')return;if(checkFrozen())return;
+  RVS={oid,pid,s:0,c:'',imgs:[],vfile:null,vname:'',kind:mode==='rpt'?'dmg':'none',only:mode==='rpt',rs:'',agree:false};renderRvModal();openM('m-rv')}
+function renderRvModal(){if(!RVS)return;const p=P.find(x=>x.id===RVS.pid);if(!p)return;const o=orders.find(x=>x.id===RVS.oid)||{},k=RVS.kind,fee=retFee(o);
+  const opt=(v,ic,ti,no,col)=>`<label class="flex items-start gap-2 p-3 border-2 rounded-xl cursor-pointer ${k===v?col:'border-slate-200'}"><input type="radio" name="rvk" ${k===v?'checked':''} onchange="RVS.kind='${v}';renderRvModal()" class="mt-1 w-4 h-4 accent-red-500"><span class="text-sm"><b><i class="fa-solid ${ic} mr-1"></i>${t(ti)}</b><br><span class="text-xs text-slate-500">${t(no)}</span></span></label>`;
+  const stars=RVS.only?'':`<div><p class="lbl">${t('rvRate')}</p><div class="flex gap-1 text-2xl text-yellow-400 mt-1">${[1,2,3,4,5].map(i=>`<button type="button" onclick="RVS.s=${i};renderRvModal()" class="hover:scale-110"><i class="fa-${RVS.s>=i?'solid':'regular'} fa-star"></i></button>`).join('')}</div></div>`;
+  const retBox=k==='ret'?`<div><p class="lbl">${t('rpReason')} *</p><select onchange="RVS.rs=this.value" class="inp"><option value="">${t('rpPick')}</option>${['rsDmg','rsWrong','rsSize','rsOther'].map(x=>`<option value="${x}" ${RVS.rs===x?'selected':''}>${t(x)}</option>`).join('')}</select></div>
+  <div class="rounded-xl bg-orange-50 border border-orange-200 p-3 text-sm"><p class="font-semibold text-orange-700"><i class="fa-solid fa-truck-ramp-box mr-1"></i>${fm(t('rpFeeBox'),RET_SHIP_PCT,Rp(fee))}</p><p class="text-xs text-slate-500 mt-1">${fm(t('rpRetRule'),RET_DAYS)}</p></div>
+  <label class="flex items-start gap-2 text-xs"><input type="checkbox" ${RVS.agree?'checked':''} onchange="RVS.agree=this.checked" class="mt-0.5 w-4 h-4 accent-orange-500"><span>${fm(t('rpAgree'),Rp(fee))}</span></label>`:'';
+  const pl=k==='dmg'?t('rpMediaDmg'):t('rvPhotos'),vl=k==='ret'?t('rpVidRet'):k==='dmg'?t('rpVidDmg'):t('rvVideo');
+  $('rvBody').innerHTML=`<div class="flex items-center gap-3"><img src="${src(p)}" alt="" class="w-14 h-14 object-contain bg-white border rounded-lg"><b>${esc(pname(p))}</b></div>
+  ${stars}
+  <div><p class="lbl">${RVS.only?t('rpDesc'):t('rvText')}</p><textarea rows="3" oninput="RVS.c=this.value" class="inp">${esc(RVS.c)}</textarea></div>
+  <div class="space-y-2"><p class="lbl">${t('rpProblem')}</p>${RVS.only?'':opt('none','fa-star','rpNone','rpNoneN','border-orange-400 bg-orange-50')}${opt('dmg','fa-triangle-exclamation','rpDmgOpt','rpDmgN','border-red-400 bg-red-50')}${opt('ret','fa-rotate-left','rpRetOpt','rpRetN','border-red-400 bg-red-50')}${k!=='none'?`<p class="text-xs text-red-600"><i class="fa-solid fa-circle-info mr-1"></i>${t('rpFalse')}</p>`:''}</div>
+  ${retBox}
+  <div><p class="lbl"><i class="fa-solid fa-camera text-orange-500 mr-1"></i>${pl}</p><input type="file" accept="image/*" multiple onchange="rvPick(this)" class="block mt-1 text-sm"><div class="mt-2 flex gap-2 flex-wrap">${RVS.imgs.map((s,i)=>`<span class="relative"><img src="${s}" alt="" class="w-16 h-16 object-cover rounded-lg border"><button type="button" onclick="RVS.imgs.splice(${i},1);renderRvModal()" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs leading-5">&times;</button></span>`).join('')}</div></div>
+  <div><p class="lbl"><i class="fa-solid fa-video text-orange-500 mr-1"></i>${vl}</p><input type="file" accept="video/*" onchange="rvVid(this)" class="block mt-1 text-sm">${RVS.vname?`<p class="text-xs text-green-600 mt-1"><i class="fa-solid fa-circle-check mr-1"></i>${esc(RVS.vname)} (${t('rvChosen')})</p>`:''}</div>
+  <div class="flex gap-2 pt-1"><button type="button" onclick="closeM('m-rv')" class="px-5 py-3 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50">${t('cancel')}</button><button type="button" onclick="rvSubmit()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl">${t('rvSubmit')}</button></div>`}
+async function rvSubmit(){const R=RVS;if(!R)return;const o=orders.find(x=>x.id===R.oid);if(!o)return;if(checkFrozen())return;
+  const k=R.kind,p=P.find(x=>x.id===R.pid),c=R.c.trim();
+  if(k==='none'&&!R.s)return toast(t('rvNeedRate'));
+  if(k==='dmg'&&!R.imgs.length&&!R.vfile)return toast(t('rpNeedMedia'));
+  if(k==='ret'){if(!R.vfile)return toast(t('rvNeedVid'));if(!R.rs)return toast(t('rpNeedRs'));if(!R.agree)return toast(t('rpNeedAgree'));if(retExpired(o))return toast(fm(t('rpExpired'),RET_DAYS))}
+  if(k!=='none'&&rptOpen(o.id,R.pid))return toast(t('rpDup'));
+  let vid=null;if(R.vfile){vid='v'+Date.now();try{await mPut(vid,R.vfile)}catch(e){vid=null;toast(t('rvVidFail'))}}
+  if(R.s){(RV[R.pid]=RV[R.pid]||[]).unshift({u:o.name,s:R.s,c:c.slice(0,200),imgs:R.imgs,vid,oid:o.id,ts:Date.now()});sv('reviews',RV);(o.rvd=o.rvd||[]).push(R.pid);sv('orders',orders)}
+  if(k!=='none'){
+    const own=o.owner||feedKey(),ci=(o.its||[]).find(x=>x.id===R.pid)||{q:1,v:''},amt=p?unit(p,ci.v).price*ci.q:0,now=Date.now();
+    RPT.unshift({id:uid(),k,oid:o.id,pid:R.pid,pn:p?p.name:'',u:o.name,wa:o.wa,own,c:c.slice(0,300),rs:R.rs,imgs:R.imgs.slice(),vid,ts:now,st:'new',amt,q:ci.q,fee:k==='ret'?retFee(o):0,log:[{s:'new',ts:now}]});
+    sv('reports',RPT);notifyAdmin('fa-triangle-exclamation',{f:k==='ret'?'retN':'dmgN',a:[o.id,R.pid]},{who:{r:'user',n:o.name}});
+    notifyUser(own,'fa-paper-plane',{f:'rptUp',a:[k,R.pid,'new','','']},{rd:true});
+    addNotif('fa-triangle-exclamation',{f:'rpSent',a:[k,R.pid]})}
+  else addNotif('fa-star',{f:'rvN',a:[R.pid,R.s]});
+  toast(t(k==='none'?'rvOk':'rpOk'));RVS=null;closeM('m-rv');renderAll()}
+const RST_C={new:'bg-red-100 text-red-700',check:'bg-blue-100 text-blue-700',ok:'bg-green-100 text-green-700',no:'bg-slate-200 text-slate-700',done:'bg-green-100 text-green-700'};
+function rptCard(r){const log=r.log||[{s:r.st,ts:r.ts}],nm=esc(pnx(r.pid,r.pn)),own=rOwn(r),o=orders.find(x=>x.id===r.oid)||{};
+  return `<div class="bg-white border rounded-2xl shadow-sm p-4 text-sm space-y-2"><div class="flex flex-wrap justify-between gap-2"><div><b>${nm}</b> <span class="text-xs text-slate-400 ml-1">${esc(r.oid)} · ${esc(fmtD(r.ts))}</span></div><div class="flex gap-1 flex-wrap">${bdg('bg-orange-100 text-orange-700',t(r.k==='ret'?'kRet':'kDmg'))}${bdg(RST_C[r.st]||RST_C.new,t('rst_'+r.st))}</div></div>
+  <div class="text-xs text-slate-500 space-y-0.5">${log.map(l=>`<p><b class="text-slate-700">${t('rst_'+l.s)}</b> · ${esc(fmtT(l.ts))}${l.n?` · <i>${esc(l.n)}</i>`:''}</p>`).join('')}</div>
+  ${r.k==='ret'&&(r.st==='new'||r.st==='check')?`<div class="rounded-lg bg-orange-50 p-2 text-xs"><i class="fa-solid fa-truck-ramp-box text-orange-500 mr-1"></i>${fm(t('rptN_check_ret'),'',nm,Rp(r.fee||retFee(o)))} ${t('shopAddrS')}</div>`:''}
+  ${r.vc?`<div class="rounded-lg bg-green-50 border border-green-200 p-2 text-xs"><i class="fa-solid fa-ticket text-green-600 mr-1"></i>${t('vcMine')}: <b class="text-green-700 tracking-wide">${esc(r.vc)}</b> (${Rp(r.vamt||0)} · ${r.pct}%) <button onclick="copyNo('${esc(r.vc)}')" class="ml-1 underline text-slate-500">${t('payCopy')}</button></div>`:''}
+  ${r.st==='ok'&&r.novc?`<p class="text-xs text-green-700">${fm(t('rptN_ok_nv'),t(r.k==='ret'?'kRet':'kDmg'),nm)}</p>`:''}
+  ${r.wn&&userExists(own)?`<p class="text-xs text-red-600 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${fm(t('warnN'),warnCnt(own),WARN_COD)}</p>`:''}</div>`}
+function renderMyRpt(){const el=$('myRpt');if(!el)return;const adm=session&&session.role==='admin';
+  const L=adm?[]:RPT.filter(r=>ownsO({owner:rOwn(r)}));
+  const cod=!adm&&codOff()?`<div class="rounded-xl border border-red-300 bg-red-50 text-red-700 text-sm px-4 py-3"><i class="fa-solid fa-ban mr-1"></i>${t('codOffNote')}</div>`:'';
+  el.innerHTML=cod+(L.length?`<h3 class="font-bold"><i class="fa-solid fa-clipboard-check text-orange-500 mr-2"></i>${t('myRpt')}</h3>`+L.map(rptCard).join(''):'')}
+
+/* ---------- LAPORAN: sisi admin ---------- */
+const rptById=id=>RPT.find(r=>r.id===id);
+const rptNoteVal=id=>{const e=$('rn-'+id);return e?e.value.trim().slice(0,160):''};
+function rptLog(r,s,n){(r.log=r.log||[]).push({s,ts:Date.now(),n:n||''})}
+function rptTell(r,s,x,n){notifyUser(rOwn(r),s==='ok'?'fa-circle-check':s==='no'?'fa-circle-xmark':'fa-magnifying-glass',{f:'rptUp',a:[r.k,r.pid,s,x||'',n||'']});addNotif('fa-clipboard-check',{f:'aRptSt',a:[r.k,r.pid,s]})}
+function admOnly(){return session&&session.role==='admin'}
+function rptCheck(id){const r=rptById(id);if(!admOnly()||!r||r.st!=='new')return;const n=rptNoteVal(id);r.st='check';rptLog(r,'check',n);sv('reports',RPT);rptTell(r,'check',r.k==='ret'?Rp(r.fee||0):'',n);renderRpt()}
+function rptProve(id){const r=rptById(id);if(!admOnly()||!r||!['new','check'].includes(r.st))return;
+  const n=rptNoteVal(id),pe=$('rp-'+id),pct=Math.min(VC_RPT_MAX,Math.max(1,Math.floor(+(pe&&pe.value)||VC_RPT_MAX)));
+  const me=users.find(x=>mk(x.u)===mk(rOwn(r)));let x='';
+  r.st='ok';r.pct=pct;
+  if(me){const amt=Math.floor((r.amt||0)*pct/100/100)*100;if(amt>0){const code=genVc();(me.vs=me.vs||[]).push({code,used:false,why:'rpt',amt,pct,rid:r.id});r.vc=code;r.vamt=amt;x=code+'|'+Rp(amt)+'|'+pct;sv('users',users)}else r.novc=true}else r.novc=true;
+  rptLog(r,'ok',n);sv('reports',RPT);rptTell(r,'ok',x,n);renderRpt()}
+function rptReject(id){const r=rptById(id);if(!admOnly()||!r||!['new','check'].includes(r.st))return;const n=rptNoteVal(id);r.st='no';rptLog(r,'no',n);sv('reports',RPT);rptTell(r,'no','',n);renderRpt()}
+function rptWarn(id){const r=rptById(id),own=r&&rOwn(r);if(!admOnly()||!r||r.st!=='no'||r.wn||!userExists(own))return;const n=rptNoteVal(id),m=modOf(own),c=(m.w||0)+1;
+  setMod(own,{w:c,wl:(m.wl||[]).concat([{ts:Date.now(),rid:r.id}])});r.wn=true;sv('reports',RPT);
+  notifyUser(own,'fa-triangle-exclamation',{f:'warnN',a:[c,WARN_COD,n]});if(c>=WARN_COD)notifyUser(own,'fa-ban',{f:'codOffN',a:[]});
+  addNotif('fa-triangle-exclamation',{f:'aWarn',a:[own,c]});renderRpt();renderCust()}
+function rptFreeze(id){const r=rptById(id),own=r&&rOwn(r);if(!admOnly()||!r||!userExists(own))return;if(warnCnt(own)<1)return toast(t('rptFreezeNeed'));if(!confirm(t('rptFrzConf')))return;
+  setMod(own,{fz:true,fzTs:Date.now()});notifyUser(own,'fa-ban',{f:'frzN',a:[]});addNotif('fa-ban',{f:'aFrz',a:[own]});renderRpt();renderCust()}
+function unfreezeAcc(q){if(!admOnly())return;const n=decodeURIComponent(q);setMod(n,{fz:false});notifyUser(n,'fa-lock-open',{f:'unfrzN',a:[]});addNotif('fa-lock-open',{f:'aUnfrz',a:[n]});renderRpt();renderCust()}
+function resetWarn(q){if(!admOnly())return;const n=decodeURIComponent(q);setMod(n,{w:0,wl:[]});renderRpt();renderCust()}
+function modBadges(name){const m=modOf(name);let h='';
+  if(m.w)h+=` <span class="px-1.5 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-[10px] font-bold">${m.w} ${t('warnL')}</span>`;
+  if(m.fz)h+=` <span class="px-1.5 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold">${t('frozenL')}</span>`;
+  if(codOffFor(name))h+=` <span class="px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">${t('codOffL')}</span>`;
+  if(m.fz)h+=`<div><button onclick="unfreezeAcc('${qa(name)}')" class="text-[11px] text-blue-600 underline font-normal">${t('unfreeze')}</button></div>`;
+  if(m.w)h+=`<div><button onclick="resetWarn('${qa(name)}')" class="text-[11px] text-slate-500 underline font-normal">${t('resetWarn')}</button></div>`;
+  return h}
+function renderRpt(){const el=$('rTable');if(!el)return;
+  el.innerHTML=RPT.length?RPT.map(r=>{
+    const own=rOwn(r),acct=userExists(own),w=acct?warnCnt(own):0,fz=acct&&isFrozen(own),open=r.st==='new'||r.st==='check',nm=pnx(r.pid,r.pn);
+    const st=bdg(RST_C[r.st]||RST_C.new,t('rst_'+r.st)),last=(r.log||[]).slice(-1)[0];
+    let act='';
+    if(open)act=`<input id="rn-${r.id}" placeholder="${esc(t('rptNote'))}" class="mt-2 w-full px-2 py-1 border rounded text-xs"><div class="mt-2 flex flex-wrap items-center gap-1">${r.st==='new'?`<button onclick="rptCheck('${r.id}')" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold px-2 py-1 rounded">${t('rptCheck')}</button>`:''}<select id="rp-${r.id}" class="text-xs border rounded px-1 py-1" title="${esc(t('rptPct'))}">${[60,50,40,30,20,10].map(v=>`<option value="${v}">${v}%</option>`).join('')}</select><button onclick="rptProve('${r.id}')" class="text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2 py-1 rounded">${t('rptProve')}</button><button onclick="rptReject('${r.id}')" class="text-xs bg-slate-600 hover:bg-slate-700 text-white font-bold px-2 py-1 rounded">${t('rptReject')}</button></div>`;
+    else if(r.st==='ok')act=r.vc?`<p class="text-xs text-green-700 mt-1"><i class="fa-solid fa-ticket mr-1"></i>${fm(t('rptVcGiven'),esc(r.vc),Rp(r.vamt||0)+' · '+r.pct+'%')}</p>`:`<p class="text-xs text-orange-600 mt-1">${t('rptVcGuest')}</p>`;
+    else if(r.st==='no'){
+      if(!acct)act=`<p class="text-xs text-slate-500 mt-1">${t('rptGuest')}</p>`;
+      else act=`<div class="mt-2 flex flex-wrap items-center gap-1">${r.wn?bdg('bg-yellow-100 text-yellow-700',t('rptWarned')):`<button onclick="rptWarn('${r.id}')" class="text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-2 py-1 rounded"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${t('rptWarnBtn')}</button>`}${fz?bdg('bg-red-100 text-red-700',t('frozenL'))+` <button onclick="unfreezeAcc('${qa(own)}')" class="text-xs text-blue-600 underline">${t('unfreeze')}</button>`:`<button onclick="rptFreeze('${r.id}')" ${w<1?'disabled title="'+esc(t('rptFreezeNeed'))+'"':''} class="text-xs bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1 rounded disabled:opacity-40 disabled:cursor-not-allowed"><i class="fa-solid fa-snowflake mr-1"></i>${t('rptFreezeBtn')}</button>`}</div>`}
+    return `<tr><td class="p-3">${fmtD(r.ts)}</td><td class="p-3 font-semibold text-orange-600">${esc(r.oid)}</td><td class="p-3">${esc(nm)}</td><td class="p-3">${esc(r.u)}${acct?modBadges(own)||'':''}</td><td class="p-3 text-xs max-w-xs">${bdg('bg-orange-100 text-orange-700',t(r.k==='ret'?'kRet':'kDmg'))}${r.rs?` <b>${t(r.rs)}</b>`:''}<div class="mt-1">${esc(r.c||'')}</div>${r.amt?`<div class="text-slate-500 mt-1">${t('rptAmt')}: ${Rp(r.amt)}${r.k==='ret'?` · ${t('rptFee')}: ${Rp(r.fee||0)}`:''}</div>`:''}<div class="mt-1">${mediaThumbs(r)}</div></td><td class="p-3 min-w-[14rem]">${st}${last&&last.n?`<div class="text-xs text-slate-500 mt-1"><i>${esc(last.n)}</i></div>`:''}${act}</td></tr>`}).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('rptNone')}</td></tr>`}
+
+Object.assign(NMF,{
+  inN:(id,q,s)=>fm(t('inN'),pn(id),q,s),
+  retN:(oid,pid)=>fm(t('retN'),oid,pn(pid)),
+  rpSent:(k,pid)=>fm(t('rpSentN'),t(k==='ret'?'kRet':'kDmg'),pn(pid)),
+  rptUp:(k,pid,s,x,note)=>{const a=String(x||'').split('|'),key='rptN_'+s+(s==='check'&&k==='ret'?'_ret':'')+(s==='ok'&&!x?'_nv':'');
+    return fm(t(key),t(k==='ret'?'kRet':'kDmg'),pn(pid),a[0]||'',a[1]||'',a[2]||'')+(note?' '+t('rptNoteL')+': '+note:'')},
+  warnN:(n,mx,note)=>fm(t('warnN'),n,mx)+(note?' '+t('rptNoteL')+': '+note:''),
+  codOffN:()=>t('codOffN'),frzN:()=>t('frzN'),unfrzN:()=>t('unfrzN'),
+  aWarn:(u,n)=>fm(t('aWarnN'),u,n),aFrz:u=>fm(t('aFrzN'),u),aUnfrz:u=>fm(t('aUnfrzN'),u),
+  aRptSt:(k,pid,s)=>fm(t('aRptStN'),t(k==='ret'?'kRet':'kDmg'),pn(pid),t('rst_'+s))
+});
 
 /* ============ INIT ============ */
 window.onload=()=>{
