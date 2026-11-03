@@ -727,8 +727,8 @@ function syncDirty(k){if(!SYNC_URL||SYNC_KEYS.indexOf(k)<0)return;syncDirtyKeys.
 async function syncNow(){
   if(!SYNC_URL||syncBusy)return;syncBusy=true;
   try{
-    let changed=false;const meta={};((await kvq('?select=key,t'))||[]).forEach(r=>meta[r.key]=Number(r.t));
-    for(const k of SYNC_KEYS){
+    let changed=false,serr='';const meta={};((await kvq('?select=key,t'))||[]).forEach(r=>meta[r.key]=Number(r.t));
+    for(const k of SYNC_KEYS){try{
       const rt=meta[k]||0,known=syncMeta[k],has=localStorage.getItem('gs_'+k)!==null,dirty=syncDirtyKeys.has(k);
       if((dirty&&(known||!rt))||(!rt&&!known&&has)){
         let v=ld(k,null);if(v===null){syncDirtyKeys.delete(k);continue}
@@ -746,11 +746,12 @@ async function syncNow(){
           syncMeta[k]=rt;
         }
       }
+    }catch(e2){serr=serr||(k+': '+(e2&&e2.message||e2))}
     }
     localStorage.setItem('gs_syncMeta',JSON.stringify(syncMeta));localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]));
-    setNet(true);
+    if(serr)setNet(false,serr);else setNet(true);
     if(changed)onStorage({key:'gs_sync'});
-    if(syncDirtyKeys.size){clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
+    if(syncDirtyKeys.size&&!serr){clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
   }catch(e){setNet(false,e&&e.message)}
   syncBusy=false;
 }
