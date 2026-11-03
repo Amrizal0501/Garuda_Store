@@ -147,7 +147,7 @@ img,canvas,video{max-width:100%}
       </div>
     </div>
     <!-- Baris 2: navbar utama (halaman utama sampai sosmed) -->
-    <div class="gs-nav flex flex-wrap items-center gap-x-5 gap-y-1 py-2 text-sm">
+    <div class="gs-nav flex flex-wrap items-center justify-center gap-x-5 gap-y-1 py-2 text-sm">
       <button onclick="show('home')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-house mr-1"></i><span data-i="home"></span></button>
       <button onclick="show('katalog')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-box-open mr-1"></i><span data-i="catalog"></span></button>
       <button onclick="show('about')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-store mr-1"></i><span data-i="about"></span></button>
@@ -336,7 +336,7 @@ img,canvas,video{max-width:100%}
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pcat"></label><select id="nc" class="w-full mt-1 px-3 py-2 border rounded-lg"><option value="Jersey" data-i="cJersey"></option><option value="Sepatu" data-i="cSepatu"></option><option value="Aksesoris" data-i="cAksesoris"></option><option value="Alat" data-i="cAlat"></option></select></div>
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="price"></label><input id="nh" type="number" min="0" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="stock"></label><input id="ns" type="number" min="0" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
-    <div class="sm:col-span-5"><label class="text-xs font-semibold text-slate-500 uppercase" data-i="photo"></label><input id="nf" type="file" accept="image/*" class="block mt-1 text-sm"></div><button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"><i class="fa-solid fa-plus mr-1"></i><span data-i="addProduct"></span></button>
+    <div class="sm:col-span-5"><label class="text-xs font-semibold text-slate-500 uppercase" data-i="photo"></label><input id="nf" type="file" accept="image/*" multiple onchange="picAdd('n',this)" class="block mt-1 text-sm"><div id="nGal" class="flex gap-2 flex-wrap mt-2"></div><p class="text-[11px] text-slate-400 mt-1" data-i="photoHint"></p><p class="text-[11px] font-semibold text-orange-600 mt-1"><i class="fa-solid fa-barcode mr-1"></i><span id="nSkuHint"></span></p></div><button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"><i class="fa-solid fa-plus mr-1"></i><span data-i="addProduct"></span></button>
   </form>
   <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3">SKU</th><th class="p-3" data-i="pname"></th><th class="p-3" data-i="price"></th><th class="p-3" data-i="stock"></th><th class="p-3" data-i="minStock"></th><th class="p-3" data-i="status"></th><th class="p-3"></th></tr></thead><tbody id="aTable" class="divide-y"></tbody></table></div>
   <div class="bg-white rounded-2xl border shadow-sm overflow-x-auto"><div class="p-4 font-bold border-b" data-i="orders"></div><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-xs uppercase text-slate-400"><tr><th class="p-3">ID</th><th class="p-3" data-i="date"></th><th class="p-3" data-i="name"></th><th class="p-3" data-i="total"></th><th class="p-3" data-i="payment"></th><th class="p-3" data-i="status"></th></tr></thead><tbody id="oTable" class="divide-y"></tbody></table></div>
@@ -382,10 +382,18 @@ img,canvas,video{max-width:100%}
 
 <!-- ============ MODAL: DETAIL PRODUK ============ -->
 <div id="m-prod" class="hid fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden relative">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto relative">
     <button onclick="closeM('m-prod')" class="absolute top-3 right-4 text-2xl text-slate-400 hover:text-slate-700 z-10">&times;</button>
     <div class="grid md:grid-cols-2">
-      <div class="flex items-center justify-center min-h-[18rem] bg-white p-4 border-r"><img id="pImgTag" alt="" class="max-h-80 w-full object-contain"></div>
+      <div class="flex flex-col items-center justify-center bg-white p-4 border-r">
+        <div id="pGal" class="relative w-full flex items-center justify-center min-h-[18rem] select-none">
+          <img id="pImgTag" alt="" class="max-h-80 w-full object-contain">
+          <button type="button" id="pPrev" onclick="gStep(-1)" class="hid absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/45 hover:bg-black/65 text-white items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button>
+          <button type="button" id="pNext" onclick="gStep(1)" class="hid absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/45 hover:bg-black/65 text-white items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button>
+          <span id="pCnt" class="hid absolute bottom-1 right-2 text-[11px] bg-black/55 text-white rounded-full px-2 py-0.5"></span>
+        </div>
+        <div id="pThumbs" class="flex gap-2 mt-3 w-full overflow-x-auto justify-center pb-1"></div>
+      </div>
       <div class="p-6 space-y-3">
         <span id="pCat" class="text-xs bg-orange-100 text-orange-700 font-semibold px-2.5 py-1 rounded-full"></span>
         <h3 id="pName" class="text-2xl font-bold"></h3>
@@ -511,9 +519,9 @@ img,canvas,video{max-width:100%}
     <div class="hd text-white px-6 py-4 flex justify-between rounded-t-2xl"><h3 class="font-bold text-lg"><i class="fa-solid fa-pen-to-square mr-2"></i><span data-i="editTitle"></span></h3><button onclick="closeM('m-edit')" class="text-2xl">&times;</button></div>
     <form onsubmit="saveEdit(event)" class="p-6 space-y-3">
       <input type="hidden" id="eid">
-      <div class="flex gap-4 items-center"><img id="ePrev" alt="" class="w-24 h-24 object-contain border rounded-lg bg-white"><div class="flex-1"><label class="lbl" data-i="photo"></label><input id="ef" type="file" accept="image/*" class="block mt-1 text-sm"></div></div>
+      <div><label class="lbl" data-i="photo"></label><div id="eGal" class="flex gap-2 flex-wrap mt-1"></div><input id="ef" type="file" accept="image/*" multiple onchange="picAdd('e',this)" class="block mt-2 text-sm"><p class="text-[11px] text-slate-400 mt-1" data-i="photoHint"></p></div>
       <div class="grid sm:grid-cols-2 gap-3">
-        <div><label class="lbl">SKU</label><input id="esku" required class="inp"></div>
+        <div><label class="lbl">SKU</label><input id="esku" required oninput="this.dataset.auto='0'" class="inp"></div>
         <div><label class="lbl" data-i="pname"></label><input id="ename" required class="inp"></div>
         <div><label class="lbl" data-i="pcat"></label><select id="ecat" class="inp"><option value="Jersey" data-i="cJersey"></option><option value="Sepatu" data-i="cSepatu"></option><option value="Aksesoris" data-i="cAksesoris"></option><option value="Alat" data-i="cAlat"></option></select></div>
         <div><label class="lbl" data-i="stock"></label><input id="estock" type="number" min="0" required class="inp"></div>
@@ -811,6 +819,11 @@ const PTR={
 'BTL-OLG':{en:["Water Bottle","BPA-free sports water bottle with a leak-proof lid. Available in 250 ml, 500 ml and 750 ml."],zh:["运动水壶","不含 BPA 的运动水壶，盖子密封防漏。提供 250 毫升、500 毫升和 750 毫升。"]},
 'TAS-OLG':{en:["Sports Bag","Large-capacity red sports bag with a separate shoe compartment. Available in sizes S, M and L."],zh:["运动包","红色大容量运动包，带独立鞋袋。提供 S、M、L 尺码。"]}
 };
+/* ===== SKU: awalan sesuai kategori (JER / SEP / ALT / AKS) ===== */
+const SKU_OLD={'JER-TR':'JER-001','JER-AWY':'JER-002','SEP-SPB':'SEP-001','PBN-SKR':'ALT-001','BLA-KK':'ALT-002','GWG-PRT':'ALT-003','CON-AGL':'ALT-004','PBN-STR':'ALT-005','GLV-KPR':'AKS-001','SHN-GRD':'AKS-002','PMP-PRT':'AKS-003','BTL-OLG':'AKS-004','TAS-OLG':'AKS-005'};
+const SKU_BACK={};Object.keys(SKU_OLD).forEach(k=>SKU_BACK[SKU_OLD[k]]=k);
+Object.keys(SKU_OLD).forEach(k=>{if(PTR[k]){PTR[SKU_OLD[k]]=PTR[k];delete PTR[k]}});
+DEF.forEach(p=>{if(SKU_OLD[p.sku])p.sku=SKU_OLD[p.sku]});
 const DEFN={};DEF.forEach(p=>DEFN[p.sku]=[p.name,p.d]);
 const OTR={'Bola Sepak (Size 5)':{en:'Football (Size 5)',zh:'足球（5号）'},'Bola Futsal (Size 4)':{en:'Futsal Ball (Size 4)',zh:'五人制足球（4号）'}};
 const otr=v=>(lang!=='id'&&OTR[v]&&OTR[v][lang])||v;
@@ -828,7 +841,33 @@ const BIG_CATS=['Jersey','Sepatu','Alat'],FAST_SOLD=20,ACC_MIN=10;
 function minStock(p){return(typeof p.min==='number'&&p.min>=0)?p.min:((BIG_CATS.includes(p.cat)&&p.sold>=FAST_SOLD)?25:8)}
 const SUPD={Jersey:'Pabrik Konveksi Jersey',Sepatu:'Distributor Sepatu Olahraga',Aksesoris:'Distributor Aksesoris Olahraga',Alat:'Distributor Alat Olahraga'};
 
-let P=ld('products5',DEF), cart=ld('cart',[]), orders=ld('orders',[]), notifs=ld('notifs',[]), users=ld('users',[]);
+const CAT_CODE={Jersey:'JER',Sepatu:'SEP',Alat:'ALT',Aksesoris:'AKS'};
+/* Awalan SKU: kategori bawaan -> kode tetap. Kategori lain -> pakai awalan yang sudah dipakai produk di kategori itu,
+   jika belum ada barulah dibuat awalan baru (3 huruf dari nama kategori, dijamin tidak bentrok). */
+function skuPrefix(cat,persist){
+  if(CAT_CODE[cat])return CAT_CODE[cat];
+  let S={};try{S=SITE||{}}catch(e){}
+  const codes=S.codes||{};if(codes[cat])return codes[cat];
+  const pre=x=>(/^([A-Z0-9]{2,5})-/.exec(x||'')||[])[1];
+  const cnt={};P.filter(p=>p.cat===cat).forEach(p=>{const k=pre(p.sku);if(k&&!/^NEW$/.test(k))cnt[k]=(cnt[k]||0)+1});
+  const ex=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];if(ex)return ex;
+  const used=new Set([...Object.values(CAT_CODE),...Object.values(codes),...P.map(p=>pre(p.sku)).filter(Boolean)]);
+  let L=String(cat).normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase();if(L.length<3)L=(L+'KAT').slice(0,3);
+  const cands=[L.slice(0,3)];for(let i=3;i<L.length;i++)cands.push(L.slice(0,2)+L[i]);for(let d=1;d<100;d++)cands.push(L.slice(0,2)+d);
+  const c=cands.find(x=>!used.has(x))||('K'+(Date.now()%1000));
+  if(persist){try{SITE.codes=Object.assign({},SITE.codes||{},{[cat]:c});siteSave()}catch(e){}}
+  return c}
+function nextSku(cat,persist,exId){
+  const pf=skuPrefix(cat,persist),re=new RegExp('^'+pf+'-(\\d+)$');let n=0;
+  P.forEach(p=>{if(p.id===exId)return;const m=re.exec(p.sku||'');if(m)n=Math.max(n,+m[1])});
+  let sku;do{n++;sku=pf+'-'+String(n).padStart(3,'0')}while(P.some(p=>p.id!==exId&&p.sku===sku));
+  return sku}
+function migSku(list){
+  if(!Array.isArray(list))return list;
+  list.forEach(p=>{if(p&&SKU_OLD[p.sku]&&!list.some(x=>x!==p&&x.sku===SKU_OLD[p.sku]))p.sku=SKU_OLD[p.sku]});
+  list.forEach(p=>{if(p&&/^NEW-\d+$/.test(p.sku||'')){try{p.sku=nextSku(p.cat,false,p.id)}catch(e){}}});
+  return list}
+let P=ld('products5',DEF), cart=ld('cart',[]), orders=ld('orders',[]), notifs=ld('notifs',[]), users=ld('users',[]);P=migSku(P);
 users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});
 let session=ld('session',null); // {role:'admin'|'user'|'guest', name}
 /* Web selalu dibuka sebagai Tamu. Admin hanya aktif setelah login di tab/jendela ini (hilang saat ditutup). */
@@ -852,7 +891,7 @@ function eye(id,btn){const i=$(id);const s=i.type==='password';i.type=s?'text':'
 /* ============ RATING & ULASAN ============ */
 let RV=ld('reviews',{});SITE=(RV&&RV._site)||{};
 const stars=a=>[1,2,3,4,5].map(i=>`<i class="fa-${a>=i-.25?'solid fa-star':a>=i-.75?'solid fa-star-half-stroke':'regular fa-star'}"></i>`).join('');
-function rate(p){let h=0;for(const c of p.sku)h=(h*31+c.charCodeAt(0))>>>0;const bn=Math.max(3,Math.round(p.sold*.6)+2),ba=4.3+(h%7)/10,l=(RV[p.id]||[]).filter(x=>x.s>0),n=bn+l.length;return{avg:(ba*bn+l.reduce((s,x)=>s+x.s,0))/n,n,l}}
+function rate(p){let h=0;for(const c of (SKU_BACK[p.sku]||p.sku))h=(h*31+c.charCodeAt(0))>>>0;const bn=Math.max(3,Math.round(p.sold*.6)+2),ba=4.3+(h%7)/10,l=(RV[p.id]||[]).filter(x=>x.s>0),n=bn+l.length;return{avg:(ba*bn+l.reduce((s,x)=>s+x.s,0))/n,n,l}}
 const rateHTML=p=>{const r=rate(p);return `<div class="text-yellow-400 text-xs mt-1">${stars(r.avg)} <span class="text-slate-500">${r.avg.toFixed(1)} (${r.n})</span></div>`};
 function mediaThumbs(x){return (x.imgs||[]).map(s=>`<img src="${s}" alt="" class="inline w-12 h-12 object-cover rounded border mr-1 cursor-zoom-in" onclick="zoomImg(this.src)">`).join('')+(x.vid?`<button type="button" onclick="viewVid('${x.vid}')" class="text-orange-600 underline text-xs"><i class="fa-solid fa-video mr-1"></i>${t('unboxing')}</button>`:'')}
 function renderRate(){const r=rate(cur);$('pStars').innerHTML=stars(r.avg);$('pSold').textContent=`${r.avg.toFixed(1)} (${r.n} ${t('reviews')}) \u00b7 ${cur.sold} ${t('sold')}`;
@@ -996,10 +1035,41 @@ function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='adm
 /* popup detail produk */
 function openProd(id){
   cur=P.find(p=>p.id===id);if(!cur)return;
-  openProdRefresh();openM('m-prod');addNotif('fa-eye',{f:'viewed',a:[cur.id]});
+  gIdx=0;openProdRefresh();openM('m-prod');addNotif('fa-eye',{f:'viewed',a:[cur.id]});
 }
+let gIdx=0;
+const pics=p=>[p.img,...(p.imgs||[])].filter(Boolean);
+function renderGallery(){
+  const L=pics(cur);if(gIdx>=L.length||gIdx<0)gIdx=0;
+  $('pImgTag').src=src({img:L[gIdx]});
+  $('pThumbs').innerHTML=L.length>1?L.map((x,i)=>`<button type="button" onclick="gGo(${i})" class="shrink-0 w-14 h-14 rounded-lg border-2 ${i===gIdx?'border-orange-500':'border-slate-200'} bg-white overflow-hidden"><img src="${src({img:x})}" alt="" class="w-full h-full object-contain"></button>`).join(''):'';
+  ['pPrev','pNext'].forEach(id=>{$(id).classList.toggle('hid',L.length<2);$(id).classList.toggle('flex',L.length>=2)});
+  $('pCnt').classList.toggle('hid',L.length<2);$('pCnt').textContent=(gIdx+1)+' / '+L.length}
+function gGo(i){gIdx=i;renderGallery()}
+function gStep(d){const n=pics(cur).length;if(n<2)return;gIdx=(gIdx+d+n)%n;renderGallery()}
+(function(){let x0=null;const g=$('pGal');
+  g.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+  g.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40)gStep(dx<0?1:-1)});
+  document.addEventListener('keydown',e=>{if($('m-prod').classList.contains('hid'))return;if(e.key==='ArrowLeft')gStep(-1);else if(e.key==='ArrowRight')gStep(1)})})();
+/* ===== Upload banyak foto produk (form tambah 'n' & edit 'e') ===== */
+const PIC={n:[],e:[]},MAXPIC=6;
+function renderPics(k){
+  const box=$(k==='n'?'nGal':'eGal');if(!box)return;
+  box.innerHTML=PIC[k].map((x,i)=>`<div class="relative w-20 h-20 border-2 ${i===0?'border-orange-500':'border-slate-200'} rounded-lg bg-white"><img src="${src({img:x})}" alt="" class="w-full h-full object-contain rounded-lg">${i===0?`<span class="absolute -top-2 left-1 text-[10px] bg-orange-500 text-white rounded-full px-1.5 font-bold">${t('photoMain')}</span>`:`<button type="button" onclick="picMain('${k}',${i})" title="${t('photoMain')}" class="absolute -bottom-2 left-1 w-5 h-5 rounded-full bg-yellow-400 text-slate-900 text-[10px]"><i class="fa-solid fa-star"></i></button>`}<button type="button" onclick="picDel('${k}',${i})" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs leading-none">&times;</button></div>`).join('')}
+async function picAdd(k,inp){
+  for(const f of [...inp.files]){if(PIC[k].length>=MAXPIC){toast(t('photoMax'));break}try{PIC[k].push(await readImg(f,640))}catch(e){}}
+  inp.value='';renderPics(k)}
+function picDel(k,i){PIC[k].splice(i,1);renderPics(k)}
+function picMain(k,i){const x=PIC[k].splice(i,1)[0];PIC[k].unshift(x);renderPics(k)}
+function updSkuHint(id){
+  if(id==='ecat'){const p=P.find(x=>x.id===+$('eid').value),sk=$('esku'),ec=$('ecat');if(!p||!sk||!ec)return;
+    if(ec.value===p.cat)sk.value=p.sku;else if(sk.dataset.auto!=='0')sk.value=nextSku(ec.value,false,p.id)}
+  else{const h=$('nSkuHint'),c=$('nc');if(h&&c&&c.value!=='__new')h.textContent=t('skuAuto')+': '+nextSku(c.value,false)}}
+Object.assign(I.id,{"photoHint":"Foto pertama = foto utama. Bisa lebih dari 1 (maks. 6) untuk sudut/pov lain. Klik ★ untuk jadikan utama, × untuk hapus.","photoMain":"Utama","photoMax":"Maksimal 6 foto per produk","skuAuto":"SKU otomatis"});
+Object.assign(I.en,{"photoHint":"First photo = main photo. You can add more than one (max 6) for other angles. Click ★ to set as main, × to remove.","photoMain":"Main","photoMax":"Maximum 6 photos per product","skuAuto":"Auto SKU"});
+Object.assign(I.zh,{"photoHint":"第一张为主图。可添加多张（最多6张）展示不同角度。点击 ★ 设为主图，× 删除。","photoMain":"主图","photoMax":"每个商品最多6张照片","skuAuto":"自动 SKU"});
 function openProdRefresh(){
-  $('pImgTag').src=src(cur);
+  renderGallery();
   $('pCat').textContent=catName(cur.cat);$('pName').textContent=pname(cur);
   $('pPrice').textContent=Rp(cur.price);$('pOld').textContent=cur.old?Rp(cur.old):'';
   $('pDesc').textContent=pdesc(cur);renderRate();
@@ -1088,7 +1158,7 @@ const VC_MAX=20000,INS_FEE=2500,XXL_FEE=10000;
 const ADM={'QRIS':0,'Transfer Bank':1500,'E-Wallet':1500,'COD':2000};
 const admFee=m=>ADM[m]||0;
 let CO={ship:null,pay:null,ins:false,vc:null,vcErr:'',agree:false};
-const WSKU={'GWG-PRT':6,'PBN-SKR':2,'CON-AGL':1.5,'TAS-OLG':.8,'PBN-STR':.8,'GLV-KPR':.3,'SHN-GRD':.3,'BLA-KK':.5,'PMP-PRT':.3,'BTL-OLG':.5};
+const WSKU={'ALT-003':6,'ALT-001':2,'ALT-004':1.5,'AKS-005':.8,'ALT-005':.8,'AKS-001':.3,'AKS-002':.3,'ALT-002':.5,'AKS-003':.3,'AKS-004':.5};
 const WCAT={Jersey:.3,Sepatu:1.2,Aksesoris:.5,Alat:1};
 const wOf=p=>WSKU[p.sku]||WCAT[p.cat]||.5;
 const isOpen=id=>!$(id).classList.contains('hid');
@@ -1564,24 +1634,24 @@ function closeMedia(){closeM('m-media');$('mediaBox').innerHTML=''}
 
 /* ============ PRODUK (admin) ============ */
 async function addProduct(e){
-  e.preventDefault();const f=$('nf').files[0];let img='noimg';
-  if(f){try{img=await readImg(f)}catch(x){}}
-  const id=Math.max(0,...P.map(p=>p.id))+1;
-  P.push({id,sku:'NEW-'+String(id).padStart(3,'0'),name:$('np').value,cat:$('nc').value,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img,d:''});
+  e.preventDefault();
+  const id=Math.max(0,...P.map(p=>p.id))+1,cat=$('nc').value,pl=PIC.n.slice();
+  const sku=nextSku(cat,true);
+  P.push({id,sku,name:$('np').value,cat,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img:pl[0]||'noimg',imgs:pl.slice(1),d:''});
   try{sv('products5',P)}catch(x){}
-  const nm=$('np').value;e.target.reset();renderAll();toast(t('prodAdded'));addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});
+  const nm=$('np').value;e.target.reset();PIC.n=[];renderPics('n');renderAll();toast(t('prodAdded')+' ('+sku+')');addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});
 }
 function readImg(f,mx){mx=mx||480;return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=r.result};r.onerror=no;r.readAsDataURL(f)})}
 function editProduct(id){
   const p=P.find(x=>x.id===id);if(!p)return;
-  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';$('ePrev').src=src(p);
+  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');$('esku').dataset.auto='1';
   $('emin').value=typeof p.min==='number'?p.min:'';$('ene').value=p.ne||'';$('enz').value=p.nz||'';$('ede').value=p.de||'';$('edz').value=p.dz||'';
   openM('m-edit');
 }
 async function saveEdit(e){
   e.preventDefault();const p=P.find(x=>x.id===+$('eid').value);if(!p)return;
-  const sku=$('esku').value.trim();if(P.some(x=>x.id!==p.id&&x.sku===sku))return toast(t('skuUsed'));
-  const f=$('ef').files[0];if(f){try{p.img=await readImg(f)}catch(x){}}
+  let sku=$('esku').value.trim();if(!sku||$('esku').dataset.auto!=='0'&&$('ecat').value!==p.cat)sku=nextSku($('ecat').value,true,p.id);if(P.some(x=>x.id!==p.id&&x.sku===sku))return toast(t('skuUsed'));
+  p.img=PIC.e[0]||'noimg';p.imgs=PIC.e.slice(1);
   p.sku=sku;p.name=$('ename').value.trim();p.cat=$('ecat').value;p.price=+$('eprice').value;p.old=Math.max(0,+$('eold').value||0);if(p.old<=p.price)p.old=0;p.stock=+$('estock').value;p.d=$('edesc').value.trim();
   const mv=$('emin').value.trim();if(mv===''||isNaN(+mv))delete p.min;else p.min=Math.max(0,Math.floor(+mv));
   p.ne=$('ene').value.trim();p.nz=$('enz').value.trim();p.de=$('ede').value.trim();p.dz=$('edz').value.trim();
@@ -1677,7 +1747,7 @@ function gDraw(){const cv=$('gc');if(!cv)return;const c=cv.getContext('2d'),g=c.
 
 /* ============ SINKRONISASI ANTAR TAB (admin <-> pelanggan/tamu) ============ */
 function onStorage(e){if(e.key&&e.key.indexOf('gs_')!==0)return;
-  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);STK=ld('stockin',STK);MOD=ld('mod',MOD);P=ld('products5',P);PBG=ld('promobg',PBG);
+  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);STK=ld('stockin',STK);MOD=ld('mod',MOD);P=migSku(ld('products5',P));PBG=ld('promobg',PBG);
   renderNotif();renderAll();applyPromoBg();checkAccess()}
 
 
@@ -1691,7 +1761,7 @@ function siteSave(){if(Array.isArray(RV))RV={};RV._site=SITE;sv('reviews',RV)}
 function fillCatSelects(){['nc','ecat'].forEach(id=>{const sel=$(id);if(!sel)return;const v=sel.value;
   sel.innerHTML=allCats().map(c=>`<option value="${esc(c)}">${esc(catName(c))}</option>`).join('')+'<option value="__new">+ Kategori baru...</option>';
   if(v&&v!=='__new'&&[...sel.options].some(o=>o.value===v))sel.value=v;
-  sel.onchange=()=>{if(sel.value==='__new'){const n=(prompt('Nama kategori baru:')||'').trim();if(n)addCat(n,id);else sel.selectedIndex=0}}})}
+  sel.onchange=()=>{if(sel.value==='__new'){const n=(prompt('Nama kategori baru:')||'').trim();if(n)addCat(n,id);else sel.selectedIndex=0}updSkuHint(id)}});updSkuHint('nc')}
 function addCat(n,sel){n=n.trim().slice(0,30);if(!n)return;const ex=allCats().find(c=>c.toLowerCase()===n.toLowerCase());
   if(!ex){SITE.cats=(SITE.cats||[]).concat(n);siteSave()}fillCatSelects();if(sel&&$(sel))$(sel).value=ex||n;renderKatalog();renderSitePanel();toast(ex?'Kategori sudah ada':'Kategori ditambahkan')}
 function delCat(c){SITE.cats=(SITE.cats||[]).filter(x=>x!==c);siteSave();fillCatSelects();if(catF===c)catF='all';renderKatalog();renderSitePanel()}
