@@ -721,6 +721,7 @@ function kvq(path,method,body,prefer){
   if(prefer)h.Prefer=prefer;
   return fetch(SYNC_URL+'/rest/v1/kv'+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined}).then(r=>{if(!r.ok)return r.text().then(x=>{throw new Error(r.status+' '+x.slice(0,140))});return r.status===204?null:r.text().then(x=>x?JSON.parse(x):null)});
 }
+const keepDone=(rem,loc)=>{if(!Array.isArray(rem)||!Array.isArray(loc))return loc;const m={};rem.forEach(o=>{if(o&&o.status==='Selesai')m[o.id]=o});return loc.map(o=>(o&&m[o.id]&&o.status!=='Selesai')?m[o.id]:o)};
 const mergeUsers=(a,b)=>{const m={};(a||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);(b||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);return Object.keys(m).map(q=>m[q])};
 function syncDirty(k){if(!SYNC_URL||SYNC_KEYS.indexOf(k)<0)return;syncDirtyKeys.add(k);try{localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]))}catch(e){}clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
 async function syncNow(){
@@ -732,6 +733,7 @@ async function syncNow(){
       if((dirty&&(known||!rt))||(!rt&&!known&&has)){
         let v=ld(k,null);if(v===null){syncDirtyKeys.delete(k);continue}
         if(k==='users'&&rt){const rem=await kvq('?select=value&key=eq.users');v=mergeUsers(rem&&rem[0]?rem[0].value:[],v);localStorage.setItem('gs_users',JSON.stringify(v));changed=true}
+        if(k==='orders'&&rt){const rem=await kvq('?select=value&key=eq.orders'),v2=keepDone(rem&&rem[0]?rem[0].value:[],v);if(JSON.stringify(v2)!==JSON.stringify(v)){v=v2;localStorage.setItem('gs_orders',JSON.stringify(v));changed=true}}
         const snap=JSON.stringify(v),t=Date.now();
         await kvq('?on_conflict=key','POST',{key:k,value:v,t},'resolution=merge-duplicates,return=minimal');
         syncMeta[k]=t;if(JSON.stringify(ld(k,null))===snap)syncDirtyKeys.delete(k);
@@ -1121,7 +1123,7 @@ const nextMile=n=>{let m=n+1;while(!isMile(m))m++;return m};
 const ordCount=name=>orders.filter(x=>x.owner===name).length;
 function genVc(){let c;do{c='GARUDA-'+Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('')}while(users.some(x=>(x.vs||[]).some(v=>v.code===c)));return c}
 function awardVc(){const me=curUser();if(!me)return;const n=ordCount(me.u);if(!isMile(n))return;const code=genVc();(me.vs=me.vs||[]).push({code,used:false,why:n});sv('users',users);notifyUser(me.u,'fa-ticket',{f:'vcNew',a:[code,n]});renderNotif();setTimeout(()=>toast('\ud83c\udf9f '+t('vcNew')+': '+code),900)}
-const vsHTML=u=>(u.vs||[]).map(v=>v.used?`<p><s class="text-slate-400">${esc(v.code)}</s> <span class="text-xs text-slate-400">(${t('vcUsed')})</span></p>`:`<p><b class="text-orange-600 tracking-wide">${esc(v.code)}</b>${v.amt?` <span class="text-xs text-green-600 font-semibold">(${Rp(v.amt)} · ${v.pct}%)</span>`:''} <button onclick="copyNo('${esc(v.code)}')" class="ml-1 text-xs text-slate-500 underline">${t('payCopy')}</button></p>`).join('')||'-';
+const vsHTML=u=>(u.vs||[]).map(v=>v.used?`<p><s class="text-slate-400">${esc(v.code)}</s> <span class="text-xs text-slate-400">(${t('vcUsed')})</span></p>`:`<p><b class="text-orange-600 tracking-wide">${esc(v.code)}</b>${v.amt?` <span class="text-xs text-green-600 font-semibold">(${Rp(v.amt)})</span>`:''} <button onclick="copyNo('${esc(v.code)}')" class="ml-1 text-xs text-slate-500 underline">${t('payCopy')}</button></p>`).join('')||'-';
 /* tujuan pengiriman: hanya ditanyakan untuk nomor WhatsApp LUAR Indonesia (luar negeri belum tersedia) */
 const isForeign=()=>!!$('cwcc')&&ccOf('c')[0]!=='IDN';
 const destOf=()=>isForeign()?CO.dest:'in';
@@ -1421,7 +1423,7 @@ function renderAdmin(){fillCatSelects();
   const lb=$('aLowBox');lb.classList.toggle('hid',!low.length);
   lb.innerHTML=low.length?`<i class="fa-solid fa-triangle-exclamation mr-2"></i>${fm(t('lowAlert'),low.length)}: <b>${low.map(p=>esc(pname(p))).join(', ')}</b>`:'';
   $('aTable').innerHTML=P.map(p=>{const m=minStock(p),isLow=p.stock<m;return `<tr><td class="p-3 font-semibold text-orange-600">${esc(p.sku)}</td><td class="p-3"><img src="${src(p)}" alt="" class="inline w-9 h-9 object-contain mr-2 bg-white border rounded">${esc(pname(p))}</td><td class="p-3">${Rp(p.price)}</td><td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${p.stock<=0?'bg-red-100 text-red-700':isLow?'bg-yellow-100 text-yellow-700':'bg-green-100 text-green-700'}">${p.stock}</span>${p.opts&&p.opts.list.some(x=>typeof x[3]==='number')?`<div class="text-[10px] text-slate-400 mt-1">${p.opts.list.map(x=>esc(otr(x[0]))+': '+x[3]).join(' · ')}</div>`:''}</td><td class="p-3 font-semibold">${m}${typeof p.min==='number'?'':` <span class="text-[10px] font-normal text-slate-400">(${t('autoL')})</span>`}</td><td class="p-3">${isLow?`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">${t('below')}</span><button onclick="openRestock(${p.id})" class="block mt-1 text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-truck-ramp-box mr-1"></i>${t('restock')}</button>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">${t('stockOk')}</span>`}</td><td class="p-3 text-right whitespace-nowrap"><button onclick="editProduct(${p.id})" title="Edit" class="text-blue-600 hover:text-blue-800 mr-3"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="delProduct(${p.id})" title="${t('del')}" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`}).join('');
-  $('oTable').innerHTML=orders.length?orders.map((o,i)=>`<tr><td class="p-3 font-semibold text-orange-600">${esc(o.id)}</td><td class="p-3">${fmtD(o.date)}</td><td class="p-3">${esc(o.name)}<div class="text-xs text-orange-600 max-w-xs">${ordItems(o).join(', ')}</div><div class="text-xs text-slate-400 max-w-xs">${esc(o.addr||'')}</div><div class="text-xs text-slate-500">${esc(cNameK(o))}${o.voucher?' · '+esc(o.voucher):''}</div></td><td class="p-3">${Rp(o.total)}</td><td class="p-3">${esc(payName(o.pay))}</td><td class="p-3">${o.status==='Selesai'?`<span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fa-solid fa-lock mr-1"></i>${stLbl('Selesai')}</span><div class="text-[10px] text-slate-400 mt-1">${t('doneByBuyer')}</div>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${stLbl(o.status)}</span><button onclick="setStatus(${i})" class="block mt-1 text-xs text-orange-600 font-semibold hover:underline">${stLbl(o.status)} \u2192 ${stLbl(o.status==='Diproses'?'Dikirim':'Diproses')}</button>`}</td></tr>`).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('empty')}</td></tr>`;
+  $('oTable').innerHTML=orders.length?orders.map((o,i)=>`<tr><td class="p-3 font-semibold text-orange-600">${esc(o.id)}</td><td class="p-3">${fmtD(o.date)}</td><td class="p-3">${esc(o.name)}<div class="text-xs text-orange-600 max-w-xs">${ordItems(o).join(', ')}</div><div class="text-xs text-slate-400 max-w-xs">${esc(o.addr||'')}</div><div class="text-xs text-slate-500">${esc(cNameK(o))}${o.voucher?' · '+esc(o.voucher):''}</div></td><td class="p-3">${Rp(o.total)}</td><td class="p-3">${esc(payName(o.pay))}</td><td class="p-3">${o.status==='Selesai'?`<span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fa-solid fa-lock mr-1"></i>${stLbl('Selesai')}</span><div class="text-[10px] text-slate-400 mt-1">${t('doneByBuyer')}</div><div class="text-[10px] text-slate-500">${esc(fmtT(finTs(o)))}</div>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${stLbl(o.status)}</span><button onclick="setStatus(${i})" class="block mt-1 text-xs text-orange-600 font-semibold hover:underline">${stLbl(o.status)} \u2192 ${stLbl(o.status==='Diproses'?'Dikirim':'Diproses')}</button>`}</td></tr>`).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('empty')}</td></tr>`;
   renderCust();renderRpt();renderPromoCtl();
 }
 const mkResi=o=>((o.ship||'GRD').replace(/[^A-Za-z]/g,'').slice(0,3)||'GRD').toUpperCase()+String(Date.now()).slice(-8)+Math.floor(1000+Math.random()*9000);
@@ -1492,7 +1494,7 @@ function ordItems(o){return o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id)
 function ordCard(o,adm){
   const ix={Diproses:1,Dikirim:2,Selesai:3}[o.status]||1,S=[['fa-file-invoice','stCreated'],['fa-box','stProc'],['fa-truck-fast','stShip'],['fa-circle-check','stDone']],pr=(o.addr||'').split(', '),city=pr[pr.length-2]||'';
   const row=(l,v)=>`<div class="flex justify-between"><span class="text-slate-500">${l}</span><span>${v}</span></div>`;
-  const where=o.status==='Diproses'?t('stProcTxt'):o.status==='Dikirim'?`${t('stShipTxt')} <b>${esc(city)}</b> \u00b7 ${esc(cNameK(o))}`:t('stDoneTxt');
+  const where=o.status==='Diproses'?t('stProcTxt'):o.status==='Dikirim'?`${t('stShipTxt')} <b>${esc(city)}</b> \u00b7 ${esc(cNameK(o))}`:t('stDoneTxt')+`<div class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-calendar-check mr-1"></i>${t('doneOnCust')} <b>${esc(fmtT(finTs(o)))}</b></div>`;
   const mapHTML=o.status==='Dikirim'?`<div class="rounded-xl border overflow-hidden"><div class="px-3 py-2 bg-orange-50 text-sm font-semibold text-orange-700"><i class="fa-solid fa-motorcycle mr-1"></i>${t('mapToday')}</div><div id="map-${mid(o)}" data-oid="${esc(o.id)}" class="h-64 w-full bg-slate-100 flex items-center justify-center text-sm text-slate-400">${t('mapLoad')}</div><div id="mapInfo-${mid(o)}" class="px-3 py-2 text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 justify-between"></div></div>`:'';
   const items=o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id),done=(o.rvd||[]).includes(ci.id);
     return `<li class="flex items-center justify-between gap-2"><span>\u2022 ${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}</span>${o.status==='Selesai'&&!adm&&p?itemBtns(o,ci,done):''}</li>`}).join(''):(o.items||[]).map(x=>`<li>\u2022 ${esc(x)}</li>`).join('');
@@ -1510,7 +1512,7 @@ function renderOrders(){mapsClear();const adm=session&&session.role==='admin',L=
   $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`;
   setTimeout(initMaps,30)}
 function finishOrder(id){const o=orders.find(x=>x.id===id);if(!o||(session&&session.role==='admin')||o.status!=='Dikirim'||!ownsO(o))return;
-  if(!confirm(t('confirmDone')))return;o.status='Selesai';(o.log=o.log||[]).push({s:'Selesai',t:tm()});sv('orders',orders);renderOrders();toast('\u2713 '+o.id+': '+t('stDone'));addNotif('fa-circle-check',{f:'ordStatus',a:[o.id,'Selesai']})}
+  if(!confirm(t('confirmDone')))return;const dts=tm();o.status='Selesai';o.doneTs=dts;o.doneBy='customer';(o.log=o.log||[]).push({s:'Selesai',t:dts});sv('orders',orders);renderOrders();toast('\u2713 '+o.id+': '+t('stDone'));addNotif('fa-circle-check',{f:'ordStatus',a:[o.id,'Selesai']})}
 
 /* ============ PETA KURIR (Leaflet + OpenStreetMap) ============ */
 const MAPS={},STORE_LL=[-4.9917,119.5733],DEMO_MS=3*60*1000;
@@ -1858,6 +1860,9 @@ aWarnN:"已向 {0} 发出警告（共 {1} 次）",aFrzN:"账号 {0} 已冻结",a
    FITUR BARU: BARANG MASUK, LAPORAN RUSAK, PENGEMBALIAN, PERINGATAN AKUN
    ====================================================================== */
 const RET_SHIP_PCT=50,RET_BASE_FREE=10000,VC_RPT_MAX=60,WARN_COD=3,RET_DAYS=7;
+const exFee=o=>{const b=o&&o.ongkir>0?o.ongkir:RET_BASE_FREE;return Math.round(b/500)*500};
+const kKey=k=>k==='ret'?'kRet':k==='wrong'?'kWrong':'kDmg';
+const kName=k=>t(kKey(k));
 const mk=n=>String(n||'').toLowerCase();
 const qa=s=>encodeURIComponent(s).replace(/'/g,'%27');
 const modOf=n=>MOD[mk(n)]||{w:0,fz:false};
@@ -1918,7 +1923,7 @@ function renderStockIn(){if(!$('siP'))return;
   $('siHist').innerHTML=STK.length?STK.slice(0,100).map(x=>`<tr class="${x.x?'opacity-50':''}"><td class="p-3 whitespace-nowrap">${fmtDay(x.ts)}</td><td class="p-3">${esc(pnx(x.pid,x.pn))}${x.v?` <span class="text-xs text-slate-500">(${esc(otr(x.v))})</span>`:''}</td><td class="p-3 font-bold text-green-600">+${x.q}</td><td class="p-3 whitespace-nowrap">${x.before} → ${x.after}</td><td class="p-3 text-xs">${esc(x.sup||'-')}</td><td class="p-3 text-xs max-w-xs">${esc(x.note||'')}</td><td class="p-3 text-xs">${esc(x.by||'')}</td><td class="p-3">${x.x?`<span class="text-xs text-slate-400">${t('siCx')}</span>`:`<button onclick="siCancel('${x.id}')" class="text-xs text-red-600 underline">${t('siCancel')}</button>`}</td></tr>`).join(''):`<tr><td colspan="8" class="p-6 text-center text-slate-400">${t('siNone')}</td></tr>`}
 
 /* ---------- LAPORAN RUSAK / PENGEMBALIAN: sisi pelanggan ---------- */
-const finTs=o=>{const l=(o.log||[]).slice().reverse().find(x=>x.s==='Selesai');return l&&typeof l.t==='number'?l.t:(typeof o.date==='number'?o.date:Date.now())};
+const finTs=o=>{if(typeof o.doneTs==='number')return o.doneTs;const l=(o.log||[]).slice().reverse().find(x=>x.s==='Selesai');return l&&typeof l.t==='number'?l.t:(typeof o.date==='number'?o.date:Date.now())};
 const retExpired=o=>Date.now()-finTs(o)>RET_DAYS*86400000;
 const retFee=o=>{const b=o.ongkir>0?o.ongkir:RET_BASE_FREE;return Math.round(b*RET_SHIP_PCT/100/500)*500};
 const rOwn=r=>r.own||(orders.find(x=>x.id===r.oid)||{}).owner;
@@ -1935,38 +1940,40 @@ function renderRvModal(){if(!RVS)return;const p=P.find(x=>x.id===RVS.pid);if(!p)
   const retBox=k==='ret'?`<div><p class="lbl">${t('rpReason')} *</p><select onchange="RVS.rs=this.value" class="inp"><option value="">${t('rpPick')}</option>${['rsDmg','rsWrong','rsSize','rsOther'].map(x=>`<option value="${x}" ${RVS.rs===x?'selected':''}>${t(x)}</option>`).join('')}</select></div>
   <div class="rounded-xl bg-orange-50 border border-orange-200 p-3 text-sm"><p class="font-semibold text-orange-700"><i class="fa-solid fa-truck-ramp-box mr-1"></i>${fm(t('rpFeeBox'),RET_SHIP_PCT,Rp(fee))}</p><p class="text-xs text-slate-500 mt-1">${fm(t('rpRetRule'),RET_DAYS)}</p></div>
   <label class="flex items-start gap-2 text-xs"><input type="checkbox" ${RVS.agree?'checked':''} onchange="RVS.agree=this.checked" class="mt-0.5 w-4 h-4 accent-orange-500"><span>${fm(t('rpAgree'),Rp(fee))}</span></label>`:'';
-  const pl=k==='dmg'?t('rpMediaDmg'):t('rvPhotos'),vl=k==='ret'?t('rpVidRet'):k==='dmg'?t('rpVidDmg'):t('rvVideo');
+  const xf=exFee(o),wrongBox=k==='wrong'?`<div class="rounded-xl bg-orange-50 border border-orange-200 p-3 text-sm"><p class="font-semibold text-orange-700"><i class="fa-solid fa-right-left mr-1"></i>${t('rpExBox')}</p><p class="text-xs text-slate-600 mt-1">${fm(t('rpExShip'),Rp(xf))}</p><p class="text-xs text-slate-500 mt-1">${fm(t('rpRetRule'),RET_DAYS)}</p></div><label class="flex items-start gap-2 text-xs"><input type="checkbox" ${RVS.agree?'checked':''} onchange="RVS.agree=this.checked" class="mt-0.5 w-4 h-4 accent-orange-500"><span>${fm(t('rpAgreeEx'),Rp(xf))}</span></label>`:'';
+  const pl=(k==='dmg'||k==='wrong')?t('rpMediaDmg'):t('rvPhotos'),vl=k==='ret'?t('rpVidRet'):(k==='dmg'||k==='wrong')?t('rpVidDmg'):t('rvVideo');
   $('rvBody').innerHTML=`<div class="flex items-center gap-3"><img src="${src(p)}" alt="" class="w-14 h-14 object-contain bg-white border rounded-lg"><b>${esc(pname(p))}</b></div>
   ${stars}
   <div><p class="lbl">${RVS.only?t('rpDesc'):t('rvText')}</p><textarea rows="3" oninput="RVS.c=this.value" class="inp">${esc(RVS.c)}</textarea></div>
-  <div class="space-y-2"><p class="lbl">${t('rpProblem')}</p>${RVS.only?'':opt('none','fa-star','rpNone','rpNoneN','border-orange-400 bg-orange-50')}${opt('dmg','fa-triangle-exclamation','rpDmgOpt','rpDmgN','border-red-400 bg-red-50')}${opt('ret','fa-rotate-left','rpRetOpt','rpRetN','border-red-400 bg-red-50')}${k!=='none'?`<p class="text-xs text-red-600"><i class="fa-solid fa-circle-info mr-1"></i>${t('rpFalse')}</p>`:''}</div>
-  ${retBox}
+  <div class="space-y-2"><p class="lbl">${t('rpProblem')}</p>${RVS.only?'':opt('none','fa-star','rpNone','rpNoneN','border-orange-400 bg-orange-50')}${opt('dmg','fa-triangle-exclamation','rpDmgOpt','rpDmgN','border-red-400 bg-red-50')}${opt('wrong','fa-box-open','rpWrongOpt','rpWrongN','border-red-400 bg-red-50')}${opt('ret','fa-rotate-left','rpRetOpt','rpRetN','border-red-400 bg-red-50')}${k!=='none'?`<p class="text-xs text-red-600"><i class="fa-solid fa-circle-info mr-1"></i>${t('rpFalse')}</p>`:''}</div>
+  ${retBox}${wrongBox}
   <div><p class="lbl"><i class="fa-solid fa-camera text-orange-500 mr-1"></i>${pl}</p><input type="file" accept="image/*" multiple onchange="rvPick(this)" class="block mt-1 text-sm"><div class="mt-2 flex gap-2 flex-wrap">${RVS.imgs.map((s,i)=>`<span class="relative"><img src="${s}" alt="" class="w-16 h-16 object-cover rounded-lg border"><button type="button" onclick="RVS.imgs.splice(${i},1);renderRvModal()" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs leading-5">&times;</button></span>`).join('')}</div></div>
   <div><p class="lbl"><i class="fa-solid fa-video text-orange-500 mr-1"></i>${vl}</p><input type="file" accept="video/*" onchange="rvVid(this)" class="block mt-1 text-sm">${RVS.vname?`<p class="text-xs text-green-600 mt-1"><i class="fa-solid fa-circle-check mr-1"></i>${esc(RVS.vname)} (${t('rvChosen')})</p>`:''}</div>
   <div class="flex gap-2 pt-1"><button type="button" onclick="closeM('m-rv')" class="px-5 py-3 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50">${t('cancel')}</button><button type="button" onclick="rvSubmit()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl">${t('rvSubmit')}</button></div>`}
 async function rvSubmit(){const R=RVS;if(!R)return;const o=orders.find(x=>x.id===R.oid);if(!o)return;if(checkFrozen())return;
   const k=R.kind,p=P.find(x=>x.id===R.pid),c=R.c.trim();
   if(k==='none'&&!R.s)return toast(t('rvNeedRate'));
-  if(k==='dmg'&&!R.imgs.length&&!R.vfile)return toast(t('rpNeedMedia'));
+  if((k==='dmg'||k==='wrong')&&!R.imgs.length&&!R.vfile)return toast(t('rpNeedMedia'));
   if(k==='ret'){if(!R.vfile)return toast(t('rvNeedVid'));if(!R.rs)return toast(t('rpNeedRs'));if(!R.agree)return toast(t('rpNeedAgree'));if(retExpired(o))return toast(fm(t('rpExpired'),RET_DAYS))}
+  if(k==='wrong'){if(!R.agree)return toast(t('rpNeedAgree'));if(retExpired(o))return toast(fm(t('rpExpired'),RET_DAYS))}
   if(k!=='none'&&rptOpen(o.id,R.pid))return toast(t('rpDup'));
   let vid=null;if(R.vfile){vid='v'+Date.now();try{await mPut(vid,R.vfile)}catch(e){vid=null;toast(t('rvVidFail'))}}
   if(R.s){(RV[R.pid]=RV[R.pid]||[]).unshift({u:o.name,s:R.s,c:c.slice(0,200),imgs:R.imgs,vid,oid:o.id,ts:Date.now()});sv('reviews',RV);(o.rvd=o.rvd||[]).push(R.pid);sv('orders',orders)}
   if(k!=='none'){
     const own=o.owner||feedKey(),ci=(o.its||[]).find(x=>x.id===R.pid)||{q:1,v:''},amt=p?unit(p,ci.v).price*ci.q:0,now=Date.now();
-    RPT.unshift({id:uid(),k,oid:o.id,pid:R.pid,pn:p?p.name:'',u:o.name,wa:o.wa,own,c:c.slice(0,300),rs:R.rs,imgs:R.imgs.slice(),vid,ts:now,st:'new',amt,q:ci.q,fee:k==='ret'?retFee(o):0,log:[{s:'new',ts:now}]});
-    sv('reports',RPT);notifyAdmin('fa-triangle-exclamation',{f:k==='ret'?'retN':'dmgN',a:[o.id,R.pid]},{who:{r:'user',n:o.name}});
+    RPT.unshift({id:uid(),k,oid:o.id,pid:R.pid,pn:p?p.name:'',u:o.name,wa:o.wa,own,c:c.slice(0,300),rs:R.rs,imgs:R.imgs.slice(),vid,ts:now,st:'new',amt,q:ci.q,fee:k==='ret'?retFee(o):k==='wrong'?exFee(o):0,log:[{s:'new',ts:now}]});
+    sv('reports',RPT);notifyAdmin('fa-triangle-exclamation',{f:k==='ret'?'retN':k==='wrong'?'wrgN':'dmgN',a:[o.id,R.pid]},{who:{r:'user',n:o.name}});
     notifyUser(own,'fa-paper-plane',{f:'rptUp',a:[k,R.pid,'new','','']},{rd:true});
     addNotif('fa-triangle-exclamation',{f:'rpSent',a:[k,R.pid]})}
   else addNotif('fa-star',{f:'rvN',a:[R.pid,R.s]});
   toast(t(k==='none'?'rvOk':'rpOk'));RVS=null;closeM('m-rv');renderAll()}
 const RST_C={new:'bg-red-100 text-red-700',check:'bg-blue-100 text-blue-700',ok:'bg-green-100 text-green-700',no:'bg-slate-200 text-slate-700',done:'bg-green-100 text-green-700'};
 function rptCard(r){const log=r.log||[{s:r.st,ts:r.ts}],nm=esc(pnx(r.pid,r.pn)),own=rOwn(r),o=orders.find(x=>x.id===r.oid)||{};
-  return `<div class="bg-white border rounded-2xl shadow-sm p-4 text-sm space-y-2"><div class="flex flex-wrap justify-between gap-2"><div><b>${nm}</b> <span class="text-xs text-slate-400 ml-1">${esc(r.oid)} · ${esc(fmtD(r.ts))}</span></div><div class="flex gap-1 flex-wrap">${bdg('bg-orange-100 text-orange-700',t(r.k==='ret'?'kRet':'kDmg'))}${bdg(RST_C[r.st]||RST_C.new,t('rst_'+r.st))}</div></div>
+  return `<div class="bg-white border rounded-2xl shadow-sm p-4 text-sm space-y-2"><div class="flex flex-wrap justify-between gap-2"><div><b>${nm}</b> <span class="text-xs text-slate-400 ml-1">${esc(r.oid)} · ${esc(fmtD(r.ts))}</span></div><div class="flex gap-1 flex-wrap">${bdg('bg-orange-100 text-orange-700',kName(r.k))}${bdg(RST_C[r.st]||RST_C.new,t('rst_'+r.st))}</div></div>
   <div class="text-xs text-slate-500 space-y-0.5">${log.map(l=>`<p><b class="text-slate-700">${t('rst_'+l.s)}</b> · ${esc(fmtT(l.ts))}${l.n?` · <i>${esc(l.n)}</i>`:''}</p>`).join('')}</div>
   ${r.k==='ret'&&(r.st==='new'||r.st==='check')?`<div class="rounded-lg bg-orange-50 p-2 text-xs"><i class="fa-solid fa-truck-ramp-box text-orange-500 mr-1"></i>${fm(t('rptN_check_ret'),'',nm,Rp(r.fee||retFee(o)))} ${t('shopAddrS')}</div>`:''}
-  ${r.vc?`<div class="rounded-lg bg-green-50 border border-green-200 p-2 text-xs"><i class="fa-solid fa-ticket text-green-600 mr-1"></i>${t('vcMine')}: <b class="text-green-700 tracking-wide">${esc(r.vc)}</b> (${Rp(r.vamt||0)} · ${r.pct}%) <button onclick="copyNo('${esc(r.vc)}')" class="ml-1 underline text-slate-500">${t('payCopy')}</button></div>`:''}
-  ${r.st==='ok'&&r.novc?`<p class="text-xs text-green-700">${fm(t('rptN_ok_nv'),t(r.k==='ret'?'kRet':'kDmg'),nm)}</p>`:''}
+  ${exPend(r)}${r.vc?`<div class="rounded-lg bg-green-50 border border-green-200 p-2 text-xs"><i class="fa-solid fa-ticket text-green-600 mr-1"></i>${t('vcMine')}: <b class="text-green-700 tracking-wide">${esc(r.vc)}</b> (${Rp(r.vamt||0)}) <button onclick="copyNo('${esc(r.vc)}')" class="ml-1 underline text-slate-500">${t('payCopy')}</button></div>`:''}
+  ${exBlock(r)}${r.st==='ok'&&r.novc?`<p class="text-xs text-green-700">${fm(t('rptN_ok_nv'),kName(r.k),nm)}</p>`:''}
   ${r.wn&&userExists(own)?`<p class="text-xs text-red-600 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${fm(t('warnN'),warnCnt(own),WARN_COD)}</p>`:''}</div>`}
 function renderMyRpt(){const el=$('myRpt');if(!el)return;const adm=session&&session.role==='admin';
   const L=adm?[]:RPT.filter(r=>ownsO({owner:rOwn(r)}));
@@ -1981,11 +1988,15 @@ function rptTell(r,s,x,n){notifyUser(rOwn(r),s==='ok'?'fa-circle-check':s==='no'
 function admOnly(){return session&&session.role==='admin'}
 function rptCheck(id){const r=rptById(id);if(!admOnly()||!r||r.st!=='new')return;const n=rptNoteVal(id);r.st='check';rptLog(r,'check',n);sv('reports',RPT);rptTell(r,'check',r.k==='ret'?Rp(r.fee||0):'',n);renderRpt()}
 function rptProve(id){const r=rptById(id);if(!admOnly()||!r||!['new','check'].includes(r.st))return;
-  const n=rptNoteVal(id),pe=$('rp-'+id),pct=Math.min(VC_RPT_MAX,Math.max(1,Math.floor(+(pe&&pe.value)||VC_RPT_MAX)));
-  const me=users.find(x=>mk(x.u)===mk(rOwn(r)));let x='';
-  r.st='ok';r.pct=pct;
-  if(me){const amt=Math.floor((r.amt||0)*pct/100/100)*100;if(amt>0){const code=genVc();(me.vs=me.vs||[]).push({code,used:false,why:'rpt',amt,pct,rid:r.id});r.vc=code;r.vamt=amt;x=code+'|'+Rp(amt)+'|'+pct;sv('users',users)}else r.novc=true}else r.novc=true;
-  rptLog(r,'ok',n);sv('reports',RPT);rptTell(r,'ok',x,n);renderRpt()}
+  const n=rptNoteVal(id),ce=$('rc-'+id),cause=(ce&&ce.value)||(r.k==='wrong'?'wrong':'gen'),pe=$('rp-'+id);
+  const pct=cause==='store'?VC_RPT_MAX:Math.min(VC_RPT_MAX,Math.max(1,Math.floor(+(pe&&pe.value)||VC_RPT_MAX)));
+  const me=users.find(x=>mk(x.u)===mk(rOwn(r))),o0=orders.find(z=>z.id===r.oid)||{};let vcs='',vam='';
+  r.st='ok';r.pct=pct;r.cause=cause;
+  if(cause==='store')r.fee=0;
+  if(me){const amt=Math.floor((r.amt||0)*pct/100/100)*100;if(amt>0){const code=genVc();(me.vs=me.vs||[]).push({code,used:false,why:'rpt',amt,pct,rid:r.id});r.vc=code;r.vamt=amt;vcs=code;vam=Rp(amt);sv('users',users)}else r.novc=true}else r.novc=true;
+  rptLog(r,'ok',n);
+  if(cause==='wrong'){r.fee=exFee(o0);r.ex={st:'offer',ts:Date.now()};rptLog(r,'ex_offer')}
+  sv('reports',RPT);rptTell(r,'ok',[vcs,vam,cause,cause==='wrong'?Rp(r.fee||0):''].join('|'),n);renderRpt()}
 function rptReject(id){const r=rptById(id);if(!admOnly()||!r||!['new','check'].includes(r.st))return;const n=rptNoteVal(id);r.st='no';rptLog(r,'no',n);sv('reports',RPT);rptTell(r,'no','',n);renderRpt()}
 function rptWarn(id){const r=rptById(id),own=r&&rOwn(r);if(!admOnly()||!r||r.st!=='no'||r.wn||!userExists(own))return;const n=rptNoteVal(id),m=modOf(own),c=(m.w||0)+1;
   setMod(own,{w:c,wl:(m.wl||[]).concat([{ts:Date.now(),rid:r.id}])});r.wn=true;sv('reports',RPT);
@@ -2007,24 +2018,131 @@ function renderRpt(){const el=$('rTable');if(!el)return;
     const own=rOwn(r),acct=userExists(own),w=acct?warnCnt(own):0,fz=acct&&isFrozen(own),open=r.st==='new'||r.st==='check',nm=pnx(r.pid,r.pn);
     const st=bdg(RST_C[r.st]||RST_C.new,t('rst_'+r.st)),last=(r.log||[]).slice(-1)[0];
     let act='';
-    if(open)act=`<input id="rn-${r.id}" placeholder="${esc(t('rptNote'))}" class="mt-2 w-full px-2 py-1 border rounded text-xs"><div class="mt-2 flex flex-wrap items-center gap-1">${r.st==='new'?`<button onclick="rptCheck('${r.id}')" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold px-2 py-1 rounded">${t('rptCheck')}</button>`:''}<select id="rp-${r.id}" class="text-xs border rounded px-1 py-1" title="${esc(t('rptPct'))}">${[60,50,40,30,20,10].map(v=>`<option value="${v}">${v}%</option>`).join('')}</select><button onclick="rptProve('${r.id}')" class="text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2 py-1 rounded">${t('rptProve')}</button><button onclick="rptReject('${r.id}')" class="text-xs bg-slate-600 hover:bg-slate-700 text-white font-bold px-2 py-1 rounded">${t('rptReject')}</button></div>`;
-    else if(r.st==='ok')act=r.vc?`<p class="text-xs text-green-700 mt-1"><i class="fa-solid fa-ticket mr-1"></i>${fm(t('rptVcGiven'),esc(r.vc),Rp(r.vamt||0)+' · '+r.pct+'%')}</p>`:`<p class="text-xs text-orange-600 mt-1">${t('rptVcGuest')}</p>`;
+    if(open)act=`<input id="rn-${r.id}" placeholder="${esc(t('rptNote'))}" class="mt-2 w-full px-2 py-1 border rounded text-xs"><div class="mt-2 flex flex-wrap items-center gap-1">${r.st==='new'?`<button onclick="rptCheck('${r.id}')" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold px-2 py-1 rounded">${t('rptCheck')}</button>`:''}<select id="rc-${r.id}" class="text-xs border rounded px-1 py-1" title="${esc(t('rptCause'))}"><option value="gen" ${r.k!=='wrong'?'selected':''}>${t('rcGen')}</option><option value="wrong" ${r.k==='wrong'?'selected':''}>${t('rcWrong')}</option><option value="store">${t('rcStore')}</option></select><select id="rp-${r.id}" class="text-xs border rounded px-1 py-1" title="${esc(t('rptPct'))}">${[60,50,40,30,20,10].map(v=>`<option value="${v}">${v}%</option>`).join('')}</select><button onclick="rptProve('${r.id}')" class="text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2 py-1 rounded">${t('rptProve')}</button><button onclick="rptReject('${r.id}')" class="text-xs bg-slate-600 hover:bg-slate-700 text-white font-bold px-2 py-1 rounded">${t('rptReject')}</button></div>`;
+    else if(r.st==='ok')act=r.vc?`<p class="text-xs text-green-700 mt-1"><i class="fa-solid fa-ticket mr-1"></i>${fm(t('rptVcGiven'),esc(r.vc),Rp(r.vamt||0))}</p>`:`<p class="text-xs text-orange-600 mt-1">${t('rptVcGuest')}</p>`;
     else if(r.st==='no'){
       if(!acct)act=`<p class="text-xs text-slate-500 mt-1">${t('rptGuest')}</p>`;
       else act=`<div class="mt-2 flex flex-wrap items-center gap-1">${r.wn?bdg('bg-yellow-100 text-yellow-700',t('rptWarned')):`<button onclick="rptWarn('${r.id}')" class="text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-2 py-1 rounded"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${t('rptWarnBtn')}</button>`}${fz?bdg('bg-red-100 text-red-700',t('frozenL'))+` <button onclick="unfreezeAcc('${qa(own)}')" class="text-xs text-blue-600 underline">${t('unfreeze')}</button>`:`<button onclick="rptFreeze('${r.id}')" ${w<1?'disabled title="'+esc(t('rptFreezeNeed'))+'"':''} class="text-xs bg-red-600 hover:bg-red-700 text-white font-bold px-2 py-1 rounded disabled:opacity-40 disabled:cursor-not-allowed"><i class="fa-solid fa-snowflake mr-1"></i>${t('rptFreezeBtn')}</button>`}</div>`}
-    return `<tr><td class="p-3">${fmtD(r.ts)}</td><td class="p-3 font-semibold text-orange-600">${esc(r.oid)}</td><td class="p-3">${esc(nm)}</td><td class="p-3">${esc(r.u)}${acct?modBadges(own)||'':''}</td><td class="p-3 text-xs max-w-xs">${bdg('bg-orange-100 text-orange-700',t(r.k==='ret'?'kRet':'kDmg'))}${r.rs?` <b>${t(r.rs)}</b>`:''}<div class="mt-1">${esc(r.c||'')}</div>${r.amt?`<div class="text-slate-500 mt-1">${t('rptAmt')}: ${Rp(r.amt)}${r.k==='ret'?` · ${t('rptFee')}: ${Rp(r.fee||0)}`:''}</div>`:''}<div class="mt-1">${mediaThumbs(r)}</div></td><td class="p-3 min-w-[14rem]">${st}${last&&last.n?`<div class="text-xs text-slate-500 mt-1"><i>${esc(last.n)}</i></div>`:''}${act}</td></tr>`}).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('rptNone')}</td></tr>`}
+    act+=exAdm(r);return `<tr><td class="p-3">${fmtD(r.ts)}</td><td class="p-3 font-semibold text-orange-600">${esc(r.oid)}</td><td class="p-3">${esc(nm)}</td><td class="p-3">${esc(r.u)}${acct?modBadges(own)||'':''}</td><td class="p-3 text-xs max-w-xs">${bdg('bg-orange-100 text-orange-700',kName(r.k))}${r.rs?` <b>${t(r.rs)}</b>`:''}<div class="mt-1">${esc(r.c||'')}</div>${r.amt?`<div class="text-slate-500 mt-1">${t('rptAmt')}: ${Rp(r.amt)}${r.k==='ret'?` · ${t('rptFee')}: ${Rp(r.fee||0)}`:''}</div>`:''}<div class="mt-1">${mediaThumbs(r)}</div></td><td class="p-3 min-w-[14rem]">${st}${last&&last.n?`<div class="text-xs text-slate-500 mt-1"><i>${esc(last.n)}</i></div>`:''}${act}</td></tr>`}).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('rptNone')}</td></tr>`}
 
 Object.assign(NMF,{
   inN:(id,q,s)=>fm(t('inN'),pn(id),q,s),
   retN:(oid,pid)=>fm(t('retN'),oid,pn(pid)),
-  rpSent:(k,pid)=>fm(t('rpSentN'),t(k==='ret'?'kRet':'kDmg'),pn(pid)),
-  rptUp:(k,pid,s,x,note)=>{const a=String(x||'').split('|'),key='rptN_'+s+(s==='check'&&k==='ret'?'_ret':'')+(s==='ok'&&!x?'_nv':'');
-    return fm(t(key),t(k==='ret'?'kRet':'kDmg'),pn(pid),a[0]||'',a[1]||'',a[2]||'')+(note?' '+t('rptNoteL')+': '+note:'')},
+  rpSent:(k,pid)=>fm(t('rpSentN'),kName(k),pn(pid)),
+  rptUp:(k,pid,s,x,note)=>{const a=String(x||'').split('|'),cs=(a[2]==='store'||a[2]==='wrong')?a[2]:'gen',nt=note?' '+t('rptNoteL')+': '+note:'',kn=kName(k),pnm=pn(pid);
+    if(s==='ok'){const head=fm(t(cs==='store'?'rptN_okStore':cs==='wrong'?'rptN_okWrong':'rptN_okGen'),kn,pnm),
+      mid=cs==='wrong'?' '+fm(t('rptN_exch'),a[3]||''):cs==='store'?' '+t('rptN_storeShip'):'',
+      vc=a[0]?' '+fm(t('rptN_vc'),a[0],a[1]||''):' '+t('rptN_vcNv');
+      return head+mid+vc+nt}
+    const key='rptN_'+s+(s==='check'&&k==='ret'?'_ret':'');
+    return fm(t(key),kn,pnm,a[0]||'',a[1]||'',a[2]||'')+nt},
   warnN:(n,mx,note)=>fm(t('warnN'),n,mx)+(note?' '+t('rptNoteL')+': '+note:''),
   codOffN:()=>t('codOffN'),frzN:()=>t('frzN'),unfrzN:()=>t('unfrzN'),
   aWarn:(u,n)=>fm(t('aWarnN'),u,n),aFrz:u=>fm(t('aFrzN'),u),aUnfrz:u=>fm(t('aUnfrzN'),u),
-  aRptSt:(k,pid,s)=>fm(t('aRptStN'),t(k==='ret'?'kRet':'kDmg'),pn(pid),t('rst_'+s))
+  wrgN:(oid,pid)=>fm(t('wrgN'),oid,pn(pid)),
+  exRep:(oid,pid,ok)=>fm(t(ok?'exRepY':'exRepN'),oid,pn(pid)),
+  exDoneN:pid=>fm(t('exDoneMsg'),pn(pid)),
+  aRptSt:(k,pid,s)=>fm(t('aRptStN'),kName(k),pn(pid),t('rst_'+s))
 });
+
+
+/* ---------- SALAH KIRIM: pengajuan tukar barang ---------- */
+function exPend(r){return(r.k==='wrong'&&(r.st==='new'||r.st==='check'))?`<div class="rounded-lg bg-orange-50 p-2 text-xs"><i class="fa-solid fa-right-left text-orange-500 mr-1"></i>${fm(t('rpExShip'),Rp(r.fee||0))}</div>`:''}
+function exBlock(r){let h='';
+  if(r.cause==='store')h+=`<div class="rounded-lg bg-green-50 border border-green-200 p-2 text-xs text-green-700"><i class="fa-solid fa-shield-heart mr-1"></i>${t('rcStoreCust')}</div>`;
+  if(!r.ex)return h;const e=r.ex;
+  if(e.st==='offer')return h+`<div class="rounded-lg bg-orange-50 border border-orange-300 p-3 text-xs space-y-2"><p class="font-bold text-orange-700"><i class="fa-solid fa-right-left mr-1"></i>${t('exOffer')}</p><p>${fm(t('rpExShip'),Rp(r.fee||0))}</p><p class="text-slate-500">${t('exShopTo')} ${t('shopAddrS')}</p><div class="flex gap-2"><button onclick="exReply('${r.id}',true)" class="bg-green-500 hover:bg-green-600 text-white font-bold px-3 py-1.5 rounded-lg">${t('exAgree')}</button><button onclick="exReply('${r.id}',false)" class="border border-slate-300 text-slate-600 font-semibold px-3 py-1.5 rounded-lg">${t('exDecline')}</button></div></div>`;
+  const m={agree:['exAgreed','bg-green-50 border-green-200 text-green-700'],decline:['exDeclined','bg-slate-100 border-slate-200 text-slate-600'],done:['exDone','bg-green-50 border-green-200 text-green-700']}[e.st];
+  return h+(m?`<div class="rounded-lg border p-2 text-xs ${m[1]}"><i class="fa-solid fa-right-left mr-1"></i>${t(m[0])}${e.st==='agree'?' '+t('exShopTo')+' '+t('shopAddrS'):''}</div>`:'')}
+function exReply(id,ok){const r=rptById(id);if(!r||!r.ex||r.ex.st!=='offer'||!ownsO({owner:rOwn(r)}))return;
+  r.ex.st=ok?'agree':'decline';r.ex.ts2=Date.now();rptLog(r,'ex_'+r.ex.st);sv('reports',RPT);
+  notifyAdmin('fa-right-left',{f:'exRep',a:[r.oid,r.pid,ok?1:0]},{who:{r:'user',n:r.u}});
+  toast(t(ok?'exAgreedT':'exDeclinedT'));renderOrders()}
+function exAdm(r){let h='';
+  if(r.cause==='store')h+=`<p class="text-xs text-red-700 mt-1"><i class="fa-solid fa-shield-heart mr-1"></i>${t('rcStoreNote')}</p>`;
+  if(!r.ex)return h;const lab={offer:'exOfferA',agree:'exAgreeA',decline:'exDeclineA',done:'exDoneA'}[r.ex.st];
+  return h+`<p class="text-xs text-orange-700 mt-1"><i class="fa-solid fa-right-left mr-1"></i>${t(lab)}</p>`+(r.ex.st==='agree'?`<button onclick="exDone('${r.id}')" class="mt-1 text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2 py-1 rounded">${t('exMarkDone')}</button>`:'')}
+function exDone(id){const r=rptById(id);if(!admOnly()||!r||!r.ex||r.ex.st!=='agree')return;
+  r.ex.st='done';r.ex.ts3=Date.now();rptLog(r,'ex_done');sv('reports',RPT);notifyUser(rOwn(r),'fa-right-left',{f:'exDoneN',a:[r.pid]});renderRpt()}
+
+Object.assign(I.id,{
+kWrong:"Salah kirim barang",rpWrongOpt:"Salah kirim barang (bukan barang yang saya pesan)",
+rpWrongN:"Wajib foto ATAU video sebagai bukti. Jika terbukti, admin memberi pengajuan tukar barang dan voucher.",
+rpExBox:"Jika terbukti, admin akan memberi pengajuan tukar barang. Voucher tetap diberikan.",
+rpExShip:"Ongkir kirim barang ke toko ditanggung Anda (perkiraan {0}). Ongkir kirim barang pengganti ke Anda ditanggung toko.",
+rpAgreeEx:"Saya bersedia menanggung ongkir kirim barang ke toko {0} dan menyatakan laporan ini benar.",
+wrgN:"Laporan salah kirim baru: {0} · {1}",
+rptN_ok:"Laporan {0} untuk {1} TERBUKTI. Anda mendapat voucher {2} senilai {3}. Pakai di halaman transaksi.",
+rptN_okGen:"Laporan {0} untuk {1} TERBUKTI.",
+rptN_okStore:"Laporan {0} untuk {1} TERBUKTI sebagai kesalahan murni toko.",
+rptN_okWrong:"Laporan {0} untuk {1} TERBUKTI: barang yang kami kirim salah.",
+rptN_exch:"Kami mengajukan tukar barang. Ongkir kirim ke toko ditanggung Anda ({0}), ongkir kirim barang pengganti ke Anda ditanggung toko. Setujui pengajuan di halaman Pesanan Saya.",
+rptN_storeShip:"Anda mendapat kompensasi tertinggi dari kami dan seluruh ongkir ditanggung toko.",
+rptN_vc:"Voucher Anda: {0} senilai {1}. Pakai di halaman transaksi.",
+rptN_vcNv:"Hubungi toko via WhatsApp 0895801321630 dengan nomor pesanan untuk kompensasi (voucher hanya untuk akun terdaftar).",
+exOffer:"Pengajuan tukar barang dari toko",exShopTo:"Alamat toko untuk pengiriman barang:",exAgree:"Setuju tukar barang",exDecline:"Tolak",
+exAgreed:"Anda menyetujui tukar barang. Silakan kirim barang ke toko; toko akan mengirim barang pengganti dan menanggung ongkirnya.",
+exDeclined:"Pengajuan tukar barang ditolak.",exDone:"Tukar barang selesai. Terima kasih!",
+exAgreedT:"Pengajuan tukar barang disetujui",exDeclinedT:"Pengajuan tukar barang ditolak",
+rst_ex_offer:"Pengajuan tukar barang dikirim",rst_ex_agree:"Pelanggan setuju tukar barang",rst_ex_decline:"Pelanggan menolak tukar barang",rst_ex_done:"Tukar barang selesai",
+rptCause:"Penyebab laporan",rcGen:"Kerusakan / lainnya",rcWrong:"Salah kirim barang (tukar barang)",rcStore:"Murni kesalahan toko (kompensasi tertinggi)",
+rcStoreCust:"Terbukti murni kesalahan toko: kompensasi tertinggi diberikan dan seluruh ongkir ditanggung toko.",
+rcStoreNote:"Kesalahan toko: kompensasi tertinggi, seluruh ongkir ditanggung toko.",
+exOfferA:"Pengajuan tukar barang dikirim ke pelanggan",exAgreeA:"Pelanggan setuju tukar barang",exDeclineA:"Pelanggan menolak tukar barang",exDoneA:"Tukar barang selesai",exMarkDone:"Tandai tukar selesai",
+exRepY:"Pelanggan menyetujui tukar barang: {0} · {1}",exRepN:"Pelanggan menolak tukar barang: {0} · {1}",
+exDoneMsg:"Tukar barang untuk {0} sudah selesai.",doneOnCust:"Dikonfirmasi selesai oleh pelanggan pada"});
+Object.assign(I.en,{
+kWrong:"Wrong item sent",rpWrongOpt:"Wrong item sent (not what I ordered)",
+rpWrongN:"A photo OR a video is required as proof. If proven, admin will offer an item exchange and a voucher.",
+rpExBox:"If proven, admin will offer an item exchange. A voucher is still given.",
+rpExShip:"Shipping the item to the store is paid by you (estimated {0}). Shipping the replacement to you is paid by the store.",
+rpAgreeEx:"I agree to pay the shipping of the item to the store {0} and declare this report is true.",
+wrgN:"New wrong-item report: {0} · {1}",
+rptN_ok:"Your {0} report for {1} is PROVEN. You received voucher {2} worth {3}. Use it at checkout.",
+rptN_okGen:"Your {0} report for {1} is PROVEN.",
+rptN_okStore:"Your {0} report for {1} is PROVEN as purely the store's fault.",
+rptN_okWrong:"Your {0} report for {1} is PROVEN: we sent the wrong item.",
+rptN_exch:"We offer an item exchange. Shipping to the store is paid by you ({0}), shipping the replacement to you is paid by the store. Please accept the offer on the My Orders page.",
+rptN_storeShip:"You receive our highest compensation and all shipping is paid by the store.",
+rptN_vc:"Your voucher: {0} worth {1}. Use it at checkout.",
+rptN_vcNv:"Contact the store on WhatsApp 0895801321630 with your order number for compensation (vouchers are for registered accounts only).",
+exOffer:"Item exchange offer from the store",exShopTo:"Store address for sending the item:",exAgree:"Accept exchange",exDecline:"Decline",
+exAgreed:"You accepted the exchange. Please send the item to the store; the store will send the replacement and pay its shipping.",
+exDeclined:"Exchange offer declined.",exDone:"Exchange completed. Thank you!",
+exAgreedT:"Exchange offer accepted",exDeclinedT:"Exchange offer declined",
+rst_ex_offer:"Exchange offer sent",rst_ex_agree:"Customer accepted the exchange",rst_ex_decline:"Customer declined the exchange",rst_ex_done:"Exchange completed",
+rptCause:"Report cause",rcGen:"Damage / other",rcWrong:"Wrong item sent (exchange)",rcStore:"Purely the store's fault (highest compensation)",
+rcStoreCust:"Proven to be purely the store's fault: highest compensation is given and all shipping is paid by the store.",
+rcStoreNote:"Store's fault: highest compensation, all shipping paid by the store.",
+exOfferA:"Exchange offer sent to customer",exAgreeA:"Customer accepted the exchange",exDeclineA:"Customer declined the exchange",exDoneA:"Exchange completed",exMarkDone:"Mark exchange done",
+exRepY:"Customer accepted the exchange: {0} · {1}",exRepN:"Customer declined the exchange: {0} · {1}",
+exDoneMsg:"The exchange for {0} is completed.",doneOnCust:"Confirmed completed by the customer on"});
+Object.assign(I.zh,{
+kWrong:"发错商品",rpWrongOpt:"发错货（不是我订购的商品）",
+rpWrongN:"必须提供照片或视频作为证明。属实后，管理员将提出换货并发放优惠券。",
+rpExBox:"属实后，管理员将提出换货申请，并仍会发放优惠券。",
+rpExShip:"寄回商品给商店的运费由您承担（预计 {0}）。商店寄出替换商品给您的运费由商店承担。",
+rpAgreeEx:"我同意承担寄回商品给商店的运费 {0}，并声明此报告属实。",
+wrgN:"新的发错货报告：{0} · {1}",
+rptN_ok:"您关于 {1} 的{0}报告已属实。您获得优惠券 {2}，价值 {3}。请在结算页面使用。",
+rptN_okGen:"您关于 {1} 的{0}报告已属实。",
+rptN_okStore:"您关于 {1} 的{0}报告已确认为完全是商店的过错。",
+rptN_okWrong:"您关于 {1} 的{0}报告已属实：我们发错了商品。",
+rptN_exch:"我们提出换货申请。寄回商店的运费由您承担（{0}），商店寄出替换商品的运费由商店承担。请在“我的订单”页面接受申请。",
+rptN_storeShip:"您将获得我们最高的补偿，且所有运费由商店承担。",
+rptN_vc:"您的优惠券：{0}，价值 {1}。请在结算页面使用。",
+rptN_vcNv:"请通过 WhatsApp 0895801321630 联系商店并提供订单号以获得补偿（优惠券仅限注册账号）。",
+exOffer:"商店提出的换货申请",exShopTo:"寄回商品的商店地址：",exAgree:"同意换货",exDecline:"拒绝",
+exAgreed:"您已同意换货。请将商品寄到商店；商店将寄出替换商品并承担运费。",
+exDeclined:"换货申请已被拒绝。",exDone:"换货已完成。谢谢！",
+exAgreedT:"已同意换货申请",exDeclinedT:"已拒绝换货申请",
+rst_ex_offer:"已发送换货申请",rst_ex_agree:"客户同意换货",rst_ex_decline:"客户拒绝换货",rst_ex_done:"换货已完成",
+rptCause:"报告原因",rcGen:"损坏 / 其他",rcWrong:"发错货（换货）",rcStore:"完全是商店的过错（最高补偿）",
+rcStoreCust:"已确认完全是商店的过错：给予最高补偿，且所有运费由商店承担。",
+rcStoreNote:"商店过错：最高补偿，所有运费由商店承担。",
+exOfferA:"已向客户发送换货申请",exAgreeA:"客户同意换货",exDeclineA:"客户拒绝换货",exDoneA:"换货已完成",exMarkDone:"标记换货完成",
+exRepY:"客户同意换货：{0} · {1}",exRepN:"客户拒绝换货：{0} · {1}",
+exDoneMsg:"{0} 的换货已完成。",doneOnCust:"客户确认完成时间："});
 
 /* ============ INIT ============ */
 window.onload=()=>{
