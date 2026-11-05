@@ -132,11 +132,32 @@ img,canvas,video{max-width:100%}
         <button onclick="openM('m-help')" class="hover:opacity-80"><i class="fa-regular fa-circle-question mr-1"></i><span data-i="help"></span></button>
         <!-- Bahasa -->
         <div class="relative">
-          <button onclick="toggleDD('dd-lang')" class="hover:opacity-80"><i class="fa-solid fa-globe mr-1"></i><span id="langLabel">Bahasa Indonesia</span> <i class="fa-solid fa-chevron-down text-xs"></i></button>
-          <div id="dd-lang" class="dd hid absolute right-0 mt-3 w-44 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm">
+          <button onclick="toggleDD('dd-lang')" class="hover:opacity-80"><i class="fa-solid fa-globe mr-1"></i><span id="langLabel" translate="no">Bahasa Indonesia</span> <i class="fa-solid fa-chevron-down text-xs"></i></button>
+          <div id="dd-lang" translate="no" class="notranslate dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-y-auto text-sm" style="max-height:70vh">
             <button onclick="setLang('id')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇮🇩 Bahasa Indonesia</button>
             <button onclick="setLang('en')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇬🇧 English</button>
             <button onclick="setLang('zh')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇨🇳 中文</button>
+            <button onclick="setLang('ms')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇲🇾 Bahasa Melayu</button>
+            <button onclick="setLang('es')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇪🇸 Español</button>
+            <button onclick="setLang('fr')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇫🇷 Français</button>
+            <button onclick="setLang('de')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇩🇪 Deutsch</button>
+            <button onclick="setLang('pt')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇵🇹 Português</button>
+            <button onclick="setLang('it')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇮🇹 Italiano</button>
+            <button onclick="setLang('nl')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇳🇱 Nederlands</button>
+            <button onclick="setLang('ru')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇷🇺 Русский</button>
+            <button onclick="setLang('tr')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇹🇷 Türkçe</button>
+            <button onclick="setLang('ar')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇸🇦 العربية</button>
+            <button onclick="setLang('hi')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇮🇳 हिन्दी</button>
+            <button onclick="setLang('bn')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇧🇩 বাংলা</button>
+            <button onclick="setLang('ur')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇵🇰 اردو</button>
+            <button onclick="setLang('ja')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇯🇵 日本語</button>
+            <button onclick="setLang('ko')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇰🇷 한국어</button>
+            <button onclick="setLang('th')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇹🇭 ไทย</button>
+            <button onclick="setLang('vi')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇻🇳 Tiếng Việt</button>
+            <button onclick="setLang('tl')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇵🇭 Filipino</button>
+            <button onclick="setLang('pl')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇵🇱 Polski</button>
+            <button onclick="setLang('uk')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇺🇦 Українська</button>
+            <button onclick="setLang('sv')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇸🇪 Svenska</button>
           </div>
         </div>
         <div class="relative">
@@ -531,7 +552,7 @@ img,canvas,video{max-width:100%}
       <div><label class="lbl" data-i="desc"></label><textarea id="edesc" rows="3" class="inp"></textarea></div>
       <div><label class="lbl" data-i="optsLbl"></label><input id="eopts" class="inp" placeholder="S, M, L, XL"></div>
       <div><label class="lbl" data-i="rsMinAuto"></label><input id="emin" type="number" min="0" data-p="autoL" class="inp"><p class="text-[11px] text-slate-400 mt-1" data-i="rsRule"></p></div>
-      <div class="grid sm:grid-cols-2 gap-3"><div><label class="lbl" data-i="nameEn"></label><input id="ene" class="inp"></div><div><label class="lbl" data-i="nameZh"></label><input id="enz" class="inp"></div><div><label class="lbl" data-i="descEn"></label><textarea id="ede" rows="2" class="inp"></textarea></div><div><label class="lbl" data-i="descZh"></label><textarea id="edz" rows="2" class="inp"></textarea></div></div>
+      <p class="text-[11px] text-slate-500 bg-slate-50 rounded-lg px-3 py-2"><i class="fa-solid fa-language text-orange-500 mr-1"></i><span data-i="autoTrHint"></span></p>
       <div class="flex justify-end gap-2 pt-2 border-t"><button type="button" onclick="closeM('m-edit')" class="px-5 py-2.5 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50" data-i="cancel"></button><button class="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold" data-i="save"></button></div>
     </form>
   </div>
@@ -650,10 +671,10 @@ id:{home:"Halaman Utama",catalog:"Katalog",notif:"Notifikasi",help:"Bantuan",log
 en:{home:"Home",catalog:"Catalog",notif:"Notifications",help:"Help",logout:"Log Out",adminMode:"Admin Mode",adminDash:"Admin Dashboard",search:"Search products, jerseys, shoes, balls...",best:"Best Sellers",newest:"New Arrivals",promoP:"Promo Products",seeAll:"See All",flash:"Special Promo",promoTitle:"Up to 30% Off Futsal Gear!",promoText:"Shop your favorite jerseys, shoes and balls. Free shipping in Maros and a voucher for new accounts.",promoBtn:"Shop Promo",ad1:"Free Shipping in Maros",ad2:"Easy Pay via QRIS",ad3:"100% Authentic Guarantee",ret:"7-day return policy",featured:"Featured Products",qty:"Quantity",stock:"Stock",sold:"sold",pcs:"pcs",buy:"Buy Now",addCart:"Add to Cart",cartTitle:"Shopping Cart",empty:"No items yet.",total:"Total",checkout:"Checkout / Transaction",name:"Name",address:"Shipping Address",payment:"Payment Method",payNow:"Pay Now",qrisNote:"Scan this QRIS to pay (simulation).",helpTitle:"Help Center",faq1q:"How do I shop?",faq1a:"Click a product, press Buy Now, fill in shipping details, choose payment, then pay.",faq2q:"Which payment methods?",faq2a:"QRIS, Bank Transfer, E-Wallet and Cash on Delivery (COD).",faq3q:"How long is delivery?",faq3a:"Maros and Makassar 1-2 days, other cities 3-5 business days.",chatWa:"Chat on WhatsApp",notifTitle:"History & Updates",clear:"Clear",noNotif:"No notifications yet.",login:"Log In",tAdmin:"Log In",tGuest:"Guest",tReg:"Sign Up",username:"Username",password:"Password",confirm:"Confirm Password",createAcc:"Create Account",enterGuest:"Continue as Guest",guestText:"Browse the store without an account. Admin mode is not available for guests.",adminPanel:"Admin Dashboard",revenue:"Total Revenue",orders:"Orders",products:"Total Products",pname:"Product Name",pcat:"Category",price:"Price",addProduct:"Add",date:"Date",noResult:"No products found.",all:"All"},
 zh:{home:"首页",catalog:"商品目录",notif:"通知",help:"帮助",logout:"退出",adminMode:"管理员模式",adminDash:"管理后台",search:"搜索商品、球衣、球鞋、足球...",best:"热销商品",newest:"新品上架",promoP:"促销商品",seeAll:"查看全部",flash:"特别促销",promoTitle:"五人制足球装备最高8折！",promoText:"选购您喜爱的球衣、球鞋和足球。马罗斯市内免运费，新账号可获优惠券。",promoBtn:"立即抢购",ad1:"马罗斯市内免运费",ad2:"QRIS 便捷支付",ad3:"正品保证",ret:"7天无理由退货",featured:"精选商品",qty:"数量",stock:"库存",sold:"已售",pcs:"件",buy:"立即购买",addCart:"加入购物车",cartTitle:"购物车",empty:"暂无商品。",total:"合计",checkout:"结算 / 交易",name:"姓名",address:"收货地址",payment:"支付方式",payNow:"立即支付",qrisNote:"扫描 QRIS 付款（模拟）。",helpTitle:"帮助中心",faq1q:"如何购物？",faq1a:"点击商品，按“立即购买”，填写收货信息，选择支付方式并付款。",faq2q:"支持哪些支付方式？",faq2a:"QRIS、银行转账、电子钱包和货到付款。",faq3q:"配送需要多久？",faq3a:"马罗斯和望加锡1-2天，其他城市3-5个工作日。",chatWa:"WhatsApp 联系我们",notifTitle:"历史与动态",clear:"清除",noNotif:"暂无通知。",login:"登录",tAdmin:"登录",tGuest:"访客",tReg:"注册",username:"用户名",password:"密码",confirm:"确认密码",createAcc:"创建账号",enterGuest:"以访客身份进入",guestText:"无需账号即可浏览商店。访客无法使用管理员模式。",adminPanel:"管理后台",revenue:"总收入",orders:"订单",products:"商品总数",pname:"商品名称",pcat:"类别",price:"价格",addProduct:"添加",date:"日期",noResult:"未找到商品。",all:"全部"}
 };
-const LN={id:"Bahasa Indonesia",en:"English",zh:"中文"};
+const LANGS=[["id", "🇮🇩", "Bahasa Indonesia", "id-ID", "id"], ["en", "🇬🇧", "English", "en-GB", "en"], ["zh", "🇨🇳", "中文", "zh-CN", "zh-CN"], ["ms", "🇲🇾", "Bahasa Melayu", "ms-MY", "ms"], ["es", "🇪🇸", "Español", "es-ES", "es"], ["fr", "🇫🇷", "Français", "fr-FR", "fr"], ["de", "🇩🇪", "Deutsch", "de-DE", "de"], ["pt", "🇵🇹", "Português", "pt-PT", "pt"], ["it", "🇮🇹", "Italiano", "it-IT", "it"], ["nl", "🇳🇱", "Nederlands", "nl-NL", "nl"], ["ru", "🇷🇺", "Русский", "ru-RU", "ru"], ["tr", "🇹🇷", "Türkçe", "tr-TR", "tr"], ["ar", "🇸🇦", "العربية", "ar-SA", "ar"], ["hi", "🇮🇳", "हिन्दी", "hi-IN", "hi"], ["bn", "🇧🇩", "বাংলা", "bn-BD", "bn"], ["ur", "🇵🇰", "اردو", "ur-PK", "ur"], ["ja", "🇯🇵", "日本語", "ja-JP", "ja"], ["ko", "🇰🇷", "한국어", "ko-KR", "ko"], ["th", "🇹🇭", "ไทย", "th-TH", "th"], ["vi", "🇻🇳", "Tiếng Việt", "vi-VN", "vi"], ["tl", "🇵🇭", "Filipino", "fil-PH", "tl"], ["pl", "🇵🇱", "Polski", "pl-PL", "pl"], ["uk", "🇺🇦", "Українська", "uk-UA", "uk"], ["sv", "🇸🇪", "Svenska", "sv-SE", "sv"]];const LN={};LANGS.forEach(x=>{LN[x[0]]=x[2];if(!I[x[0]])I[x[0]]={}});const NATIVE=['id','en','zh'];
 let lang=ld('lang','id');
 let SITE={};
-const t=k=>((SITE.tx&&SITE.tx[lang]&&SITE.tx[lang][k])??I[lang][k]??I.id[k]??k);
+const t=k=>((SITE.tx&&SITE.tx[lang]&&SITE.tx[lang][k])??(I[lang]&&I[lang][k])??(SITE.tx&&SITE.tx.id&&SITE.tx.id[k])??I.id[k]??k);
 
 
 /* ============ ALAMAT (kode pos otomatis) ============ */
@@ -719,7 +740,7 @@ const SUPABASE_URL="https://lgzxltobehnwmsdkwzsu.supabase.co";   /* contoh: http
 const SUPABASE_KEY="sb_publishable_cdIB6CfwbgD1ruP8G1cILw_llM-3BYc";   /* Publishable key (sb_publishable_...) atau anon key */
 const SYNC_URL=(SUPABASE_URL&&SUPABASE_KEY)?SUPABASE_URL.replace(/\/+$/,'').replace(/\/rest\/v1$/,''):"";
 function setNet(ok,msg){let e=document.getElementById('netPill');if(!e){e=document.createElement('div');e.id='netPill';e.style.cssText='position:fixed;left:12px;bottom:12px;z-index:60;max-width:92vw;background:#fff;color:#334155;border:1px solid #cbd5e1;border-radius:9999px;padding:4px 12px;font:600 12px system-ui,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.15)';document.body.appendChild(e)}
-  e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'+(msg?'<br><small style="color:#b91c1c;font-weight:500">'+String(msg).replace(/</g,'&lt;')+'</small>':'')}
+  e.innerHTML=ok?'<span style="color:#16a34a">&#9679;</span> Online (tersinkron)':'<span style="color:#dc2626">&#9679;</span> Offline (tersimpan lokal)'+(msg?'<br><small style="color:#b91c1c;font-weight:500">'+String(msg).replace(/</g,'&lt;')+'</small>':'');try{trDom(e)}catch(x){}}
 if(!SYNC_URL)setNet(false);
 const SYNC_KEYS=['users','orders','notifs2','reviews','access','reports','products5','promobg','stockin','mod'];
 let syncMeta=ld('syncMeta',{}),syncDirtyKeys=new Set(ld('syncDirty',[])),syncTimer=null,syncBusy=false;
@@ -827,13 +848,83 @@ DEF.forEach(p=>{if(SKU_OLD[p.sku])p.sku=SKU_OLD[p.sku]});
 const DEFN={};DEF.forEach(p=>DEFN[p.sku]=[p.name,p.d]);
 const OTR={'Bola Sepak (Size 5)':{en:'Football (Size 5)',zh:'足球（5号）'},'Bola Futsal (Size 4)':{en:'Futsal Ball (Size 4)',zh:'五人制足球（4号）'}};
 const otr=v=>(lang!=='id'&&OTR[v]&&OTR[v][lang])||v;
-const catName=c=>{const k='c'+c;return (SITE.tx&&SITE.tx[lang]&&SITE.tx[lang][k])??I[lang][k]??I.id[k]??c};
-function pname(p){if(!p)return'?';if(lang==='en'&&p.ne)return p.ne;if(lang==='zh'&&p.nz)return p.nz;const d=DEFN[p.sku],x=PTR[p.sku];if(lang!=='id'&&d&&x&&x[lang]&&d[0]===p.name)return x[lang][0];return p.name}
-function pdesc(p){if(!p.d)return t('newProdDesc');if(lang==='en'&&p.de)return p.de;if(lang==='zh'&&p.dz)return p.dz;const d=DEFN[p.sku],x=PTR[p.sku];if(lang!=='id'&&d&&x&&x[lang]&&d[1]===p.d)return x[lang][1];return p.d}
+/* ===== TERJEMAHAN OTOMATIS (tanpa tulis manual) =====
+   Teks apa pun yang diketik/diedit admin diterjemahkan otomatis ke semua bahasa (Indonesia, Inggris, Mandarin).
+   Hasilnya disimpan di data produk / data situs sehingga ikut tersinkron ke semua device. */
+const TL=['id','en','zh'],LGC={id:'id',en:'en',zh:'zh-CN',auto:'auto'};LANGS.forEach(x=>{LGC[x[0]]=x[4]});
+let TRC=ld('trc',{}),trQ={},trFail={},trTimer=null,trErrCnt=0;
+const trKey=(f,to,x)=>f+'>'+to+'|'+x;
+const trHasText=x=>/[A-Za-z\u4e00-\u9fff]{2,}/.test(x||'');
+function trSave(){try{const k=Object.keys(TRC);if(k.length>6000)k.slice(0,1800).forEach(x=>delete TRC[x]);localStorage.setItem('gs_trc',JSON.stringify(TRC))}catch(e){}}
+function trProt(x){const m=[];return[x.replace(/\{(\d+)\}/g,a=>{m.push(a);return'[['+(m.length-1)+']]'}),m]}
+function trRest(x,m){return x.replace(/\[\s*\[\s*(\d+)\s*\]\s*\]/g,(a,n)=>m[+n]!==undefined?m[+n]:a)}
+function trChunk(x,n){const o=[];let c='';x.split(/(?<=[.!?\u3002])\s+/).forEach(p=>{while(p.length>n){o.push((c+' '+p.slice(0,n)).trim());c='';p=p.slice(n)}if((c+' '+p).length>n){if(c)o.push(c.trim());c=p}else c=(c+' '+p).trim()});if(c)o.push(c);return o}
+async function mtGoogle(q,f,g){const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl='+f+'&tl='+g+'&dt=t&q='+encodeURIComponent(q));if(!r.ok)throw new Error('g'+r.status);const d=await r.json();const x=d[0].map(y=>(y&&y[0])||'').join('');if(!x)throw new Error('g0');return x}
+async function mtMyMemory(q,f,g){const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+(f==='auto'?'id':f)+'|'+g);if(!r.ok)throw new Error('m'+r.status);const d=await r.json(),x=d&&d.responseData&&d.responseData.translatedText;if(!x||+d.responseStatus!==200||/MYMEMORY WARNING|INVALID/i.test(x))throw new Error('m0');return x}
+async function mt(text,from,to){
+  text=String(text==null?'':text).trim();if(!text||from===to||!trHasText(text))return text;
+  const key=trKey(from,to,text);if(TRC[key])return TRC[key];
+  const pr=trProt(text),out=[];
+  for(const part of trChunk(pr[0],450)){let r;try{r=await mtGoogle(part,LGC[from],LGC[to])}catch(e){r=await mtMyMemory(part,LGC[from],LGC[to])}out.push(r)}
+  const res=trRest(out.join(' '),pr[1]).trim();if(!res)throw new Error('empty');
+  TRC[key]=res;trSave();return res}
+/* tampil: pakai hasil terjemahan jika sudah ada; jika belum, tampilkan teks asli lalu terjemahkan di latar belakang */
+function trL(text,from){
+  from=from||'id';if(!text||lang===from||!trHasText(text)||!NATIVE.includes(lang))return text;
+  const key=trKey(from,lang,text);if(TRC[key])return TRC[key];
+  if(!trQ[key]&&!(trFail[key]&&Date.now()-trFail[key]<60000)){trQ[key]=1;
+    mt(text,from,lang).then(()=>{delete trQ[key];trRefresh()}).catch(()=>{delete trQ[key];trFail[key]=Date.now()})}
+  return text}
+const H=x=>{try{return lang==='id'?x:trL(x,'id')}catch(e){return x}};
+function trRefresh(){clearTimeout(trTimer);trTimer=setTimeout(()=>{try{fillCatSelects();renderAll();if(typeof cur!=='undefined'&&cur&&$('m-prod')&&!$('m-prod').classList.contains('hid'))openProdRefresh();trDomAll()}catch(e){}},400)}
+/* teks tetap (hardcode bahasa Indonesia) di panel admin dll: diterjemahkan lewat DOM */
+const TRDOM=new Set();
+function trDom(root){
+  if(!root)return;TRDOM.add(root);if(!NATIVE.includes(lang))return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;return(p&&!/^(SCRIPT|STYLE|TEXTAREA)$/.test(p.nodeName)&&!p.closest('[data-i]')&&trHasText(n._o!==undefined?n._o:n.nodeValue))?1:2}});
+  const ns=[];while(w.nextNode())ns.push(w.currentNode);
+  ns.forEach(n=>{if(n._o===undefined)n._o=n.nodeValue;const o=n._o,a=o.match(/^\s*/)[0],b=o.match(/\s*$/)[0],core=o.trim();n.nodeValue=lang==='id'?o:a+trL(core,'id')+b});
+  root.querySelectorAll('[placeholder],[title]').forEach(e=>['placeholder','title'].forEach(at=>{if(!e.hasAttribute(at))return;const k='_o_'+at;if(e[k]===undefined)e[k]=e.getAttribute(at);if(trHasText(e[k]))e.setAttribute(at,lang==='id'?e[k]:trL(e[k],'id'))}))}
+function trDomAll(){TRDOM.forEach(r=>{if(!document.body.contains(r))TRDOM.delete(r);else trDom(r)})}
+/* produk: nama & deskripsi -> terjemahan ke bahasa lain disimpan di p.tr */
+async function transProduct(p){
+  let ch=false;const s0=p.src||'id',ds=p.dsrc||p.src||'id',dn=DEFN[p.sku]||[],defN=dn[0]===p.name,defD=dn[1]===(p.d||'');
+  for(const L of TL){
+    const q=P.find(x=>x.id===p.id)||p,e=(q.tr&&q.tr[L])||{},r={n:e.n,d:e.d,sn:e.sn,sd:e.sd};let c2=false;
+    if(L!==s0&&!defN&&p.name&&(e.sn!==p.name||!e.n)){try{r.n=await mt(p.name,s0,L);r.sn=p.name;c2=true}catch(x){trErrCnt++}}
+    if(L!==ds&&!defD&&p.d&&(e.sd!==p.d||!e.d)){try{r.d=await mt(p.d,ds,L);r.sd=p.d;c2=true}catch(x){trErrCnt++}}
+    if(c2){const t2=P.find(x=>x.id===p.id);if(t2){t2.tr=t2.tr||{};t2.tr[L]=r;ch=true}}}
+  return ch}
+async function transAndSave(p){if(!p)return;try{if(await transProduct(p)){try{sv('products5',P)}catch(x){}renderAll()}}catch(e){}}
+/* kategori */
+async function transCat(c,src){
+  SITE.ctr=SITE.ctr||{};const e=SITE.ctr[c]=SITE.ctr[c]||{s:src||lang};let ch=false;
+  for(const L of TL){if(L===e.s||e[L])continue;try{e[L]=await mt(c,e.s,L);ch=true}catch(x){trErrCnt++}}
+  if(ch){siteSave();try{fillCatSelects();renderKatalog();renderSitePanel()}catch(x){}}return ch}
+/* tulisan halaman (mode edit tulisan) -> otomatis ke bahasa lain */
+async function transSite(k,v,from){
+  SITE.tx=SITE.tx||{};SITE.txa=SITE.txa||{};let ch=false;
+  for(const L of TL){if(L===from)continue;
+    if(!v){if(SITE.txa[L]&&SITE.txa[L][k]){if(SITE.tx[L])delete SITE.tx[L][k];delete SITE.txa[L][k];ch=true}continue}
+    try{const r=await mt(v,from,L);SITE.tx[L]=SITE.tx[L]||{};SITE.tx[L][k]=r;(SITE.txa[L]=SITE.txa[L]||{})[k]=1;ch=true}catch(x){trErrCnt++}}
+  if(ch){siteSave();applyLang()}}
+/* admin: lengkapi terjemahan produk & kategori yang belum ada (termasuk data lama yang diisi manual) */
+let bfBusy=false,bfDone=false;
+async function backfillTr(){
+  if(bfBusy||bfDone||typeof session==='undefined'||!session||session.role!=='admin')return;bfBusy=true;
+  try{const e0=trErrCnt;let any=false;
+    for(const p of P.slice()){if(await transProduct(p))any=true}
+    for(const c of allCats()){if(CAT_CODE[c])continue;if(!(SITE.ctr&&SITE.ctr[c]&&TL.every(L=>L===SITE.ctr[c].s||SITE.ctr[c][L])))await transCat(c,(SITE.ctr&&SITE.ctr[c]&&SITE.ctr[c].s)||'id')}
+    if(any){try{sv('products5',P)}catch(x){}renderAll()}
+    if(trErrCnt===e0)bfDone=true}catch(e){}
+  bfBusy=false}
+const catName=c=>{const k='c'+c,v=(SITE.tx&&SITE.tx[lang]&&SITE.tx[lang][k])??(I[lang]&&I[lang][k])??I.id[k];if(v!==undefined)return v;const e=SITE.ctr&&SITE.ctr[c];if(e){if(e.s===lang)return c;if(e[lang])return e[lang]}return trL(c,(e&&e.s)||'id')};
+function pname(p){if(!p)return'?';if(lang==='en'&&p.ne)return p.ne;if(lang==='zh'&&p.nz)return p.nz;const d=DEFN[p.sku],x=PTR[p.sku],s0=p.src||'id';if(lang!=='id'&&d&&x&&x[lang]&&d[0]===p.name)return x[lang][0];if(lang===s0)return p.name;const e=p.tr&&p.tr[lang];if(e&&e.sn===p.name&&e.n)return e.n;return trL(p.name,s0)}
+function pdesc(p){if(!p.d)return t('newProdDesc');if(lang==='en'&&p.de)return p.de;if(lang==='zh'&&p.dz)return p.dz;const d=DEFN[p.sku],x=PTR[p.sku],ds=p.dsrc||p.src||'id';if(lang!=='id'&&d&&x&&x[lang]&&d[1]===p.d)return x[lang][1];if(lang===ds)return p.d;const e=p.tr&&p.tr[lang];if(e&&e.sd===p.d&&e.d)return e.d;return trL(p.d,ds)}
 const stLbl=s=>t({Diproses:'stProc',Dikirim:'stShip',Selesai:'stDone'}[s]||'stProc');
 const PAYN={'Transfer Bank':'pTB','E-Wallet':'pEW','COD':'pCOD'};
 const payName=m=>PAYN[m]?t(PAYN[m]):m;
-const cnT=n=>String(n).replace('Reguler',{id:'Reguler',en:'Regular',zh:'普通'}[lang]);
+const cnT=n=>String(n).replace('Reguler',({id:'Reguler',en:'Regular',zh:'普通'}[lang]||'Reguler'));
 const cName=s=>s?(s.k==='toko'?t('courToko'):cnT(s.n)):'';
 const cNameK=o=>(o.shipK==='toko'||o.ship==='Kurir Toko Garuda')?t('courToko'):cnT(o.ship||'');
 /* ===== Stok minimum: 25 untuk barang besar & laku (kategori Jersey/Sepatu/Alat dengan terjual >= 20), 8 untuk lainnya ===== */
@@ -907,7 +998,7 @@ const GID=(function(){let g=ld('gid',null);if(!g){g=Math.random().toString(36).s
 /* tamu punya ID perangkat sendiri, sehingga pesanan & update-nya tetap tersambung walau keluar-masuk sebagai tamu */
 const feedKey=()=>session&&session.role==='user'?session.name:GK+':'+GID;
 const ownsO=o=>{const k=feedKey(),w=o.owner||GK;return w===k||(w===GK&&k.indexOf(GK+':')===0)};
-const LOC=()=>lang==='zh'?'zh-CN':lang==='en'?'en-GB':'id-ID';
+const LOC=()=>{const x=LANGS.find(y=>y[0]===lang);return x?x[3]:'id-ID'};
 const tm=()=>Date.now();
 const fmtT=v=>typeof v==='number'?new Date(v).toLocaleString(LOC()):String(v||'');
 const fmtD=v=>typeof v==='number'?new Date(v).toLocaleDateString(LOC()):String(v||'');
@@ -983,7 +1074,7 @@ function clearNotif(){if(session&&session.role==='admin')NF[nMode==='a'?'a':'g']
 function unreadHint(){if(session&&session.role==='admin')return;const n=curArr().filter(x=>!x.rd).length;if(n)toast(`\ud83d\udd14 ${n} ${t('newUpd')}`)}
 
 
-function setLang(l){lang=l;sv('lang',l);document.documentElement.lang=l;applyLang();$('dd-lang').classList.add('hid');toast(LN[l])}
+function setLang(l){lang=l;sv('lang',l);document.documentElement.lang=l;if(window.atLang)atLang();applyLang();trDomAll();$('dd-lang').classList.add('hid');toast(LN[l])}
 function applyLang(){
   fillCatSelects();
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
@@ -1027,7 +1118,7 @@ function renderKatalog(){
 }
 const nz=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\u4e00-\u9fff\s]/g,' ').split(/\s+/).filter(Boolean);
 /* cocok pada NAMA (semua bahasa), KATEGORI, SKU - deskripsi tidak ikut dicari */
-function matchQ(p,q){const hay=[p.name,pname(p),p.ne||'',p.nz||'',p.cat,catName(p.cat),p.sku].join(' '),w=nz(hay),h=hay.toLowerCase();return q.every(k=>w.some(x=>x.startsWith(k))||(/[\u4e00-\u9fff]/.test(k)&&h.includes(k)))}
+function matchQ(p,q){const hay=[p.name,pname(p),p.ne||'',p.nz||'',...Object.values(p.tr||{}).map(x=>(x&&x.n)||''),p.cat,catName(p.cat),p.sku].join(' '),w=nz(hay),h=hay.toLowerCase();return q.every(k=>w.some(x=>x.startsWith(k))||(/[\u4e00-\u9fff]/.test(k)&&h.includes(k)))}
 function doSearch(){catF='all';show('katalog')}
 function liveSearch(){catF='all';if(curView!=='katalog')show('katalog');else renderKatalog()}
 function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='admin')renderAdmin();if(curView==='orders')renderOrders();if(curView==='stockin')renderStockIn()}
@@ -1068,6 +1159,9 @@ function updSkuHint(id){
 Object.assign(I.id,{"photoHint":"Foto pertama = foto utama. Bisa lebih dari 1 (maks. 6) untuk sudut/pov lain. Klik ★ untuk jadikan utama, × untuk hapus.","photoMain":"Utama","photoMax":"Maksimal 6 foto per produk","skuAuto":"SKU otomatis"});
 Object.assign(I.en,{"photoHint":"First photo = main photo. You can add more than one (max 6) for other angles. Click ★ to set as main, × to remove.","photoMain":"Main","photoMax":"Maximum 6 photos per product","skuAuto":"Auto SKU"});
 Object.assign(I.zh,{"photoHint":"第一张为主图。可添加多张（最多6张）展示不同角度。点击 ★ 设为主图，× 删除。","photoMain":"主图","photoMax":"每个商品最多6张照片","skuAuto":"自动 SKU"});
+Object.assign(I.id,{"autoTrHint":"Tulis dalam bahasa yang sedang dipilih. Terjemahan ke bahasa lain dibuat otomatis, tidak perlu ditulis manual."});
+Object.assign(I.en,{"autoTrHint":"Write in the language currently selected. Translations into the other languages are created automatically, no manual typing needed."});
+Object.assign(I.zh,{"autoTrHint":"请用当前所选语言填写。其他语言的翻译会自动生成，无需手动输入。"});
 function openProdRefresh(){
   renderGallery();
   $('pCat').textContent=catName(cur.cat);$('pName').textContent=pname(cur);
@@ -1488,7 +1582,7 @@ function enterGuest(){enter('guest','Tamu',{f:'loginG',a:[]})}
 function logout(){addNotif('fa-right-from-bracket',{f:'t',a:['logout']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session={role:'guest',name:'Tamu'};sv('session',session);$('dd-acc').classList.add('hid');authLabel();renderNotif();toast(t('loggedOut'));show('home')}
 
 /* ============ ADMIN ============ */
-function renderAdmin(){fillCatSelects();
+function renderAdmin(){fillCatSelects();backfillTr();
   $('aRev').textContent=Rp(orders.reduce((s,o)=>s+o.total,0));$('aOrd').textContent=orders.length;$('aProd').textContent=P.length;
   const low=P.filter(p=>p.stock<minStock(p));$('aLow').textContent=low.length;
   const lb=$('aLowBox');lb.classList.toggle('hid',!low.length);
@@ -1569,11 +1663,11 @@ function ordCard(o,adm){
   const mapHTML=o.status==='Dikirim'?`<div class="rounded-xl border overflow-hidden"><div class="px-3 py-2 bg-orange-50 text-sm font-semibold text-orange-700"><i class="fa-solid fa-motorcycle mr-1"></i>${t('mapToday')}</div><div id="map-${mid(o)}" data-oid="${esc(o.id)}" class="h-64 w-full bg-slate-100 flex items-center justify-center text-sm text-slate-400">${t('mapLoad')}</div><div id="mapInfo-${mid(o)}" class="px-3 py-2 text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 justify-between"></div></div>`:'';
   const items=o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id),done=(o.rvd||[]).includes(ci.id);
     return `<li class="flex items-center justify-between gap-2"><span>\u2022 ${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}</span>${o.status==='Selesai'&&!adm&&p?itemBtns(o,ci,done):''}</li>`}).join(''):(o.items||[]).map(x=>`<li>\u2022 ${esc(x)}</li>`).join('');
-  return `<div class="bg-white border rounded-2xl shadow-sm overflow-hidden"><div class="px-5 py-3 border-b flex flex-wrap justify-between gap-2"><div><b class="text-orange-600">${esc(o.id)}</b> <span class="text-xs text-slate-400 ml-2">${esc(fmtD(o.date))}</span>${adm?`<span class="text-xs text-slate-500 ml-2">${esc(o.name)}</span>`:''}</div><span class="px-3 py-0.5 rounded-full text-xs font-bold ${o.status==='Selesai'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}">${stLbl(o.status)}</span></div>
+  return `<div class="bg-white border rounded-2xl shadow-sm overflow-hidden"><div class="px-5 py-3 border-b flex flex-wrap justify-between gap-2"><div><b class="text-orange-600">${esc(o.id)}</b> <span class="text-xs text-slate-400 ml-2">${esc(fmtD(o.date))}</span>${adm?`<span translate="no" class="text-xs text-slate-500 ml-2">${esc(o.name)}</span>`:''}</div><span class="px-3 py-0.5 rounded-full text-xs font-bold ${o.status==='Selesai'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}">${stLbl(o.status)}</span></div>
   <div class="p-5 space-y-4"><div class="grid grid-cols-4 text-center text-xs">${S.map((s,k)=>`<div><div class="mx-auto w-10 h-10 rounded-full flex items-center justify-center ${k<=ix?'bg-orange-500 text-white':'bg-slate-200 text-slate-400'}"><i class="fa-solid ${s[0]}"></i></div><p class="mt-1 font-semibold ${k<=ix?'text-orange-600':'text-slate-400'}">${t(s[1])}</p></div>`).join('')}</div>
   <div class="bg-orange-50 rounded-xl p-3 text-sm"><i class="fa-solid fa-location-dot text-orange-500 mr-1"></i>${where}${o.resi?`<div class="text-xs text-slate-500 mt-1">${t('resi')}: <b>${esc(o.resi)}</b></div>`:''}</div>
   ${mapHTML}
-  <div class="grid md:grid-cols-2 gap-4 text-sm"><div><p class="lbl mb-1">${t('ordDetail')}</p><ul class="space-y-1">${items}</ul><p class="text-xs text-slate-500 mt-2">${esc(o.addr||'')}</p></div>
+  <div class="grid md:grid-cols-2 gap-4 text-sm"><div><p class="lbl mb-1">${t('ordDetail')}</p><ul class="space-y-1">${items}</ul><p translate="no" class="text-xs text-slate-500 mt-2">${esc(o.addr||'')}</p></div>
   <div class="space-y-1">${row(t('subtotal'),Rp(o.sub||0))}${row(t('shipFee'),o.ongkir?Rp(o.ongkir):t('free'))}${row(t('adminFee'),Rp(o.admin||0))}${o.ins?row(t('insFee'),Rp(o.ins)):''}${o.disc?row(t('vcDisc')+(o.voucher?' ('+esc(o.voucher)+')':''),'-'+Rp(o.disc)):''}<div class="flex justify-between font-extrabold pt-1 border-t"><span>${t('total')}</span><span class="text-orange-600">${Rp(o.total)}</span></div>${o.pay!=='COD'?`<p class="text-right"><span class="inline-block px-3 py-0.5 rounded-full text-xs font-extrabold tracking-widest bg-green-100 text-green-700"><i class="fa-solid fa-circle-check mr-1"></i>${t('paid')}</span></p>`:''}<p class="text-xs text-slate-500">${esc(payName(o.pay))}</p></div></div>
   <div><p class="lbl mb-1">${t('ordHistory')}</p><div class="text-xs text-slate-500 space-y-0.5">${(o.log||[{s:o.status,t:o.date}]).slice().reverse().map(l=>`<p><b class="text-slate-700">${esc(stLbl(l.s))}</b> \u00b7 ${esc(fmtT(l.t))}</p>`).join('')}</div></div>
   ${adm?'':(o.status==='Dikirim'?`<button onclick="finishOrder('${esc(o.id)}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-circle-check mr-1"></i>${t('recvBtn')}</button>`:o.status==='Diproses'?`<p class="text-xs text-slate-400 text-center">${t('recvWait')}</p>`:'')}</div></div>`}
@@ -1637,30 +1731,30 @@ async function addProduct(e){
   e.preventDefault();
   const id=Math.max(0,...P.map(p=>p.id))+1,cat=$('nc').value,pl=PIC.n.slice();
   const sku=nextSku(cat,true);
-  P.push({id,sku,name:$('np').value,cat,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img:pl[0]||'noimg',imgs:pl.slice(1),d:''});
+  P.push({id,sku,name:$('np').value,cat,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img:pl[0]||'noimg',imgs:pl.slice(1),d:'',src:lang});
   try{sv('products5',P)}catch(x){}
-  const nm=$('np').value;e.target.reset();PIC.n=[];renderPics('n');renderAll();toast(t('prodAdded')+' ('+sku+')');addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});
+  const nm=$('np').value;e.target.reset();PIC.n=[];renderPics('n');renderAll();toast(t('prodAdded')+' ('+sku+')');addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});transAndSave(P.find(x=>x.id===id));
 }
 function readImg(f,mx){mx=mx||480;return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=r.result};r.onerror=no;r.readAsDataURL(f)})}
 function editProduct(id){
   const p=P.find(x=>x.id===id);if(!p)return;
   $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');$('esku').dataset.auto='1';
-  $('emin').value=typeof p.min==='number'?p.min:'';$('ene').value=p.ne||'';$('enz').value=p.nz||'';$('ede').value=p.de||'';$('edz').value=p.dz||'';
+  $('emin').value=typeof p.min==='number'?p.min:'';
   openM('m-edit');
 }
 async function saveEdit(e){
   e.preventDefault();const p=P.find(x=>x.id===+$('eid').value);if(!p)return;
   let sku=$('esku').value.trim();if(!sku||$('esku').dataset.auto!=='0'&&$('ecat').value!==p.cat)sku=nextSku($('ecat').value,true,p.id);if(P.some(x=>x.id!==p.id&&x.sku===sku))return toast(t('skuUsed'));
   p.img=PIC.e[0]||'noimg';p.imgs=PIC.e.slice(1);
-  p.sku=sku;p.name=$('ename').value.trim();p.cat=$('ecat').value;p.price=+$('eprice').value;p.old=Math.max(0,+$('eold').value||0);if(p.old<=p.price)p.old=0;p.stock=+$('estock').value;p.d=$('edesc').value.trim();
+  const _on=p.name,_od=p.d||'';p.sku=sku;p.name=$('ename').value.trim();p.cat=$('ecat').value;p.price=+$('eprice').value;p.old=Math.max(0,+$('eold').value||0);if(p.old<=p.price)p.old=0;p.stock=+$('estock').value;p.d=$('edesc').value.trim();
   const mv=$('emin').value.trim();if(mv===''||isNaN(+mv))delete p.min;else p.min=Math.max(0,Math.floor(+mv));
-  p.ne=$('ene').value.trim();p.nz=$('enz').value.trim();p.de=$('ede').value.trim();p.dz=$('edz').value.trim();
+  if(p.name!==_on){p.src=lang;delete p.ne;delete p.nz}if((p.d||'')!==_od){p.dsrc=lang;delete p.de;delete p.dz}
   {const nm=$('eopts').value.split(',').map(s=>s.trim()).filter(Boolean);
   if(nm.length){const o=p.opts;p.opts={l:o?o.l:'size',list:nm.map(tk=>{const q=tk.split('='),n=q[0].trim(),st=(q[1]!==undefined&&q[1].trim()!==''&&!isNaN(+q[1]))?Math.max(0,Math.floor(+q[1])):null;const old=o&&o.list.find(x=>x[0]===n);const r=old?old.slice(0,3):[n,0];while(r.length<3)r.push(null);if(st!==null)r.push(st);return r})};
     if(p.opts.list.some(x=>typeof x[3]==='number'))p.stock=p.opts.list.reduce((s,x)=>s+(typeof x[3]==='number'?x[3]:0),0)}else delete p.opts}
   checkLow(p);
   try{sv('products5',P)}catch(x){}
-  closeM('m-edit');renderAll();toast(t('saved'));addNotif('fa-pen-to-square',{f:'prodSaved',a:[p.name]});
+  closeM('m-edit');renderAll();toast(t('saved'));transAndSave(p);addNotif('fa-pen-to-square',{f:'prodSaved',a:[p.name]});
 }
 function delProduct(id){if(!confirm(t('confDel')))return;{const d=P.find(p=>p.id===id);if(d)addNotif('fa-trash',{f:'prodDel',a:[d.name]})}P=P.filter(p=>p.id!==id);cart=cart.filter(c=>c.id!==id);sv('products5',P);sv('cart',cart);renderAll();toast(t('prodDel'))}
 
@@ -1759,11 +1853,11 @@ let editMode=false;
 function allCats(){const x=DEF_CATS.slice();[...(SITE.cats||[]),...P.map(p=>p.cat)].forEach(c=>{if(c&&x.indexOf(c)<0)x.push(c)});return x}
 function siteSave(){if(Array.isArray(RV))RV={};RV._site=SITE;sv('reviews',RV)}
 function fillCatSelects(){['nc','ecat'].forEach(id=>{const sel=$(id);if(!sel)return;const v=sel.value;
-  sel.innerHTML=allCats().map(c=>`<option value="${esc(c)}">${esc(catName(c))}</option>`).join('')+'<option value="__new">+ Kategori baru...</option>';
+  sel.innerHTML=allCats().map(c=>`<option value="${esc(c)}">${esc(catName(c))}</option>`).join('')+'<option value="__new">'+esc(H('+ Kategori baru...'))+'</option>';
   if(v&&v!=='__new'&&[...sel.options].some(o=>o.value===v))sel.value=v;
-  sel.onchange=()=>{if(sel.value==='__new'){const n=(prompt('Nama kategori baru:')||'').trim();if(n)addCat(n,id);else sel.selectedIndex=0}updSkuHint(id)}});updSkuHint('nc')}
+  sel.onchange=()=>{if(sel.value==='__new'){const n=(prompt(H('Nama kategori baru:'))||'').trim();if(n)addCat(n,id);else sel.selectedIndex=0}updSkuHint(id)}});updSkuHint('nc')}
 function addCat(n,sel){n=n.trim().slice(0,30);if(!n)return;const ex=allCats().find(c=>c.toLowerCase()===n.toLowerCase());
-  if(!ex){SITE.cats=(SITE.cats||[]).concat(n);siteSave()}fillCatSelects();if(sel&&$(sel))$(sel).value=ex||n;renderKatalog();renderSitePanel();toast(ex?'Kategori sudah ada':'Kategori ditambahkan')}
+  if(!ex){SITE.cats=(SITE.cats||[]).concat(n);siteSave();transCat(n,lang)}fillCatSelects();if(sel&&$(sel))$(sel).value=ex||n;renderKatalog();renderSitePanel();toast(H(ex?'Kategori sudah ada':'Kategori ditambahkan'))}
 function delCat(c){SITE.cats=(SITE.cats||[]).filter(x=>x!==c);siteSave();fillCatSelects();if(catF===c)catF='all';renderKatalog();renderSitePanel()}
 /* warna & gambar katalog */
 const hx=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
@@ -1781,23 +1875,23 @@ function applySite(){
   let st=$('siteCss');if(!st){st=document.createElement('style');st.id='siteCss';document.head.appendChild(st)}st.textContent=css}
 function setSite(k,v){if(v)SITE[k]=v;else delete SITE[k];applySite()}
 function resetColors(){delete SITE.ac;delete SITE.hc;delete SITE.bg;siteSave();applySite();renderSitePanel()}
-function resetTx(){if(!confirm('Kembalikan semua tulisan ke teks asli?'))return;delete SITE.tx;siteSave();applyLang();toast('Tulisan dikembalikan')}
+function resetTx(){if(!confirm(H('Kembalikan semua tulisan ke teks asli?')))return;delete SITE.tx;delete SITE.txa;siteSave();applyLang();toast(H('Tulisan dikembalikan'))}
 /* edit tulisan langsung di halaman */
 function startEdit(){closeSite();editMode=true;document.body.classList.add('edmode');
   let b=$('siteBar');if(!b){b=document.createElement('div');b.id='siteBar';
     b.style.cssText='position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:70;background:#2b2118;color:#fff;border-radius:14px;padding:10px 14px;font:600 12px system-ui,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.4);display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:94vw';
     const nb=(l,v)=>`<button onclick="show('${v}')" style="background:#ffffff22;border-radius:8px;padding:4px 10px;color:#fff;border:0;cursor:pointer">${l}</button>`;
-    b.innerHTML=`<span><i class="fa-solid fa-pen"></i> Mode edit: klik tulisan lalu ketik, Enter = simpan</span>${nb('Beranda','home')}${nb('Katalog','katalog')}${nb('Tentang','about')}${nb('Pesanan','orders')}${nb('Game','game')}<button onclick="stopEdit()" style="background:#22c55e;border-radius:8px;padding:4px 12px;color:#fff;border:0;cursor:pointer;font-weight:800">Selesai</button>`;
+    b.innerHTML=`<span><i class="fa-solid fa-pen"></i> Mode edit: klik tulisan lalu ketik, Enter = simpan. Otomatis diterjemahkan ke bahasa lain</span>${nb('Beranda','home')}${nb('Katalog','katalog')}${nb('Tentang','about')}${nb('Pesanan','orders')}${nb('Game','game')}<button onclick="stopEdit()" style="background:#22c55e;border-radius:8px;padding:4px 12px;color:#fff;border:0;cursor:pointer;font-weight:800">Selesai</button>`;
     document.body.appendChild(b)}
-  b.style.display='flex'}
+  b.style.display='flex';trDom(b)}
 function stopEdit(){editMode=false;document.body.classList.remove('edmode');document.querySelectorAll('[contenteditable=true]').forEach(e=>e.removeAttribute('contenteditable'));const b=$('siteBar');if(b)b.style.display='none'}
 document.addEventListener('click',e=>{if(!editMode||e.target.closest('#siteBar'))return;const el=e.target.closest('[data-i]');if(!el)return;
   e.preventDefault();e.stopPropagation();if(el.getAttribute('contenteditable')!=='true'){el.setAttribute('contenteditable','true');el.focus()}},true);
 document.addEventListener('keydown',e=>{if(editMode&&e.key==='Enter'&&e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'){e.preventDefault();e.stopPropagation();e.target.blur()}},true);
 document.addEventListener('focusout',e=>{if(!editMode)return;const el=e.target.closest&&e.target.closest('[data-i]');
   if(!el||el.getAttribute('contenteditable')!=='true'||!session||session.role!=='admin')return;
-  const k=el.dataset.i,v=el.textContent.trim(),base=I[lang][k]??I.id[k]??k;el.removeAttribute('contenteditable');
-  SITE.tx=SITE.tx||{};SITE.tx[lang]=SITE.tx[lang]||{};if(v===base||!v)delete SITE.tx[lang][k];else SITE.tx[lang][k]=v;siteSave();applyLang()},true);
+  const k=el.dataset.i,v=el.textContent.trim(),base=(I[lang]&&I[lang][k])??I.id[k]??k;el.removeAttribute('contenteditable');if(window.atUnchanged&&atUnchanged(el))return;
+  SITE.tx=SITE.tx||{};SITE.tx[lang]=SITE.tx[lang]||{};if(v===base||!v)delete SITE.tx[lang][k];else SITE.tx[lang][k]=v;if(SITE.txa&&SITE.txa[lang])delete SITE.txa[lang][k];siteSave();applyLang();transSite(k,(v===base||!v)?'':v,lang)},true);
 /* tombol & panel admin */
 function adminTools(){const adm=session&&session.role==='admin';let b=$('siteBtn');
   if(!b){b=document.createElement('button');b.id='siteBtn';b.innerHTML='<i class="fa-solid fa-palette"></i> Kelola Tampilan';b.onclick=openSite;
@@ -1810,7 +1904,7 @@ function openSite(){const m=$('m-site');m.classList.remove('hid');m.classList.ad
 function closeSite(){const m=$('m-site');if(m){m.classList.add('hid');m.classList.remove('flex')}}
 function renderSitePanel(){const m=$('sBody');if(!m)return;const used=c=>P.filter(p=>p.cat===c).length,ex=SITE.cats||[];
   m.innerHTML=`<div class="space-y-6 text-sm">
-  <div><p class="lbl">Tulisan di halaman</p><p class="text-xs text-slate-500 my-2">Klik "Edit tulisan", lalu klik tulisan apa pun di halaman (judul, menu, tombol, keterangan) dan ketik penggantinya. Tekan Enter untuk menyimpan. Berlaku untuk bahasa yang sedang dipilih.</p>
+  <div><p class="lbl">Tulisan di halaman</p><p class="text-xs text-slate-500 my-2">Klik "Edit tulisan", lalu klik tulisan apa pun di halaman (judul, menu, tombol, keterangan) dan ketik penggantinya. Tekan Enter untuk menyimpan. Tulisan yang diubah otomatis diterjemahkan ke bahasa lain, tidak perlu ditulis manual satu per satu.</p>
   <div class="flex gap-2 flex-wrap"><button onclick="startEdit()" class="bg-orange-500 text-white font-bold px-4 py-2 rounded-lg"><i class="fa-solid fa-pen mr-1"></i>Edit tulisan</button><button onclick="resetTx()" class="px-4 py-2 rounded-lg border font-semibold">Kembalikan tulisan asli</button></div></div>
   <div><p class="lbl">Warna (tema terang)</p><div class="grid grid-cols-3 gap-3 mt-2 text-xs">
    <label class="flex flex-col gap-1">Warna utama<input type="color" value="${SITE.ac||'#a87546'}" oninput="setSite('ac',this.value)" onchange="siteSave()" class="w-full h-10 rounded border"></label>
@@ -1822,7 +1916,7 @@ function renderSitePanel(){const m=$('sBody');if(!m)return;const used=c=>P.filte
   <div><p class="lbl">Kategori produk</p><div class="flex flex-wrap gap-2 mt-2">${allCats().map(c=>`<span class="px-3 py-1 rounded-full border bg-slate-50 text-xs font-semibold">${esc(catName(c))} <span class="text-slate-400">(${used(c)})</span>${ex.indexOf(c)>=0&&!used(c)?` <button onclick="delCat(this.dataset.c)" data-c="${esc(c)}" class="text-red-600 ml-1" title="Hapus">&times;</button>`:''}</span>`).join('')}</div>
   <div class="flex gap-2 mt-3"><input id="newCat" class="inp" placeholder="Nama kategori baru, contoh: Kaos Kaki" maxlength="30"><button onclick="addCat($('newCat').value)" class="bg-green-500 text-white font-bold px-4 rounded-lg whitespace-nowrap">Tambah</button></div>
   <p class="text-xs text-slate-500 mt-2">Kategori bawaan tidak bisa dihapus. Kategori tambahan bisa dihapus selama belum dipakai produk.</p></div>
-  <p class="text-xs text-slate-500">Semua perubahan tersimpan otomatis dan muncul di semua device dalam sekitar 10 detik.</p></div>`}
+  <p class="text-xs text-slate-500">Semua perubahan tersimpan otomatis dan muncul di semua device dalam sekitar 10 detik.</p></div>`;trDom($('m-site'))}
 
 Object.assign(I.id,{
 stockIn:"Barang Masuk",siTitle:"Barang Masuk (Tambah Stok)",siHint:"Catat barang yang baru datang dari produsen / supplier. Stok langsung bertambah dan posisinya terhadap stok minimum dihitung otomatis.",siBack:"Kembali ke Dashboard",
@@ -2228,5 +2322,178 @@ window.onload=()=>{
   if(SYNC_URL){syncNow();setInterval(()=>{if(!document.hidden)syncNow()},6000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncNow()})}
 };
 </script>
+<script>
+/* =====================================================================
+   PENERJEMAH OTOMATIS SEMUA TULISAN (tanpa tulis manual)
+   - Semua teks di halaman (tombol, judul, placeholder, pesan notifikasi,
+     isi modal, panel admin, dll) diterjemahkan otomatis ke bahasa pilihan.
+   - Memakai MutationObserver: teks baru / teks yang diedit / halaman yang
+     dirender ulang akan langsung diterjemahkan lagi secara otomatis.
+   - Hasil terjemahan disimpan (cache) di localStorage agar cepat & hemat kuota.
+   - Tulisan yang diberi atribut translate="no" tidak diterjemahkan.
+   ===================================================================== */
+(function(){
+"use strict";
+var SKIP_TAG=/^(SCRIPT|STYLE|TEXTAREA|NOSCRIPT|IFRAME|OPTION_NONE)$/;
+var ADDR_SEL=/(prov|city|dist|vill|zip|wcc)$/;
+var ATTRS=['placeholder','title','alt','aria-label'];
+var ATTR_SEL='[placeholder],[title],[alt],[aria-label],input[type=button],input[type=submit],input[type=reset]';
+var LNAMES=null;
+var queue=[],Q=new Map(),FAIL={},busy=0,MAXC=4,retryT=null,saveT=null;
+
+function active(){return lang!=='id'}
+
+/* ---------- aturan: bagian mana yang tidak diterjemahkan ---------- */
+function skipEl(el){
+  if(!el||!el.closest)return false;
+  if(el.closest('[translate="no"],.notranslate,#cTable,[contenteditable="true"],.leaflet-container'))return true;
+  var s=el.closest('select');
+  if(s&&ADDR_SEL.test(s.id||'')){if(el.nodeName==='OPTION'&&el.value==='')return false;return true}
+  return false}
+function okText(c){
+  if(!c||c.length<2)return false;
+  if(!/\p{L}{2,}/u.test(c))return false;
+  if(/^(https?:\/\/|www\.)\S+$/i.test(c)||/^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(c))return false;
+  if(/^(rp|idr|usd|\$)?\s*[\d.,\s]+$/i.test(c))return false;
+  if(/^[A-Z0-9][A-Z0-9\-_.\/#]{1,14}$/.test(c)&&(c.length<=5||/[\d\-_.\/#]/.test(c)))return false;
+  if(!LNAMES){LNAMES={};Object.keys(LN).forEach(function(k){LNAMES[LN[k]]=1})}
+  if(LNAMES[c])return false;
+  if(lang==='zh'&&/[\u4e00-\u9fff]/.test(c))return false;
+  return true}
+/* angka diganti penanda {n} supaya "12 terjual" dan "13 terjual" memakai satu terjemahan */
+function prep(s){var nums=[];var p=s.replace(/\d[\d.,:\/\-]*\d|\d/g,function(m){nums.push(m);return '{'+(nums.length-1)+'}'});return[p,nums]}
+function fin(t,nums){return t.replace(/\{\s*(\d+)\s*\}/g,function(a,i){return nums[+i]!==undefined?nums[+i]:a})}
+
+/* ---------- antrian terjemahan (digabung per batch agar cepat) ---------- */
+function atSave(){clearTimeout(saveT);saveT=setTimeout(function(){try{trSaveReal()}catch(e){}},900)}
+var trSaveReal=window.trSave;window.trSave=atSave;
+function badge(){var b=document.getElementById('atBadge');if(b)b.style.display=(busy>0||queue.length>0)?'flex':'none'}
+function go(core,cb){
+  var pr=prep(core),pp=pr[0],nums=pr[1],L=lang,key=trKey('auto',L,pp);
+  if(TRC[key]){cb(fin(TRC[key],nums));return}
+  var w=L+'\u0001'+pp,e=Q.get(w);
+  if(!e){
+    if(FAIL[w]&&Date.now()-FAIL[w]<30000)return;
+    e={pp:pp,l:L,w:w,cbs:[]};Q.set(w,e);queue.push(e)}
+  e.cbs.push(function(r){cb(fin(r,nums))});
+  badge();setTimeout(pump,20)}
+function pump(){
+  while(busy<MAXC&&queue.length){
+    var batch=[],len=0;
+    while(queue.length&&batch.length<20){
+      var e=queue[0];
+      if(batch.length&&(len+e.pp.length>1100||e.l!==batch[0].l||e.pp.indexOf('\n')>=0))break;
+      queue.shift();batch.push(e);len+=e.pp.length+1;
+      if(e.pp.indexOf('\n')>=0||e.pp.length>350)break}
+    run(batch)}
+  badge()}
+function done(e,r){
+  TRC[trKey('auto',e.l,e.pp)]=r;atSave();Q.delete(e.w);
+  e.cbs.forEach(function(f){if(e.l===lang){try{f(r)}catch(x){}}})}
+function fail(e){
+  FAIL[e.w]=Date.now();Q.delete(e.w);
+  clearTimeout(retryT);retryT=setTimeout(function(){if(active())scan(document.body)},31000)}
+function single(e){return mt(e.pp,'auto',e.l).then(function(r){done(e,r)},function(){fail(e)})}
+function run(batch){
+  busy++;
+  var p;
+  if(batch.length>1){
+    var pr=batch.map(function(e){return trProt(e.pp)});
+    p=mtGoogle(pr.map(function(x){return x[0]}).join('\n'),'auto',LGC[batch[0].l]).then(function(r){
+      var parts=r.split('\n');
+      if(parts.length!==batch.length)throw new Error('mismatch');
+      var out=parts.map(function(x,i){return trRest(x,pr[i][1]).trim()});
+      if(!out.every(Boolean))throw new Error('empty');
+      batch.forEach(function(e,i){done(e,out[i])})
+    }).catch(function(){
+      return batch.reduce(function(a,e){return a.then(function(){return single(e)})},Promise.resolve())})
+  }else p=single(batch[0]);
+  p.then(function(){busy--;badge();pump()},function(){busy--;badge();pump()})}
+
+/* ---------- teks ---------- */
+function doText(n,force){
+  if(n.nodeType!==3)return;
+  var p=n.parentElement;if(!p||SKIP_TAG.test(p.nodeName))return;
+  var cur=n.nodeValue;
+  if(n._at!==undefined&&cur===n._at){if(!force)return;cur=n._ao}
+  else n._ao=cur;
+  n._at=undefined;
+  if(!active()||skipEl(p))return;
+  var core=cur.trim();if(!okText(core))return;
+  var a=cur.match(/^\s*/)[0],b=cur.match(/\s*$/)[0],orig=cur;
+  go(core,function(r){
+    if(!n.isConnected||n._ao!==orig||(n._at===undefined&&n.nodeValue!==orig))return;
+    if(r===core)return;
+    var v=a+r+b;n._at=v;n.nodeValue=v})}
+/* ---------- atribut: placeholder, title, alt, aria-label, tombol ---------- */
+function doAttr(el,name,force){
+  var cur=el.getAttribute(name);if(cur==null)return;
+  var kA='_ao_'+name,kT='_at_'+name;
+  if(el[kT]!==undefined&&cur===el[kT]){if(!force)return;cur=el[kA]}
+  else el[kA]=cur;
+  el[kT]=undefined;
+  if(!active()||skipEl(el))return;
+  var core=cur.trim();if(!okText(core))return;
+  var orig=cur;
+  go(core,function(r){
+    if(!el.isConnected||el[kA]!==orig||(el[kT]===undefined&&el.getAttribute(name)!==orig))return;
+    if(r===core)return;
+    el[kT]=r;el.setAttribute(name,r)})}
+function doEl(el,force){
+  ATTRS.forEach(function(a){if(el.hasAttribute&&el.hasAttribute(a))doAttr(el,a,force)});
+  if(el.nodeName==='INPUT'&&/^(button|submit|reset)$/i.test(el.type||''))doAttr(el,'value',force)}
+function scan(root,force){
+  if(!root||!active())return;
+  if(root.nodeType===3){doText(root,force);return}
+  if(root.nodeType!==1)return;
+  if(SKIP_TAG.test(root.nodeName)||skipEl(root))return;
+  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),arr=[];
+  while(w.nextNode())arr.push(w.currentNode);
+  arr.forEach(function(n){doText(n,force)});
+  doEl(root,force);
+  root.querySelectorAll(ATTR_SEL).forEach(function(e){doEl(e,force)})}
+
+/* ---------- kembalikan semua teks asli (dipakai saat pindah bahasa) ---------- */
+function restore(){
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),arr=[];
+  while(w.nextNode())arr.push(w.currentNode);
+  arr.forEach(function(n){if(n._at!==undefined&&n.nodeValue===n._at){n.nodeValue=n._ao}n._at=undefined});
+  document.querySelectorAll(ATTR_SEL).forEach(function(e){
+    ATTRS.concat(['value']).forEach(function(a){var kA='_ao_'+a,kT='_at_'+a;
+      if(e[kT]!==undefined&&e.getAttribute(a)===e[kT])e.setAttribute(a,e[kA]);e[kT]=undefined})})}
+window.atLang=function(){
+  Q.clear();queue.length=0;
+  restore();
+  try{document.documentElement.lang=lang==='zh'?'zh-CN':lang}catch(e){}
+  if(active())setTimeout(function(){scan(document.body)},0);
+  badge()};
+/* dipakai saat admin selesai mengedit tulisan: true jika isinya hanya hasil terjemahan otomatis (tidak diubah) */
+window.atUnchanged=function(el){
+  var any=false,same=true,w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+  while(w.nextNode()){var n=w.currentNode;
+    if(n._at===undefined){if(n.nodeValue.trim())same=false}
+    else{any=true;if(n.nodeValue!==n._at)same=false}}
+  return any&&same};
+
+/* ---------- pengamat perubahan halaman ---------- */
+var mo=new MutationObserver(function(recs){
+  if(!active())return;
+  recs.forEach(function(r){
+    if(r.type==='characterData')doText(r.target,false);
+    else if(r.type==='attributes'){
+      if(r.attributeName==='value'&&!(r.target.nodeName==='INPUT'&&/^(button|submit|reset)$/i.test(r.target.type||'')))return;
+      doAttr(r.target,r.attributeName,false)}
+    else r.addedNodes.forEach(function(n){scan(n,false)})})});
+function start(){
+  var b=document.createElement('div');b.id='atBadge';b.setAttribute('translate','no');
+  b.style.cssText='position:fixed;left:14px;bottom:14px;z-index:70;display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:9999px;background:rgba(15,23,42,.88);color:#fff;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.3)';
+  b.innerHTML='<i class="fa-solid fa-language fa-beat"></i>';document.body.appendChild(b);
+  mo.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:ATTRS.concat(['value'])});
+  try{document.documentElement.lang=lang==='zh'?'zh-CN':lang}catch(e){}
+  if(active())scan(document.body)}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
+})();
+</script>
+
 </body>
 </html>
