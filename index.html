@@ -75,7 +75,7 @@ img,canvas,video{max-width:100%}
 .gs-util{background:rgba(0,0,0,.14);margin:0 -1rem;padding-left:1rem;padding-right:1rem}
 .gs-nav button,.gs-nav a{white-space:nowrap}
 @media(max-width:639px){
- .gs-util [data-i="theme"],.gs-util [data-i="help"],.gs-util #langLabel{display:none}
+ .gs-nav [data-i="theme"],.gs-nav [data-i="help"],.gs-nav #langLabel{display:none}
  .gs-util .flex{gap:.9rem}
  .gs-nav{gap:.5rem 1rem;font-size:.8rem}
  .dd{position:fixed!important;top:auto!important;left:.5rem!important;right:.5rem!important;width:auto!important;max-width:none!important;max-height:70vh;overflow-y:auto}
@@ -113,32 +113,6 @@ img,canvas,video{max-width:100%}
     <!-- Baris 1: navbar kanan (notifikasi sampai akun) -->
     <div class="gs-util flex items-center justify-end py-1.5 text-xs sm:text-sm border-b border-white/25">
       <div class="flex flex-wrap items-center justify-end gap-x-5 gap-y-1">
-        <!-- Notifikasi -->
-        <div class="relative">
-          <button onclick="toggleDD('dd-notif')" class="hover:opacity-80 relative"><i class="fa-regular fa-bell mr-1"></i><span data-i="notif"></span>
-            <span id="notifBadge" class="hid absolute -top-2 -right-4 bg-yellow-300 text-slate-900 text-[10px] font-bold rounded-full px-1.5">0</span></button>
-          <div id="dd-notif" class="dd hid absolute right-0 mt-3 w-80 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden">
-            <div class="px-4 py-3 font-bold border-b flex justify-between"><span data-i="notifTitle"></span><span class="flex gap-3"><button onclick="readAll()" class="text-xs text-slate-500 hover:underline" data-i="markRead"></button><button onclick="clearNotif()" class="text-xs text-red-600" data-i="clear"></button></span></div>
-            <div id="nTabs" class="hid grid grid-cols-2 text-xs font-semibold border-b"></div><div id="nVc"></div><div id="notifList" class="max-h-80 overflow-y-auto divide-y text-sm"></div>
-          </div>
-        </div>
-        <div class="relative">
-          <button onclick="toggleDD('dd-theme')" class="hover:opacity-80"><i class="fa-solid fa-palette mr-1"></i><span data-i="theme"></span></button>
-          <div id="dd-theme" class="dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm">
-            <button onclick="setTheme('red')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#f3e8d6 50%,#a87546 50%)"></span><span data-i="thRed"></span><i id="thk-red" class="fa-solid fa-check ml-auto text-green-600"></i></button>
-            <button onclick="setTheme('dark')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#14171a 50%,#c8ff00 50%)"></span><span data-i="thDark"></span><i id="thk-dark" class="fa-solid fa-check ml-auto text-green-600"></i></button>
-          </div>
-        </div>
-        <button onclick="openM('m-help')" class="hover:opacity-80"><i class="fa-regular fa-circle-question mr-1"></i><span data-i="help"></span></button>
-        <!-- Bahasa -->
-        <div class="relative">
-          <button onclick="toggleDD('dd-lang')" class="hover:opacity-80"><i class="fa-solid fa-globe mr-1"></i><span id="langLabel" translate="no">Bahasa Indonesia</span> <i class="fa-solid fa-chevron-down text-xs"></i></button>
-          <div id="dd-lang" translate="no" class="notranslate dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-y-auto text-sm" style="max-height:70vh">
-            <button onclick="setLang('id')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇮🇩 Bahasa Indonesia</button>
-            <button onclick="setLang('en')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇬🇧 English</button>
-            <button onclick="setLang('zh')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇨🇳 中文</button>
-          </div>
-        </div>
         <div class="relative">
           <button id="authBtn" onclick="authBtnClick()" class="font-bold hover:opacity-80 flex items-center gap-1.5"><span id="authIcon" class="inline-flex"><i class="fa-regular fa-user"></i></span><span id="authLabel" class="max-w-[9rem] truncate"></span></button>
           <div id="dd-acc" class="dd hid absolute right-0 mt-3 w-72 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm"></div>
@@ -153,6 +127,32 @@ img,canvas,video{max-width:100%}
       <button onclick="show('about')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-store mr-1"></i><span data-i="about"></span></button>
       <button onclick="show('orders')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-truck-fast mr-1"></i><span data-i="myOrders"></span></button>
       <button onclick="show('game')" class="font-semibold hover:opacity-80"><i class="fa-solid fa-rocket mr-1"></i><span data-i="game"></span></button>
+      <!-- Notifikasi -->
+      <div class="relative">
+        <button onclick="toggleDD('dd-notif')" class="hover:opacity-80 relative"><i class="fa-regular fa-bell mr-1"></i><span data-i="notif"></span>
+          <span id="notifBadge" class="hid absolute -top-2 -right-4 bg-yellow-300 text-slate-900 text-[10px] font-bold rounded-full px-1.5">0</span></button>
+        <div id="dd-notif" class="dd hid absolute right-0 mt-3 w-80 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden">
+          <div class="px-4 py-3 font-bold border-b flex justify-between"><span data-i="notifTitle"></span><span class="flex gap-3"><button onclick="readAll()" class="text-xs text-slate-500 hover:underline" data-i="markRead"></button><button onclick="clearNotif()" class="text-xs text-red-600" data-i="clear"></button></span></div>
+          <div id="nTabs" class="hid grid grid-cols-2 text-xs font-semibold border-b"></div><div id="nVc"></div><div id="notifList" class="max-h-80 overflow-y-auto divide-y text-sm"></div>
+        </div>
+      </div>
+      <div class="relative">
+        <button onclick="toggleDD('dd-theme')" class="hover:opacity-80"><i class="fa-solid fa-palette mr-1"></i><span data-i="theme"></span></button>
+        <div id="dd-theme" class="dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-hidden text-sm">
+          <button onclick="setTheme('red')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#f3e8d6 50%,#a87546 50%)"></span><span data-i="thRed"></span><i id="thk-red" class="fa-solid fa-check ml-auto text-green-600"></i></button>
+          <button onclick="setTheme('dark')" class="flex items-center gap-2 w-full text-left px-4 py-2.5 hover:bg-orange-50"><span class="w-5 h-5 rounded-full border-2 border-slate-300" style="background:linear-gradient(135deg,#14171a 50%,#c8ff00 50%)"></span><span data-i="thDark"></span><i id="thk-dark" class="fa-solid fa-check ml-auto text-green-600"></i></button>
+        </div>
+      </div>
+      <button onclick="openM('m-help')" class="hover:opacity-80"><i class="fa-regular fa-circle-question mr-1"></i><span data-i="help"></span></button>
+      <!-- Bahasa -->
+      <div class="relative">
+        <button onclick="toggleDD('dd-lang')" class="hover:opacity-80"><i class="fa-solid fa-globe mr-1"></i><span id="langLabel" translate="no">Bahasa Indonesia</span> <i class="fa-solid fa-chevron-down text-xs"></i></button>
+        <div id="dd-lang" translate="no" class="notranslate dd hid absolute right-0 mt-3 w-56 bg-white text-slate-800 rounded-xl shadow-2xl overflow-y-auto text-sm" style="max-height:70vh">
+          <button onclick="setLang('id')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇮🇩 Bahasa Indonesia</button>
+          <button onclick="setLang('en')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇬🇧 English</button>
+          <button onclick="setLang('zh')" class="block w-full text-left px-4 py-2.5 hover:bg-orange-50">🇨🇳 中文</button>
+        </div>
+      </div>
       <div class="flex items-center gap-3 text-lg">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener" title="Facebook" class="hover:scale-110 transition"><i class="fa-brands fa-facebook"></i></a>
         <a href="https://www.instagram.com/" target="_blank" rel="noopener" title="Instagram" class="hover:scale-110 transition"><i class="fa-brands fa-instagram"></i></a>
