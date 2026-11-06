@@ -401,7 +401,7 @@ img,canvas,video{max-width:100%}
         <div class="bg-orange-50 rounded-xl p-3"><span id="pPrice" class="text-3xl font-extrabold text-orange-600"></span> <span id="pOld" class="text-sm text-slate-400 line-through ml-2"></span></div>
         <p id="pDesc" class="text-sm text-slate-600"></p>
         <ul class="text-xs text-slate-500 space-y-1"><li><i class="fa-solid fa-truck-fast text-orange-500 w-5"></i><span data-i="ad1"></span></li><li><i class="fa-solid fa-qrcode text-orange-500 w-5"></i><span data-i="ad2"></span></li><li><i class="fa-solid fa-rotate-left text-orange-500 w-5"></i><span data-i="ret"></span></li></ul>
-        <div class="text-sm"><p id="pOpts" class="font-semibold text-slate-700"></p><p id="pStock" class="text-slate-400 mt-1"></p></div>
+        <div class="text-sm"><div id="pVarBox" class="hid"><p id="pVarLbl" class="lbl"></p><div id="pVars" class="flex flex-wrap gap-2 mt-2"></div></div><p id="pOpts" class="hid"></p><p id="pStock" class="text-slate-400 mt-1"></p></div>
         <div class="flex gap-2 pt-2">
           <button onclick="openBuy('cart')" class="flex-1 border-2 border-orange-500 text-orange-600 font-bold py-2.5 rounded-xl hover:bg-orange-50"><i class="fa-solid fa-cart-plus mr-1"></i><span data-i="addCart"></span></button>
           <button onclick="openBuy('buy')" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl"><span data-i="buy"></span></button>
@@ -529,7 +529,7 @@ img,canvas,video{max-width:100%}
         <div><label class="lbl" data-i="oldPrice"></label><input id="eold" type="number" min="0" class="inp"></div>
       </div>
       <div><label class="lbl" data-i="desc"></label><textarea id="edesc" rows="3" class="inp"></textarea></div>
-      <div><label class="lbl" data-i="optsLbl"></label><input id="eopts" class="inp" placeholder="S, M, L, XL"></div>
+      <div><label class="lbl" data-i="optsLbl"></label><input id="eopts" oninput="renderVarPics()" class="inp" placeholder="S, M, L, XL"></div><div id="eVarImgs" class="hid space-y-2 rounded-xl border-2 border-dashed border-orange-300 bg-orange-50 p-3"></div>
       <div><label class="lbl" data-i="rsMinAuto"></label><input id="emin" type="number" min="0" data-p="autoL" class="inp"><p class="text-[11px] text-slate-400 mt-1" data-i="rsRule"></p></div>
       <p class="text-[11px] text-slate-500 bg-slate-50 rounded-lg px-3 py-2"><i class="fa-solid fa-language text-orange-500 mr-1"></i><span data-i="autoTrHint"></span></p>
       <div class="flex justify-end gap-2 pt-2 border-t"><button type="button" onclick="closeM('m-edit')" class="px-5 py-2.5 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50" data-i="cancel"></button><button class="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold" data-i="save"></button></div>
@@ -1105,18 +1105,22 @@ function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='adm
 /* popup detail produk */
 function openProd(id){
   cur=P.find(p=>p.id===id);if(!cur)return;
-  gIdx=0;openProdRefresh();openM('m-prod');addNotif('fa-eye',{f:'viewed',a:[cur.id]});
+  gIdx=0;pv='';openProdRefresh();openM('m-prod');addNotif('fa-eye',{f:'viewed',a:[cur.id]});
 }
 let gIdx=0;
 const pics=p=>[p.img,...(p.imgs||[])].filter(Boolean);
+let pv='';
+/* galeri detail = foto produk + foto khusus tiap varian (tanpa duplikat) */
+const galList=p=>{const L=pics(p);if(p.opts)p.opts.list.forEach(o=>{if(o[2]&&!L.includes(o[2]))L.push(o[2])});return L};
+function selVar(i){const o=cur.opts.list[i];if(!o)return;pv=o[0];gIdx=Math.max(0,galList(cur).indexOf(vImg(cur,pv)));openProdRefresh()}
 function renderGallery(){
-  const L=pics(cur);if(gIdx>=L.length||gIdx<0)gIdx=0;
+  const L=galList(cur);if(gIdx>=L.length||gIdx<0)gIdx=0;
   $('pImgTag').src=src({img:L[gIdx]});
   $('pThumbs').innerHTML=L.length>1?L.map((x,i)=>`<button type="button" onclick="gGo(${i})" class="shrink-0 w-14 h-14 rounded-lg border-2 ${i===gIdx?'border-orange-500':'border-slate-200'} bg-white overflow-hidden"><img src="${src({img:x})}" alt="" class="w-full h-full object-contain"></button>`).join(''):'';
   ['pPrev','pNext'].forEach(id=>{$(id).classList.toggle('hid',L.length<2);$(id).classList.toggle('flex',L.length>=2)});
   $('pCnt').classList.toggle('hid',L.length<2);$('pCnt').textContent=(gIdx+1)+' / '+L.length}
 function gGo(i){gIdx=i;renderGallery()}
-function gStep(d){const n=pics(cur).length;if(n<2)return;gIdx=(gIdx+d+n)%n;renderGallery()}
+function gStep(d){const n=galList(cur).length;if(n<2)return;gIdx=(gIdx+d+n)%n;renderGallery()}
 (function(){let x0=null;const g=$('pGal');
   g.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
   g.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40)gStep(dx<0?1:-1)});
@@ -1131,6 +1135,14 @@ async function picAdd(k,inp){
   inp.value='';renderPics(k)}
 function picDel(k,i){PIC[k].splice(i,1);renderPics(k)}
 function picMain(k,i){const x=PIC[k].splice(i,1)[0];PIC[k].unshift(x);renderPics(k)}
+/* ===== Gambar per varian/pilihan (modal edit produk) ===== */
+let VIMG={};
+const varNames=()=>[...new Set($('eopts').value.split(',').map(s=>s.trim().split('=')[0].trim()).filter(Boolean))];
+function renderVarPics(){const box=$('eVarImgs');if(!box)return;const nm=varNames();box.classList.toggle('hid',!nm.length);if(!nm.length){box.innerHTML='';return}
+  box.innerHTML=`<p class="lbl"><i class="fa-solid fa-images text-orange-500 mr-1"></i>${t('varImg')}</p><p class="text-[11px] text-slate-500">${t('varImgHint')}</p>`+nm.map((n,i)=>{const im=VIMG[n];
+    return `<div class="flex items-center gap-3 bg-white border rounded-lg p-2"><img src="${src({img:im||PIC.e[0]||'noimg'})}" alt="" class="w-14 h-14 object-contain bg-white border rounded ${im?'':'opacity-40'}"><div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${esc(n)}</p><p class="text-[11px] ${im?'text-green-600':'text-slate-400'}">${im?t('varImgOwn'):t('varImgDefault')}</p></div><label class="cursor-pointer text-xs font-semibold border border-orange-400 text-orange-600 rounded-lg px-3 py-1.5 hover:bg-orange-50 whitespace-nowrap"><i class="fa-solid fa-upload mr-1"></i>${t('varImgUp')}<input type="file" accept="image/*" class="hid" onchange="varPicAdd(${i},this)"></label>${im?`<button type="button" onclick="varPicDel(${i})" class="text-red-500 text-xl px-1">&times;</button>`:''}</div>`}).join('')}
+async function varPicAdd(i,inp){const n=varNames()[i],f=inp.files[0];if(!n||!f)return;try{VIMG[n]=await readImg(f,640)}catch(e){}inp.value='';renderVarPics()}
+function varPicDel(i){const n=varNames()[i];if(n)delete VIMG[n];renderVarPics()}
 function updSkuHint(id){
   if(id==='ecat'){const p=P.find(x=>x.id===+$('eid').value),sk=$('esku'),ec=$('ecat');if(!p||!sk||!ec)return;
     if(ec.value===p.cat)sk.value=p.sku;else if(sk.dataset.auto!=='0')sk.value=nextSku(ec.value,false,p.id)}
@@ -1141,13 +1153,21 @@ Object.assign(I.zh,{"photoHint":"第一张为主图。可添加多张（最多6�
 Object.assign(I.id,{"autoTrHint":"Tulis dalam bahasa yang sedang dipilih. Terjemahan ke bahasa lain dibuat otomatis, tidak perlu ditulis manual."});
 Object.assign(I.en,{"autoTrHint":"Write in the language currently selected. Translations into the other languages are created automatically, no manual typing needed."});
 Object.assign(I.zh,{"autoTrHint":"请用当前所选语言填写。其他语言的翻译会自动生成，无需手动输入。"});
+Object.assign(I.id,{varImg:"Gambar per Pilihan/Varian",varImgHint:"Unggah gambar khusus untuk tiap pilihan. Pembeli yang memilih varian ini akan melihat gambarnya. Kosong = pakai foto utama produk.",varImgUp:"Unggah",varImgOwn:"Gambar khusus varian",varImgDefault:"Memakai foto utama"});
+Object.assign(I.en,{varImg:"Image per Option/Variant",varImgHint:"Upload a dedicated image for each option. Buyers who pick this variant will see its image. Empty = uses the main product photo.",varImgUp:"Upload",varImgOwn:"Variant-specific image",varImgDefault:"Using main photo"});
+Object.assign(I.zh,{varImg:"每个规格的图片",varImgHint:"为每个选项上传专属图片。买家选择该规格时会看到对应图片。留空则使用商品主图。",varImgUp:"上传",varImgOwn:"规格专属图片",varImgDefault:"使用主图"});
 function openProdRefresh(){
   renderGallery();
   $('pCat').textContent=catName(cur.cat);$('pName').textContent=pname(cur);
-  $('pPrice').textContent=Rp(cur.price);$('pOld').textContent=cur.old?Rp(cur.old):'';
+  {const u=unit(cur,pv);$('pPrice').textContent=Rp(u.price);$('pOld').textContent=cur.old?Rp(u.old):''}
   $('pDesc').textContent=pdesc(cur);renderRate();
-  $('pOpts').textContent=cur.opts?`${t(cur.opts.l)}: ${cur.opts.list.map(x=>otr(x[0])).join(' · ')}${(cur.opts.l==='size'&&cur.opts.list.some(x=>x[0]==='XXL'))?` — XXL +${Rp(XXL_FEE)}`:''}`:'';
-  $('pStock').textContent=`${t('stock')}: ${cur.stock} ${t('pcs')}`;
+  $('pVarBox').classList.toggle('hid',!cur.opts);
+  if(cur.opts){const anyImg=cur.opts.list.some(x=>x[2]);$('pVarLbl').textContent=t(cur.opts.l);
+    $('pVars').innerHTML=cur.opts.list.map((o,i)=>{const off=typeof o[3]==='number'&&o[3]<=0,on=pv===o[0];
+      const th=anyImg?`<img src="${src({img:vImg(cur,o[0])})}" alt="" class="w-9 h-9 object-contain bg-white rounded border border-slate-200">`:'';
+      return `<button type="button" ${off?'disabled':''} onclick="selVar(${i})" class="disabled:opacity-40 disabled:line-through flex items-center gap-2 px-3 py-2 rounded-lg border-2 text-sm font-semibold text-left ${on?'border-orange-500 bg-orange-50 text-orange-600':'border-slate-200 hover:border-orange-300'}">${th}<span>${esc(otr(o[0]))}${isXXL(cur,o[0])?`<span class="block text-[10px] font-normal text-orange-600">+${Rp(XXL_FEE)}</span>`:''}</span></button>`}).join('')}
+  $('pOpts').textContent='';
+  $('pStock').textContent=`${t('stock')}: ${vs(cur,pv)} ${t('pcs')}`;
 }
 Object.assign(I.id,{"addrTitle": "Alamat Pengiriman", "zip": "Kode Pos", "prov": "Provinsi", "city": "Kota / Kabupaten", "dist": "Kecamatan", "vill": "Kelurahan / Desa", "street": "Alamat Lengkap (jalan, no. rumah, RT/RW)", "streetPh": "Isi kode pos terlebih dahulu", "zipHint": "Isi 5 digit kode pos, alamat terisi otomatis", "zipOk": "Alamat ditemukan dan terisi otomatis", "zipNone": "Kode pos tidak ditemukan, isi alamat secara manual", "addrReq": "Lengkapi alamat (kode pos 5 digit dan alamat lengkap)!", "noStock": "stok tidak mencukupi", "okTitle": "Pembayaran Berhasil!", "processing": "Pesanan sedang diproses oleh penjual", "toNotif": "Lihat Notifikasi", "keepShop": "Lanjut Belanja", "edit": "Edit", "editTitle": "Edit Produk", "save": "Simpan", "cancel": "Batal", "oldPrice": "Harga Coret / Promo (0 = tanpa promo)", "desc": "Deskripsi", "soldOut": "HABIS", "saved": "Perubahan produk disimpan"});
 Object.assign(I.en,{"addrTitle": "Shipping Address", "zip": "Postal Code", "prov": "Province", "city": "City / Regency", "dist": "District", "vill": "Village", "street": "Full Address (street, house no., RT/RW)", "streetPh": "Enter the postal code first", "zipHint": "Enter the 5-digit postal code to auto-fill the address", "zipOk": "Address found and filled automatically", "zipNone": "Postal code not found, please fill in manually", "addrReq": "Please complete the address (5-digit postal code and full address)!", "noStock": "insufficient stock", "okTitle": "Payment Successful!", "processing": "Your order is being processed by the seller", "toNotif": "View Notifications", "keepShop": "Continue Shopping", "edit": "Edit", "editTitle": "Edit Product", "save": "Save", "cancel": "Cancel", "oldPrice": "Strikethrough / Promo Price (0 = no promo)", "desc": "Description", "soldOut": "SOLD OUT", "saved": "Product changes saved"});
@@ -1186,7 +1206,7 @@ function unit(p,v){let d=0;if(p.opts&&v){const x=p.opts.list.find(l=>l[0]===v);i
 function vs(p,v){if(p.opts&&v){const x=p.opts.list.find(l=>l[0]===v);if(x&&typeof x[3]==='number')return x[3]}return p.stock}
 function vImg(p,v){const x=p.opts&&v&&p.opts.list.find(l=>l[0]===v);return x&&x[2]?x[2]:p.img}
 const vtxt=c=>c.v?` (${otr(c.v)})`:'';
-function openBuy(mode){if(!cur||!cur.stock)return toast(t('soldOut'));B={p:cur,mode,v:'',q:1};closeM('m-prod');renderBuy();openM('m-buy')}
+function openBuy(mode){if(!cur||!cur.stock)return toast(t('soldOut'));B={p:cur,mode,v:pv,q:1};closeM('m-prod');renderBuy();openM('m-buy')}
 function renderBuy(){
   const p=B.p,u=unit(p,B.v);
   $('bImg').src=src({img:vImg(p,B.v)});$('bName').textContent=pname(p);$('bPrice').textContent=Rp(u.price);
@@ -1199,7 +1219,7 @@ function renderBuy(){
 }
 function pickOpt(i){B.v=B.p.opts.list[i][0];B.q=Math.min(B.q,Math.max(1,vs(B.p,B.v)));renderBuy()}
 function bQty(d){B.q=Math.max(1,Math.min(vs(B.p,B.v),B.q+d));renderBuy()}
-function backBuy(){closeM('m-buy');openM('m-prod')}
+function backBuy(){if(B&&B.p===cur&&B.v!==pv){pv=B.v;gIdx=Math.max(0,galList(cur).indexOf(vImg(cur,pv)));openProdRefresh()}closeM('m-buy');openM('m-prod')}
 function buyConfirm(){
   const p=B.p;
   if(p.opts&&!B.v)return toast(`${t('pickOpt')} ${t(p.opts.l)} ${t('pickFirst')}`);
@@ -1717,7 +1737,7 @@ async function addProduct(e){
 function readImg(f,mx){mx=mx||480;return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=r.result};r.onerror=no;r.readAsDataURL(f)})}
 function editProduct(id){
   const p=P.find(x=>x.id===id);if(!p)return;
-  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');$('esku').dataset.auto='1';
+  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');VIMG={};if(p.opts)p.opts.list.forEach(x=>{if(x[2])VIMG[x[0]]=x[2]});renderVarPics();$('esku').dataset.auto='1';
   $('emin').value=typeof p.min==='number'?p.min:'';
   openM('m-edit');
 }
@@ -1729,7 +1749,7 @@ async function saveEdit(e){
   const mv=$('emin').value.trim();if(mv===''||isNaN(+mv))delete p.min;else p.min=Math.max(0,Math.floor(+mv));
   if(p.name!==_on){p.src=lang;delete p.ne;delete p.nz}if((p.d||'')!==_od){p.dsrc=lang;delete p.de;delete p.dz}
   {const nm=$('eopts').value.split(',').map(s=>s.trim()).filter(Boolean);
-  if(nm.length){const o=p.opts;p.opts={l:o?o.l:'size',list:nm.map(tk=>{const q=tk.split('='),n=q[0].trim(),st=(q[1]!==undefined&&q[1].trim()!==''&&!isNaN(+q[1]))?Math.max(0,Math.floor(+q[1])):null;const old=o&&o.list.find(x=>x[0]===n);const r=old?old.slice(0,3):[n,0];while(r.length<3)r.push(null);if(st!==null)r.push(st);return r})};
+  if(nm.length){const o=p.opts;p.opts={l:o?o.l:'size',list:nm.map(tk=>{const q=tk.split('='),n=q[0].trim(),st=(q[1]!==undefined&&q[1].trim()!==''&&!isNaN(+q[1]))?Math.max(0,Math.floor(+q[1])):null;const old=o&&o.list.find(x=>x[0]===n);const r=[n,old?(old[1]||0):0,VIMG[n]||null];if(st!==null)r.push(st);return r})};
     if(p.opts.list.some(x=>typeof x[3]==='number'))p.stock=p.opts.list.reduce((s,x)=>s+(typeof x[3]==='number'?x[3]:0),0)}else delete p.opts}
   checkLow(p);
   try{sv('products5',P)}catch(x){}
