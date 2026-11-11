@@ -274,7 +274,7 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
 <!-- ============ PESANAN SAYA ============ -->
 <section id="v-orders" class="hid space-y-4">
   <h2 class="text-2xl font-bold"><i class="fa-solid fa-truck-fast text-orange-500 mr-2"></i><span data-i="myOrders"></span></h2>
-  <p id="ordNote" class="text-sm text-slate-500"></p>
+  <div id="ordNote" class="text-sm text-slate-500"></div>
   <div id="myRpt" class="space-y-3"></div>
   <div id="ordList" class="space-y-4"></div>
 </section>
@@ -1013,10 +1013,15 @@ function giveRate(s){const c=prompt(t('rvCmt'))||'';RV[cur.id]=[{u:session.name,
 /* ============ NOTIFIKASI ============ */
 let NF=ld('notifs2',{g:[],a:[],u:{}}),nMode=ld('nmode','g');
 const GK='__tamu';
-const GID=(function(){let g=ld('gid',null);if(!g){g=Math.random().toString(36).slice(2,9);sv('gid',g)}return g})();
-/* tamu punya ID perangkat sendiri, sehingga pesanan & update-nya tetap tersambung walau keluar-masuk sebagai tamu */
+/* TAMU = PENGUNJUNG BARU. Setiap kunjungan tamu (tab/jendela baru, atau setelah keluar dari akun) mendapat ID kunjungan baru,
+   jadi keranjang, pesanan & notifikasi tamu selalu mulai dari kosong. Refresh di tab yang sama tetap kunjungan yang sama. */
+const newVid=()=>Math.random().toString(36).slice(2,9);
+let GID=(function(){let g=null;try{g=sessionStorage.getItem('gs_gv')}catch(e){}
+  if(!g){g=newVid();try{sessionStorage.setItem('gs_gv',g)}catch(e){}if(session&&session.role==='guest'){cart=[];sv('cart',cart)}}
+  return g})();
+function newGuestVisit(){GID=newVid();try{sessionStorage.setItem('gs_gv',GID)}catch(e){}cart=[];sv('cart',cart);try{renderCart()}catch(e){}}
 const feedKey=()=>session&&session.role==='user'?session.name:GK+':'+GID;
-const ownsO=o=>{const k=feedKey(),w=o.owner||GK;return w===k||(w===GK&&k.indexOf(GK+':')===0)};
+const ownsO=o=>{const k=feedKey(),w=o.owner||GK;return w===k};
 const LOC=()=>{const x=LANGS.find(y=>y[0]===lang);return x?x[3]:'id-ID'};
 const tm=()=>Date.now();
 const fmtT=v=>typeof v==='number'?new Date(v).toLocaleString(LOC()):String(v||'');
@@ -1024,6 +1029,9 @@ const fmtD=v=>typeof v==='number'?new Date(v).toLocaleDateString(LOC()):String(v
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function normNF(){const f=a=>(a||[]).forEach(n=>{if(!('rd' in n))n.rd=true;if(!n.id)n.id=uid()});NF.g=NF.g||[];NF.a=NF.a||[];NF.u=NF.u||{};f(NF.g);f(NF.a);for(const k in NF.u)f(NF.u[k])}
 normNF();
+function pruneGuestFeeds(){const ks=Object.keys(NF.u||{}).filter(k=>k.indexOf(GK+':')===0&&k!==GK+':'+GID);if(ks.length<=40)return;
+  ks.sort((a,b)=>(((NF.u[b]||[])[0]||{}).ts||0)-(((NF.u[a]||[])[0]||{}).ts||0));ks.slice(40).forEach(k=>delete NF.u[k]);sv('notifs2',NF)}
+pruneGuestFeeds();
 function pushTo(a,n){a.unshift(n);a.length=Math.min(a.length,60)}
 const pn=id=>{const p=P.find(x=>x.id===id);return p?pname(p):'?'};
 const fm=(s,...a)=>a.reduce((r,v,i)=>r.split('{'+i+'}').join(v),s);
@@ -1234,7 +1242,7 @@ Object.assign(I.zh,{ownerBtn:"店主简介",ownerTitle:"店主简介",ownerRole:
 
 Object.assign(I.id,{waDigits:'digit tanpa 0 di depan',phoneBad:'Nomor WhatsApp tidak valid untuk negara yang dipilih!',noZip:'Tidak tahu kode pos? Pilih Provinsi → Kota/Kab. → Kecamatan → Kelurahan, kode pos terisi otomatis.',pickProv:'— Pilih Provinsi —',pickCity:'— Pilih Kota / Kabupaten —',pickDist:'— Pilih Kecamatan —',pickVill:'— Pilih Kelurahan / Desa —',zipHint:'Isi 5 digit kode pos, atau pilih alamat lewat dropdown di bawah',zipNone:'Kode pos tidak ditemukan, pilih alamat lewat dropdown di bawah',zipPickV:'Kode pos ditemukan. Pilih kelurahan/desa Anda dari dropdown di bawah.',zipAuto:'Kode pos terisi otomatis dari alamat',csTitle:'Segera Hadir: Barang untuk Riding / Sepeda',csText:'Perlengkapan dan barang-barang untuk riding/sepeda akan segera tersedia di Garuda Store. Nantikan ya!',qFor:'Hasil pencarian untuk',qFound:'produk ditemukan',qClear:'Hapus pencarian',reviews:'ulasan',rvGive:'Beri nilai:',rvDone:'Terima kasih, Anda sudah memberi ulasan.',rvLogin:'Masuk dengan akun untuk memberi ulasan.',rvCmt:'Tulis komentar singkat (opsional):',rvThanks:'Ulasan terkirim',nAll:'Semua Aktivitas',nAdm:'Aktivitas Admin',nGuestVc:'Buat akun baru untuk mendapatkan kode voucher.',guest:'Tamu'});Object.assign(I.en,{waDigits:'digits without leading 0',phoneBad:'Invalid WhatsApp number for the selected country!',noZip:"Don't know the postal code? Choose Province → City → District → Village and the postal code fills in automatically.",pickProv:'— Select Province —',pickCity:'— Select City / Regency —',pickDist:'— Select District —',pickVill:'— Select Village —',zipHint:'Enter the 5-digit postal code, or choose the address from the dropdowns below',zipNone:'Postal code not found, choose the address from the dropdowns below',zipPickV:'Postal code found. Choose your village from the dropdown below.',zipAuto:'Postal code filled in from the address',csTitle:'Coming Soon: Riding / Cycling Gear',csText:'Riding and cycling gear will soon be available at Garuda Store. Stay tuned!',qFor:'Search results for',qFound:'products found',qClear:'Clear search',reviews:'reviews',rvGive:'Rate:',rvDone:'Thanks, you have already reviewed this.',rvLogin:'Log in to leave a review.',rvCmt:'Write a short comment (optional):',rvThanks:'Review sent',nAll:'All Activity',nAdm:'Admin Activity',nGuestVc:'Create a new account to get a voucher code.',guest:'Guest'});Object.assign(I.zh,{phoneBad:'所选国家的 WhatsApp 号码无效！',csTitle:'即将推出：骑行/自行车用品',csText:'骑行和自行车用品即将在 Garuda Store 上架，敬请期待！'});
 
-Object.assign(I.id,{myOrders:"Pesanan Saya",noOrders:"Belum ada pesanan.",trackOrder:"Lacak Pesanan",stCreated:"Pesanan Dibuat",stProc:"Diproses",stShip:"Dikirim",stDone:"Selesai",stProcTxt:"Pesanan sedang dikemas oleh penjual.",stShipTxt:"Paket dalam perjalanan menuju kota tujuan:",stDoneTxt:"Pesanan sudah diterima pembeli. Terima kasih sudah berbelanja!",recvBtn:"Pesanan Diterima / Selesaikan",recvWait:"Tombol Selesaikan aktif setelah pesanan dikirim.",confirmDone:"Pesanan sudah diterima dengan baik? Status akan menjadi Selesai dan tidak dapat diubah lagi.",doneByBuyer:"Diselesaikan oleh pembeli",ordDetail:"Rincian Pesanan",resi:"No. Resi",ordHistory:"Riwayat Status",ordAdmin:"Tampilan admin: semua pesanan. Hanya pembeli yang dapat menyelesaikan pesanan.",ordGuest:"Anda masuk sebagai tamu: hanya pesanan dari perangkat ini yang tampil.",vcLogin:"Masuk dengan akun Anda untuk memakai voucher",vcNext:"Voucher berikutnya di pembelian ke-",vcNew:"Voucher baru",vcAt:"pembelian ke-",vcNote:"Voucher hanya berlaku 1 kali dan khusus akun pemilik. Didapat saat membuat akun, lalu di pembelian ke-5, ke-8, dan seterusnya (setiap kelipatan 3 pembelian)."});Object.assign(I.en,{myOrders:"My Orders",noOrders:"No orders yet.",trackOrder:"Track Order",stCreated:"Order Placed",stProc:"Processing",stShip:"Shipped",stDone:"Completed",stProcTxt:"Your order is being packed by the seller.",stShipTxt:"Your parcel is on its way to the destination city:",stDoneTxt:"Order received by the buyer. Thank you for shopping!",recvBtn:"Order Received / Complete",recvWait:"The Complete button is enabled once the order is shipped.",confirmDone:"Did you receive the order in good condition? Status will become Completed and cannot be changed.",doneByBuyer:"Completed by buyer",ordDetail:"Order Details",resi:"Tracking No.",ordHistory:"Status History",ordAdmin:"Admin view: all orders. Only the buyer can complete an order.",ordGuest:"You are a guest: only orders from this device are shown.",vcLogin:"Log in to your account to use a voucher",vcNext:"Next voucher at purchase #",vcNew:"New voucher",vcAt:"purchase #",vcNote:"A voucher is valid once and only for its owner account. Earned on sign-up, then at purchase #5, #8, and every 3 purchases after that."});Object.assign(I.zh,{vcNote:"优惠码仅限使用 1 次，且仅限账户本人。注册时获得，第 5、第 8 次购买后各获得一张，之后每 3 次购买获得一张。"});
+Object.assign(I.id,{myOrders:"Pesanan Saya",noOrders:"Belum ada pesanan.",trackOrder:"Lacak Pesanan",stCreated:"Pesanan Dibuat",stProc:"Diproses",stShip:"Dikirim",stDone:"Selesai",stProcTxt:"Pesanan sedang dikemas oleh penjual.",stShipTxt:"Paket dalam perjalanan menuju kota tujuan:",stDoneTxt:"Pesanan sudah diterima pembeli. Terima kasih sudah berbelanja!",recvBtn:"Pesanan Diterima / Selesaikan",recvWait:"Tombol Selesaikan aktif setelah pesanan dikirim.",confirmDone:"Pesanan sudah diterima dengan baik? Status akan menjadi Selesai dan tidak dapat diubah lagi.",doneByBuyer:"Diselesaikan oleh pembeli",ordDetail:"Rincian Pesanan",resi:"No. Resi",ordHistory:"Riwayat Status",ordAdmin:"Tampilan admin: semua pesanan. Hanya pembeli yang dapat menyelesaikan pesanan.",ordGuestT:"Anda masuk sebagai Tamu (pengunjung baru)",ordGuest:"Setiap masuk sebagai tamu dihitung sebagai kunjungan pertama, jadi keranjang, pesanan, dan notifikasi selalu mulai dari kosong.",ordGuestN:"Pesanan yang Anda buat selama kunjungan ini tetap tampil di halaman ini. Setelah tab/browser ditutup, pesanan tidak bisa ditampilkan lagi di sini. Buat akun atau masuk agar riwayat pesanan tersimpan permanen.",ordGuestEmpty:"Belum ada pesanan pada kunjungan ini. Masuk atau buat akun agar riwayat pesanan Anda tersimpan dan bisa dilihat kembali kapan saja.",ordGuestCta:"Buat Akun / Masuk",cartGuestHint:"Mode tamu: keranjang dimulai dari kosong di setiap kunjungan baru.",vcLogin:"Masuk dengan akun Anda untuk memakai voucher",vcNext:"Voucher berikutnya di pembelian ke-",vcNew:"Voucher baru",vcAt:"pembelian ke-",vcNote:"Voucher hanya berlaku 1 kali dan khusus akun pemilik. Didapat saat membuat akun, lalu di pembelian ke-5, ke-8, dan seterusnya (setiap kelipatan 3 pembelian)."});Object.assign(I.en,{myOrders:"My Orders",noOrders:"No orders yet.",trackOrder:"Track Order",stCreated:"Order Placed",stProc:"Processing",stShip:"Shipped",stDone:"Completed",stProcTxt:"Your order is being packed by the seller.",stShipTxt:"Your parcel is on its way to the destination city:",stDoneTxt:"Order received by the buyer. Thank you for shopping!",recvBtn:"Order Received / Complete",recvWait:"The Complete button is enabled once the order is shipped.",confirmDone:"Did you receive the order in good condition? Status will become Completed and cannot be changed.",doneByBuyer:"Completed by buyer",ordDetail:"Order Details",resi:"Tracking No.",ordHistory:"Status History",ordAdmin:"Admin view: all orders. Only the buyer can complete an order.",ordGuestT:"You are browsing as a Guest (new visitor)",ordGuest:"Every guest session counts as a first visit, so your cart, orders and notifications always start empty.",ordGuestN:"Orders you place during this visit stay on this page. Once you close the tab or browser, they can no longer be shown here. Sign up or log in to keep your order history permanently.",ordGuestEmpty:"No orders in this visit yet. Log in or create an account so your order history is saved and can be viewed any time.",ordGuestCta:"Sign Up / Log In",cartGuestHint:"Guest mode: your cart starts empty on every new visit.",vcLogin:"Log in to your account to use a voucher",vcNext:"Next voucher at purchase #",vcNew:"New voucher",vcAt:"purchase #",vcNote:"A voucher is valid once and only for its owner account. Earned on sign-up, then at purchase #5, #8, and every 3 purchases after that."});Object.assign(I.zh,{vcNote:"优惠码仅限使用 1 次，且仅限账户本人。注册时获得，第 5、第 8 次购买后各获得一张，之后每 3 次购买获得一张。"});
 
 Object.assign(I.id,{theme:'Tema',thRed:'Garuda Merah',thDark:'Charcoal & Neon',switchAcc:'Ganti Akun'});Object.assign(I.en,{theme:'Theme',thRed:'Garuda Red',thDark:'Charcoal & Neon'});Object.assign(I.zh,{theme:'\u4e3b\u9898'});Object.assign(I.en,{switchAcc:'Switch Account'});Object.assign(I.zh,{switchAcc:'\u5207\u6362\u8d26\u53f7'});
 
@@ -1275,7 +1283,7 @@ function renderCart(){
   $('cartList').innerHTML=cart.length?cart.map((c,i)=>{const p=P.find(x=>x.id===c.id);if(!p)return'';const u=unit(p,c.v);tot+=u.price*c.q;
     return `<div class="flex items-center gap-3 border rounded-xl p-3"><img src="${src({img:vImg(p,c.v)})}" alt="" class="w-16 h-16 object-contain bg-white border rounded-lg"><div class="flex-1 min-w-0"><p class="font-semibold text-sm truncate">${esc(pname(p))}</p>${c.v?`<p class="text-xs text-slate-500">${esc(otr(c.v))}</p>`:''}<p class="text-red-600 text-sm font-bold">${Rp(u.price)}</p>
     <div class="flex items-center gap-2 mt-1 text-sm"><button onclick="cartQ(${i},-1)" class="w-6 border rounded">−</button>${c.q}<button onclick="cartQ(${i},1)" class="w-6 border rounded">+</button></div></div>
-    <button onclick="cartDel(${i})" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div>`}).join(''):`<p class="text-center text-slate-400 py-10">${t('empty')}</p>`;
+    <button onclick="cartDel(${i})" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div>`}).join(''):`<p class="text-center text-slate-400 py-10">${t('empty')}${session&&session.role==='guest'?`<span class="block text-xs mt-2">${esc(t('cartGuestHint'))}</span>`:''}</p>`;
   $('cartTotal').textContent=Rp(tot);
 }
 function cartQ(i,d){const c=cart[i],p=P.find(x=>x.id===c.id);c.q=Math.max(1,Math.min(vs(p,c.v),c.q+d));sv('cart',cart);renderCart()}
@@ -1533,7 +1541,7 @@ waDigits:"去掉开头 0 的位数",noZip:"不知道邮政编码？请依次选�
 zipPickV:"已找到邮政编码。请在下方下拉菜单中选择您的村/街道。",zipAuto:"邮政编码已根据地址自动填写",qFor:"搜索结果：",qFound:"件商品",qClear:"清除搜索",reviews:"条评价",rvGive:"请评分：",rvDone:"谢谢，您已评价过。",rvLogin:"请登录后发表评价。",rvCmt:"请写一句简短评论（可选）：",rvThanks:"评价已提交",
 nAll:"全部动态",nAdm:"管理员动态",nGuestVc:"创建新账号即可获得优惠码。",guest:"访客",myOrders:"我的订单",noOrders:"暂无订单。",trackOrder:"跟踪订单",stCreated:"订单已创建",stProc:"处理中",stShip:"已发货",stDone:"已完成",
 stProcTxt:"卖家正在打包您的订单。",stShipTxt:"包裹正在运往目的地城市：",stDoneTxt:"买家已收到订单。感谢您的购买！",recvBtn:"已收货 / 完成订单",recvWait:"订单发货后即可点击“完成订单”按钮。",confirmDone:"订单是否已完好收到？状态将变为“已完成”，且无法再更改。",doneByBuyer:"由买家确认完成",
-ordDetail:"订单详情",resi:"运单号",ordHistory:"状态记录",ordAdmin:"管理员视图：显示所有订单。只有买家可以完成订单。",ordGuest:"您以访客身份登录：仅显示本设备的订单。",vcLogin:"请登录账号后使用优惠码",vcNext:"下一张优惠码：第 ",vcNew:"新优惠码",vcAt:"第 ",thRed:"加鲁达红",thDark:"炭黑霓虹",
+ordDetail:"订单详情",resi:"运单号",ordHistory:"状态记录",ordAdmin:"管理员视图：显示所有订单。只有买家可以完成订单。",ordGuestT:"您正以访客身份浏览（新访客）",ordGuest:"每次以访客身份进入都会被视为首次访问，因此购物车、订单和通知都从空白开始。",ordGuestN:"本次访问期间下的订单会显示在此页面。关闭标签页或浏览器后，将无法再在此查看这些订单。注册或登录即可永久保存订单记录。",ordGuestEmpty:"本次访问暂无订单。登录或注册账号后，订单记录将被保存，可随时查看。",ordGuestCta:"注册 / 登录",cartGuestHint:"访客模式：每次新访问时购物车都从空白开始。",vcLogin:"请登录账号后使用优惠码",vcNext:"下一张优惠码：第 ",vcNew:"新优惠码",vcAt:"第 ",thRed:"加鲁达红",thDark:"炭黑霓虹",
 /* kunci baru */
 game:"游戏",gameTitle:"太空大战",gTip:"击落敌机，收集道具，尽可能坚持更久！",gStart:"开始游戏",gPause:"已暂停",gResume:"继续",gOver:"游戏结束",gFinal:"最终得分",gRetry:"再玩一次",gScore:"得分",gHi:"最高分",gLives:"生命",gLvl:"关卡",
 gHelp:"操作：方向键 / WASD，或用鼠标 / 手指拖动。子弹自动发射。按 P 键暂停。",gItems:"道具：P = 武器升级 · S = 护盾 · + = 额外生命",
@@ -1654,8 +1662,8 @@ function doRegister(e,re){
   users.push({u,p,phone:ph,email:em,addr:ad,vs:[{code,used:false,why:'signup'}],ts:Date.now()});sv('users',users);er.classList.add('hid');e.target.reset();resetAddr('r');mountAddr('regAddrBox','r');waSet('r','');
   enter('user',u,{f:'regOk',a:[code]},{addr:ad,phone:ph,email:em});
 }
-function enterGuest(){enter('guest','Tamu',{f:'loginG',a:[]})}
-function logout(){addNotif('fa-right-from-bracket',{f:'t',a:['logout']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session={role:'guest',name:'Tamu'};sv('session',session);$('dd-acc').classList.add('hid');authLabel();renderNotif();toast(t('loggedOut'));show('home')}
+function enterGuest(){if(!session||session.role!=='guest')newGuestVisit();enter('guest','Tamu',{f:'loginG',a:[]})}
+function logout(){addNotif('fa-right-from-bracket',{f:'t',a:['logout']});try{sessionStorage.removeItem('gs_adm')}catch(e){}session={role:'guest',name:'Tamu'};sv('session',session);newGuestVisit();$('dd-acc').classList.add('hid');authLabel();renderNotif();toast(t('loggedOut'));show('home')}
 
 /* ============ ADMIN ============ */
 function renderAdmin(){fillCatSelects();backfillTr();
@@ -1748,9 +1756,11 @@ function ordCard(o,adm){
   <div><p class="lbl mb-1">${t('ordHistory')}</p><div class="text-xs text-slate-500 space-y-0.5">${(o.log||[{s:o.status,t:o.date}]).slice().reverse().map(l=>`<p><b class="text-slate-700">${esc(stLbl(l.s))}</b> \u00b7 ${esc(fmtT(l.t))}</p>`).join('')}</div></div>
   ${adm?'':(o.status==='Dikirim'?`<button onclick="finishOrder('${esc(o.id)}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-circle-check mr-1"></i>${t('recvBtn')}</button>`:o.status==='Diproses'?`<p class="text-xs text-slate-400 text-center">${t('recvWait')}</p>`:'')}</div></div>`}
 function renderOrders(){mapsClear();const adm=session&&session.role==='admin',L=orders.filter(o=>adm||ownsO(o));
-  $('ordNote').textContent=adm?t('ordAdmin'):(session&&session.role==='user'?'':t('ordGuest'));
+  const gst=!adm&&!(session&&session.role==='user');
+  $('ordNote').className=gst?'rounded-xl border border-orange-300 bg-orange-50 text-slate-700 text-sm px-4 py-3 space-y-1':'text-sm text-slate-500';
+  $('ordNote').innerHTML=adm?esc(t('ordAdmin')):(gst?`<p class="font-bold text-orange-700"><i class="fa-solid fa-user-clock mr-1"></i>${esc(t('ordGuestT'))}</p><p>${esc(t('ordGuest'))}</p><p class="text-xs text-slate-500">${esc(t('ordGuestN'))}</p>`:'');
   renderMyRpt();
-  $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`;
+  $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):(gst?`<div class="text-center py-10 space-y-3"><i class="fa-solid fa-box-open text-5xl text-slate-300"></i><p class="font-semibold text-slate-500">${t('noOrders')}</p><p class="text-sm text-slate-400 max-w-md mx-auto">${esc(t('ordGuestEmpty'))}</p><button onclick="authBtnClick()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2 rounded-xl text-sm"><i class="fa-solid fa-user-plus mr-1"></i>${esc(t('ordGuestCta'))}</button></div>`:`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`);
   setTimeout(initMaps,30)}
 function finishOrder(id){const o=orders.find(x=>x.id===id);if(!o||(session&&session.role==='admin')||o.status!=='Dikirim'||!ownsO(o))return;
   if(!confirm(t('confirmDone')))return;const dts=tm();o.status='Selesai';o.doneTs=dts;o.doneBy='customer';(o.log=o.log||[]).push({s:'Selesai',t:dts});sv('orders',orders);renderOrders();toast('\u2713 '+o.id+': '+t('stDone'));addNotif('fa-circle-check',{f:'ordStatus',a:[o.id,'Selesai']})}
@@ -2116,7 +2126,7 @@ const userExists=n=>!!n&&users.some(x=>mk(x.u)===mk(n));
 const bdg=(c,x)=>`<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${c}">${x}</span>`;
 const pnx=(id,n)=>{const p=P.find(z=>z.id===id);return p?pname(p):(n||'?')};
 function setMod(n,patch){const k=mk(n),o=MOD[k]||{};MOD[k]=Object.assign({w:0,fz:false,wl:[]},o,patch);sv('mod',MOD)}
-function checkFrozen(){if(session&&session.role==='user'&&isFrozen(session.name)){session={role:'guest',name:'Tamu'};sv('session',session);authLabel();renderNotif();toast(t('acctFrozen'));show('home');return true}return false}
+function checkFrozen(){if(session&&session.role==='user'&&isFrozen(session.name)){session={role:'guest',name:'Tamu'};sv('session',session);newGuestVisit();authLabel();renderNotif();toast(t('acctFrozen'));show('home');return true}return false}
 function vcDisc(code,sub,fees){const v=vcFind(code);if(!v)return Math.min(fees,VC_MAX);return v.amt?Math.min(v.amt,sub+fees):Math.min(fees,VC_MAX)}
 
 /* ---------- BARANG MASUK (admin) ---------- */
