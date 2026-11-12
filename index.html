@@ -274,6 +274,12 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
 <!-- ============ PESANAN SAYA ============ -->
 <section id="v-orders" class="hid space-y-4">
   <h2 class="text-2xl font-bold"><i class="fa-solid fa-truck-fast text-orange-500 mr-2"></i><span data-i="myOrders"></span></h2>
+  <div id="trkBox" class="bg-white border rounded-2xl shadow-sm p-4 space-y-3">
+    <p class="font-bold text-slate-800"><i class="fa-solid fa-barcode text-orange-500 mr-2"></i><span data-i="trkTitle"></span></p>
+    <p class="text-xs text-slate-500" data-i="trkHint"></p>
+    <div class="flex gap-2"><input id="trkIn" class="inp !mt-0 flex-1" autocomplete="off" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();trackResi()}"><button id="trkBtn" type="button" onclick="trackResi()" class="bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-bold px-5 rounded-xl text-sm"><i class="fa-solid fa-magnifying-glass mr-1"></i><span data-i="trkBtn"></span></button></div>
+    <div id="trkRes" class="space-y-4"></div>
+  </div>
   <div id="ordNote" class="text-sm text-slate-500"></div>
   <div id="myRpt" class="space-y-3"></div>
   <div id="ordList" class="space-y-4"></div>
@@ -545,6 +551,7 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
       <div class="flex justify-between"><span class="text-slate-500" data-i="payment"></span><b id="okPay"></b></div>
       <div class="flex items-center justify-center gap-2 pt-2 font-semibold text-orange-600"><span class="dotp"></span><span data-i="processing"></span></div>
     </div>
+    <p id="okWa" class="hid text-xs text-slate-700 bg-green-50 border border-green-200 rounded-xl p-2.5 mt-3"></p>
     <button onclick="closeOk();show('orders')" class="w-full mt-5 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-truck-fast mr-1"></i><span data-i="trackOrder"></span></button>
     <div class="flex gap-2 mt-2">
       <button onclick="closeOk(true)" class="flex-1 border-2 border-orange-500 text-orange-600 font-bold py-2.5 rounded-xl hover:bg-orange-50"><i class="fa-regular fa-bell mr-1"></i><span data-i="toNotif"></span></button>
@@ -647,6 +654,20 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
       <p class="text-xs text-slate-500" data-i="accNote"></p>
       <div class="flex gap-2"><button onclick="respondAccess(accCur,false)" class="flex-1 border-2 border-red-500 text-red-600 font-bold py-2.5 rounded-xl hover:bg-red-50" data-i="accDeny"></button><button onclick="respondAccess(accCur,true)" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl" data-i="accAllow"></button></div>
       <button onclick="closeM('m-acc')" class="w-full text-xs text-slate-400 underline" data-i="accLater"></button></div>
+  </div>
+</div>
+<!-- MODAL: INPUT NO. RESI + KIRIM VIA WHATSAPP (admin) -->
+<div id="m-resi" class="hid fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[92vh] overflow-y-auto">
+    <div class="hd text-white px-6 py-4 flex justify-between items-center rounded-t-2xl"><h3 class="font-bold text-lg"><i class="fa-solid fa-barcode mr-2"></i><span data-i="rsiTitle"></span></h3><button onclick="closeM('m-resi')" class="text-2xl">&times;</button></div>
+    <div class="p-6 space-y-3">
+      <div class="bg-orange-50 rounded-xl p-3 text-sm"><b id="rsiOrd"></b></div>
+      <div><label class="lbl" data-i="rsiLbl"></label><input id="rsiIn" class="inp" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
+      <p class="text-xs text-slate-500" data-i="rsiHint"></p>
+      <div class="rounded-xl bg-green-50 border border-green-200 p-3 text-sm"><p class="text-xs text-slate-500" data-i="rsiToL"></p><p class="font-bold text-green-700"><i class="fa-brands fa-whatsapp mr-1"></i><span id="rsiTo"></span></p></div>
+      <p id="rsiShipNote" class="hid text-xs text-orange-700 bg-orange-50 rounded-lg px-3 py-2" data-i="rsiShipNote"></p>
+      <div class="flex gap-2"><button type="button" onclick="saveResi(false)" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-sm" data-i="rsiSaveOnly"></button><button type="button" onclick="saveResi(true)" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl text-sm"><i class="fa-brands fa-whatsapp mr-1"></i><span data-i="rsiSave"></span></button></div>
+    </div>
   </div>
 </div>
 <!-- MODAL: PESAN ULANG KE DISTRIBUTOR / PABRIK -->
@@ -1471,6 +1492,7 @@ function checkoutCart(){
 }
 function showOk(o){
   $('okId').textContent=o.id;$('okTotal').textContent=Rp(o.total);$('okPay').textContent=payName(o.pay);
+  {const ow=$('okWa');if(ow){if(o.wa){ow.innerHTML='<i class="fa-brands fa-whatsapp text-green-600 mr-1"></i>'+esc(fm(t('okWa'),o.wa));ow.classList.remove('hid')}else ow.classList.add('hid')}}
   const cf=$('confetti');cf.innerHTML='';const cs=[getComputedStyle(document.documentElement).getPropertyValue('--cf1').trim()||'#f6cf5b','#fbbf24','#22c55e','#3b82f6','#eab308','#ef4444','#a855f7'];
   for(let i=0;i<34;i++){const s=document.createElement('span');s.className='conf';s.style.left=Math.random()*100+'%';s.style.background=cs[i%cs.length];s.style.animationDelay=(Math.random()*.8)+'s';cf.appendChild(s)}
   openM('m-ok');
@@ -1564,6 +1586,41 @@ rvBtn:"去评价",rvSent:"已评价",rvTitle:"商品评价",rvRate:"评分",rvTe
 rvNeedVid:"损坏报告必须上传开箱视频。",rvNeedRate:"请评分或报告损坏。",rvTooBig:"视频大小不能超过 40 MB。",rvOk:"评价已提交，谢谢！",rvRepOk:"损坏报告已发送给卖家。",rvVidFail:"视频保存失败",rvChosen:"已选择",rvN:"{0} 的评价：{1}",
 rptTitle:"损坏报告",rptNone:"暂无报告。",rptNew:"新",rptDone:"已处理",rptMark:"标记为已处理",unboxing:"开箱视频",dmgN:"新的损坏报告：{0} · {1}",close:"关闭",
 nameEn:"商品名称（英文，可选）",nameZh:"商品名称（中文，可选）",descEn:"商品描述（英文，可选）",descZh:"商品描述（中文，可选）",vcNextS:" 次购买",vcAtS:" 次购买",autoL:"自动",pol4:"服务费：QRIS Rp 0；银行转账和电子钱包 Rp 1,500；货到付款 Rp 2,000。可选保险 Rp 2,500。XXL 尺码加收 Rp 10,000"
+});
+
+/* ===== KAMUS: RESI VIA WHATSAPP + LACAK MANUAL (id / en / zh) ===== */
+Object.assign(I.id,{
+trkTitle:"Lacak Paket dengan No. Resi",trkHint:"Masukkan No. Resi yang dikirim penjual ke WhatsApp Anda. Resi dikirim setelah pesanan berstatus Dikirim.",trkPh:"Masukkan No. Resi",trkBtn:"Lacak",
+trkNone:"No. Resi tidak ditemukan. Periksa kembali nomor yang dikirim penjual lewat WhatsApp.",trkEmpty:"Masukkan No. Resi terlebih dahulu.",trkNoneYet:"Belum ada paket yang dilacak",trkDest:"Tujuan",
+ordGuestT:"Anda masuk sebagai Tamu",ordGuest:"Tamu melacak paket secara manual memakai No. Resi yang dikirim penjual lewat pesan pribadi WhatsApp ke nomor yang Anda isi saat checkout.",
+ordGuestN:"Riwayat pesanan tidak ditampilkan otomatis untuk tamu. Buat akun atau masuk agar riwayat pesanan tersimpan permanen.",
+ordGuestEmpty:"Masukkan No. Resi dari pesan WhatsApp penjual pada kolom di atas untuk melihat posisi paket Anda.",
+okWa:"No. Resi akan dikirim penjual ke WhatsApp pribadi Anda ({0}) setelah pesanan dikirim.",
+rsiTitle:"Input No. Resi & Kirim ke WhatsApp",rsiLbl:"No. Resi (dari kurir)",rsiHint:"Isi nomor resi asli dari kurir. Kosongkan untuk membuat nomor otomatis.",rsiToL:"Akan dikirim ke WhatsApp pembeli",
+rsiShipNote:"Setelah disimpan, status pesanan berubah menjadi Dikirim.",rsiSave:"Simpan & Kirim via WA",rsiSaveOnly:"Simpan Saja",rsiBtn:"Resi / Kirim WA",
+rsiNoWa:"Pesanan ini tidak punya nomor WhatsApp pembeli yang valid.",rsiNoWaShort:"(tidak ada nomor WhatsApp)",rsiDup:"No. Resi sudah dipakai pesanan lain.",rsiSaved:"Resi tersimpan"
+});
+Object.assign(I.en,{
+trkTitle:"Track Your Parcel by Tracking No.",trkHint:"Enter the tracking number the seller sent to your WhatsApp. It is sent once your order is marked Shipped.",trkPh:"Enter tracking no.",trkBtn:"Track",
+trkNone:"Tracking number not found. Please re-check the number sent by the seller on WhatsApp.",trkEmpty:"Please enter a tracking number first.",trkNoneYet:"No parcel tracked yet",trkDest:"Destination",
+ordGuestT:"You are browsing as a Guest",ordGuest:"Guests track their parcel manually using the tracking number the seller sends by private WhatsApp message to the number you entered at checkout.",
+ordGuestN:"Order history is not shown automatically for guests. Create an account or log in to keep your order history permanently.",
+ordGuestEmpty:"Enter the tracking number from the seller's WhatsApp message in the box above to see where your parcel is.",
+okWa:"The seller will send your tracking number to your personal WhatsApp ({0}) once the order is shipped.",
+rsiTitle:"Enter Tracking No. & Send via WhatsApp",rsiLbl:"Tracking No. (from courier)",rsiHint:"Enter the real tracking number from the courier. Leave blank to auto-generate one.",rsiToL:"Will be sent to the buyer's WhatsApp",
+rsiShipNote:"Once saved, the order status changes to Shipped.",rsiSave:"Save & Send via WA",rsiSaveOnly:"Save Only",rsiBtn:"Tracking / Send WA",
+rsiNoWa:"This order has no valid buyer WhatsApp number.",rsiNoWaShort:"(no WhatsApp number)",rsiDup:"This tracking number is already used by another order.",rsiSaved:"Tracking no. saved"
+});
+Object.assign(I.zh,{
+trkTitle:"用运单号查询包裹",trkHint:"请输入卖家通过 WhatsApp 发给您的运单号。订单状态变为“已发货”后才会发送。",trkPh:"输入运单号",trkBtn:"查询",
+trkNone:"未找到该运单号。请核对卖家通过 WhatsApp 发送的号码。",trkEmpty:"请先输入运单号。",trkNoneYet:"尚未查询任何包裹",trkDest:"目的地",
+ordGuestT:"您正以访客身份浏览",ordGuest:"访客需使用卖家通过 WhatsApp 私信发送到您下单时所填号码的运单号，手动查询包裹。",
+ordGuestN:"访客不会自动显示订单记录。注册或登录后即可永久保存订单记录。",
+ordGuestEmpty:"请在上方输入卖家 WhatsApp 消息中的运单号，即可查看包裹位置。",
+okWa:"订单发货后，卖家会把运单号发送到您的个人 WhatsApp（{0}）。",
+rsiTitle:"填写运单号并发送到 WhatsApp",rsiLbl:"运单号（快递公司提供）",rsiHint:"填写快递公司提供的真实运单号；留空则自动生成。",rsiToL:"将发送到买家的 WhatsApp",
+rsiShipNote:"保存后，订单状态将变为“已发货”。",rsiSave:"保存并通过 WA 发送",rsiSaveOnly:"仅保存",rsiBtn:"运单号 / 发送 WA",
+rsiNoWa:"此订单没有有效的买家 WhatsApp 号码。",rsiNoWaShort:"（无 WhatsApp 号码）",rsiDup:"该运单号已用于其他订单。",rsiSaved:"运单号已保存"
 });
 
 let tabCur='admin';
@@ -1672,14 +1729,61 @@ function renderAdmin(){fillCatSelects();backfillTr();
   const lb=$('aLowBox');lb.classList.toggle('hid',!low.length);
   lb.innerHTML=low.length?`<i class="fa-solid fa-triangle-exclamation mr-2"></i>${fm(t('lowAlert'),low.length)}: <b>${low.map(p=>esc(pname(p))).join(', ')}</b>`:'';
   $('aTable').innerHTML=P.map(p=>{const m=minStock(p),isLow=p.stock<m;return `<tr><td class="p-3 font-semibold text-orange-600">${esc(p.sku)}</td><td class="p-3"><img src="${src(p)}" alt="" class="inline w-9 h-9 object-contain mr-2 bg-white border rounded">${esc(pname(p))}</td><td class="p-3">${Rp(p.price)}</td><td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${p.stock<=0?'bg-red-100 text-red-700':isLow?'bg-yellow-100 text-yellow-700':'bg-green-100 text-green-700'}">${p.stock}</span>${p.opts&&p.opts.list.some(x=>typeof x[3]==='number')?`<div class="text-[10px] text-slate-400 mt-1">${p.opts.list.map(x=>esc(otr(x[0]))+': '+x[3]).join(' · ')}</div>`:''}</td><td class="p-3 font-semibold">${m}${typeof p.min==='number'?'':` <span class="text-[10px] font-normal text-slate-400">(${t('autoL')})</span>`}</td><td class="p-3">${isLow?`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">${t('below')}</span><button onclick="openRestock(${p.id})" class="block mt-1 text-xs bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-truck-ramp-box mr-1"></i>${t('restock')}</button>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">${t('stockOk')}</span>`}</td><td class="p-3 text-right whitespace-nowrap"><button onclick="editProduct(${p.id})" title="Edit" class="text-blue-600 hover:text-blue-800 mr-3"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="delProduct(${p.id})" title="${t('del')}" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td></tr>`}).join('');
-  $('oTable').innerHTML=orders.length?orders.map((o,i)=>`<tr><td class="p-3 font-semibold text-orange-600">${esc(o.id)}</td><td class="p-3">${fmtD(o.date)}</td><td class="p-3">${esc(o.name)}<div class="text-xs text-orange-600 max-w-xs">${ordItems(o).join(', ')}</div><div class="text-xs text-slate-400 max-w-xs">${esc(o.addr||'')}</div><div class="text-xs text-slate-500">${esc(cNameK(o))}${o.voucher?' · '+esc(o.voucher):''}</div></td><td class="p-3">${Rp(o.total)}</td><td class="p-3">${esc(payName(o.pay))}</td><td class="p-3">${o.status==='Selesai'?`<span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fa-solid fa-lock mr-1"></i>${stLbl('Selesai')}</span><div class="text-[10px] text-slate-400 mt-1">${t('doneByBuyer')}</div><div class="text-[10px] text-slate-500">${esc(fmtT(finTs(o)))}</div>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${stLbl(o.status)}</span><button onclick="setStatus(${i})" class="block mt-1 text-xs text-orange-600 font-semibold hover:underline">${stLbl(o.status)} \u2192 ${stLbl(o.status==='Diproses'?'Dikirim':'Diproses')}</button>`}</td></tr>`).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('empty')}</td></tr>`;
+  $('oTable').innerHTML=orders.length?orders.map((o,i)=>`<tr><td class="p-3 font-semibold text-orange-600">${esc(o.id)}</td><td class="p-3">${fmtD(o.date)}</td><td class="p-3">${esc(o.name)}<div class="text-xs text-orange-600 max-w-xs">${ordItems(o).join(', ')}</div><div class="text-xs text-slate-400 max-w-xs">${esc(o.addr||'')}</div><div class="text-xs text-slate-500">${esc(cNameK(o))}${o.voucher?' · '+esc(o.voucher):''}</div></td><td class="p-3">${Rp(o.total)}</td><td class="p-3">${esc(payName(o.pay))}</td><td class="p-3">${o.status==='Selesai'?`<span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700"><i class="fa-solid fa-lock mr-1"></i>${stLbl('Selesai')}</span><div class="text-[10px] text-slate-400 mt-1">${t('doneByBuyer')}</div><div class="text-[10px] text-slate-500">${esc(fmtT(finTs(o)))}</div>`:`<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${stLbl(o.status)}</span><button onclick="setStatus(${i})" class="block mt-1 text-xs text-orange-600 font-semibold hover:underline">${stLbl(o.status)} \u2192 ${stLbl(o.status==='Diproses'?'Dikirim':'Diproses')}</button>${o.status==='Dikirim'?`<div class="text-[11px] text-slate-600 mt-1">${t('resi')}: <b>${esc(o.resi||'-')}</b></div><button onclick="openResi(${i})" class="mt-1 text-xs bg-green-500 hover:bg-green-600 text-white font-bold px-2.5 py-1 rounded-lg"><i class="fa-brands fa-whatsapp mr-1"></i>${t('rsiBtn')}</button>`:''}`}</td></tr>`).join(''):`<tr><td colspan="6" class="p-6 text-center text-slate-400">${t('empty')}</td></tr>`;
   renderCust();renderRpt();renderPromoCtl();
 }
 const mkResi=o=>((o.ship||'GRD').replace(/[^A-Za-z]/g,'').slice(0,3)||'GRD').toUpperCase()+String(Date.now()).slice(-8)+Math.floor(1000+Math.random()*9000);
 function setStatus(i){const o=orders[i];if(!o||!session||session.role!=='admin'||!['Diproses','Dikirim'].includes(o.status))return;
-  o.status=o.status==='Diproses'?'Dikirim':'Diproses';if(o.status==='Dikirim'&&!o.resi)o.resi=mkResi(o);
+  if(o.status==='Diproses')return openResi(i);o.status='Diproses';
   (o.log=o.log||[]).push({s:o.status,t:tm()});sv('orders',orders);renderAdmin();
   addNotif('fa-truck-fast',{f:'ordStatus',a:[o.id,o.status]});notifyUser(o.owner,'fa-truck-fast',{f:'ordStatus',a:[o.id,o.status]})}
+
+/* ============ NO. RESI: ADMIN INPUT -> KIRIM KE WA PEMBELI -> TAMU/AKUN LACAK MANUAL ============ */
+const normR=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+let RSI=null,TRK='';
+function canFin(o){return !!o&&!(session&&session.role==='admin')&&(ownsO(o)||String(o.owner||GK).indexOf(GK)===0)}
+function openResi(i){const o=orders[i];if(!o||!session||session.role!=='admin'||o.status==='Selesai')return;
+  RSI={id:o.id};$('rsiOrd').textContent=o.id+' \u00b7 '+(o.name||'');$('rsiIn').value=o.resi||'';
+  $('rsiTo').textContent=o.wa||t('rsiNoWaShort');$('rsiShipNote').classList.toggle('hid',o.status!=='Diproses');
+  openM('m-resi');setTimeout(()=>{try{$('rsiIn').focus()}catch(e){}},60)}
+function waResi(o){const w=String(o.wa||'').replace(/\D/g,'');if(w.length<8)return toast(t('rsiNoWa'));
+  const site=location.href.split('#')[0].split('?')[0];
+  const msg=`Halo ${o.name||'Kak'}, pesanan Anda di Garuda Store sudah *dikirim*.\n\n\u2022 No. Pesanan: ${o.id}\n\u2022 Kurir: ${cNameK(o)}\n\u2022 No. Resi: *${o.resi}*\n\nCara lacak paket: buka ${site} \u2192 menu "Pesanan Saya" \u2192 masukkan No. Resi di atas.\nJangan bagikan No. Resi ini ke orang lain.\n\nTerima kasih sudah berbelanja!\nGaruda Store \u2013 WA 0895801321630`;
+  window.open('https://wa.me/'+w+'?text='+encodeURIComponent(msg),'_blank','noopener')}
+function saveResi(sendWa){const o=RSI&&orders.find(x=>x.id===RSI.id);if(!o||!session||session.role!=='admin')return;
+  let r=normR($('rsiIn').value);if(!r)r=mkResi(o);
+  if(orders.some(x=>x.id!==o.id&&x.resi&&normR(x.resi)===r))return toast(t('rsiDup'));
+  if(sendWa&&String(o.wa||'').replace(/\D/g,'').length<8)return toast(t('rsiNoWa'));
+  const was=o.status;o.resi=r;
+  if(was==='Diproses'){o.status='Dikirim';(o.log=o.log||[]).push({s:'Dikirim',t:tm()})}
+  sv('orders',orders);closeM('m-resi');renderAdmin();toast(t('rsiSaved')+': '+r);
+  if(was==='Diproses'){addNotif('fa-truck-fast',{f:'ordStatus',a:[o.id,o.status]});notifyUser(o.owner,'fa-truck-fast',{f:'ordStatus',a:[o.id,o.status]})}
+  if(sendWa)waResi(o)}
+async function trackResi(){const v=normR($('trkIn').value);
+  if(!v){TRK='';renderOrders();return toast(t('trkEmpty'))}
+  const b=$('trkBtn');if(b)b.disabled=true;
+  try{if(typeof SYNC_URL!=='undefined'&&SYNC_URL)await syncNow()}catch(e){}
+  if(b)b.disabled=false;TRK=v;renderOrders()}
+function renderTrk(){const el=$('trkRes');if(!el)return;
+  if(!TRK){el.innerHTML='';return}
+  const o=orders.find(x=>x.resi&&normR(x.resi)===TRK);
+  el.innerHTML=o?trkCard(o):`<div class="rounded-xl border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3"><i class="fa-solid fa-circle-exclamation mr-1"></i>${esc(t('trkNone'))}</div>`}
+function trkCard(o){
+  const ix={Diproses:1,Dikirim:2,Selesai:3}[o.status]||1,S=[['fa-file-invoice','stCreated'],['fa-box','stProc'],['fa-truck-fast','stShip'],['fa-circle-check','stDone']];
+  const pr=(o.addr||'').split(', '),city=pr[pr.length-2]||'';
+  const where=o.status==='Diproses'?t('stProcTxt'):o.status==='Dikirim'?`${t('stShipTxt')} <b>${esc(city)}</b> \u00b7 ${esc(cNameK(o))}`:t('stDoneTxt')+`<div class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-calendar-check mr-1"></i>${t('doneOnCust')} <b>${esc(fmtT(finTs(o)))}</b></div>`;
+  const ownList=!!(session&&session.role==='user'&&ownsO(o));
+  const mapHTML=(o.status==='Dikirim'&&!ownList)?`<div class="rounded-xl border overflow-hidden"><div class="px-3 py-2 bg-orange-50 text-sm font-semibold text-orange-700"><i class="fa-solid fa-motorcycle mr-1"></i>${t('mapToday')}</div><div id="map-${mid(o)}" data-oid="${esc(o.id)}" class="h-64 w-full bg-slate-100 flex items-center justify-center text-sm text-slate-400">${t('mapLoad')}</div><div id="mapInfo-${mid(o)}" class="px-3 py-2 text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 justify-between"></div></div>`:'';
+  const items=o.its?o.its.map(ci=>{const p=P.find(x=>x.id===ci.id),done=(o.rvd||[]).includes(ci.id);
+    return `<li class="flex items-center justify-between gap-2"><span>\u2022 ${esc(p?pname(p):ci.n)}${ci.v?` (${esc(otr(ci.v))})`:''} x${ci.q}</span>${o.status==='Selesai'&&ownsO(o)&&!ownList&&p?itemBtns(o,ci,done):''}</li>`}).join(''):(o.items||[]).map(x=>`<li>\u2022 ${esc(x)}</li>`).join('');
+  const fin=(o.status==='Dikirim'&&canFin(o))?`<button onclick="finishOrder('${esc(o.id)}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-circle-check mr-1"></i>${t('recvBtn')}</button>`:(o.status==='Diproses'?`<p class="text-xs text-slate-400 text-center">${t('recvWait')}</p>`:'');
+  return `<div class="bg-white border-2 border-orange-300 rounded-2xl shadow-sm overflow-hidden"><div class="px-5 py-3 border-b flex flex-wrap justify-between gap-2"><div><b class="text-orange-600">${esc(o.id)}</b> <span class="text-xs text-slate-400 ml-2">${esc(fmtD(o.date))}</span></div><span class="px-3 py-0.5 rounded-full text-xs font-bold ${o.status==='Selesai'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}">${stLbl(o.status)}</span></div>
+  <div class="p-5 space-y-4"><div class="grid grid-cols-4 text-center text-xs">${S.map((s,k)=>`<div><div class="mx-auto w-10 h-10 rounded-full flex items-center justify-center ${k<=ix?'bg-orange-500 text-white':'bg-slate-200 text-slate-400'}"><i class="fa-solid ${s[0]}"></i></div><p class="mt-1 font-semibold ${k<=ix?'text-orange-600':'text-slate-400'}">${t(s[1])}</p></div>`).join('')}</div>
+  <div class="bg-orange-50 rounded-xl p-3 text-sm"><i class="fa-solid fa-location-dot text-orange-500 mr-1"></i>${where}<div class="text-xs text-slate-500 mt-1">${t('resi')}: <b>${esc(o.resi)}</b> \u00b7 ${t('trkDest')}: <b>${esc(city)}</b></div></div>
+  ${mapHTML}
+  <div class="text-sm"><p class="lbl mb-1">${t('ordDetail')}</p><ul class="space-y-1">${items}</ul></div>
+  <div><p class="lbl mb-1">${t('ordHistory')}</p><div class="text-xs text-slate-500 space-y-0.5">${(o.log||[{s:o.status,t:o.date}]).slice().reverse().map(l=>`<p><b class="text-slate-700">${esc(stLbl(l.s))}</b> \u00b7 ${esc(fmtT(l.t))}</p>`).join('')}</div></div>
+  ${fin}</div></div>`}
 
 /* ============ DATA PELANGGAN + IZIN AKSES DETAIL ============ */
 const accOf=u=>ACC.filter(r=>r.user===u).sort((a,b)=>b.ts-a.ts)[0]||null;
@@ -1755,14 +1859,15 @@ function ordCard(o,adm){
   <div class="space-y-1">${row(t('subtotal'),Rp(o.sub||0))}${row(t('shipFee'),o.ongkir?Rp(o.ongkir):t('free'))}${row(t('adminFee'),Rp(o.admin||0))}${o.ins?row(t('insFee'),Rp(o.ins)):''}${o.disc?row(t('vcDisc')+(o.voucher?' ('+esc(o.voucher)+')':''),'-'+Rp(o.disc)):''}<div class="flex justify-between font-extrabold pt-1 border-t"><span>${t('total')}</span><span class="text-orange-600">${Rp(o.total)}</span></div>${o.pay!=='COD'?`<p class="text-right"><span class="inline-block px-3 py-0.5 rounded-full text-xs font-extrabold tracking-widest bg-green-100 text-green-700"><i class="fa-solid fa-circle-check mr-1"></i>${t('paid')}</span></p>`:''}<p class="text-xs text-slate-500">${esc(payName(o.pay))}</p></div></div>
   <div><p class="lbl mb-1">${t('ordHistory')}</p><div class="text-xs text-slate-500 space-y-0.5">${(o.log||[{s:o.status,t:o.date}]).slice().reverse().map(l=>`<p><b class="text-slate-700">${esc(stLbl(l.s))}</b> \u00b7 ${esc(fmtT(l.t))}</p>`).join('')}</div></div>
   ${adm?'':(o.status==='Dikirim'?`<button onclick="finishOrder('${esc(o.id)}')" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl"><i class="fa-solid fa-circle-check mr-1"></i>${t('recvBtn')}</button>`:o.status==='Diproses'?`<p class="text-xs text-slate-400 text-center">${t('recvWait')}</p>`:'')}</div></div>`}
-function renderOrders(){mapsClear();const adm=session&&session.role==='admin',L=orders.filter(o=>adm||ownsO(o));
+function renderOrders(){mapsClear();const adm=session&&session.role==='admin',L=orders.filter(o=>adm||(session&&session.role==='user'&&ownsO(o)));
   const gst=!adm&&!(session&&session.role==='user');
   $('ordNote').className=gst?'rounded-xl border border-orange-300 bg-orange-50 text-slate-700 text-sm px-4 py-3 space-y-1':'text-sm text-slate-500';
   $('ordNote').innerHTML=adm?esc(t('ordAdmin')):(gst?`<p class="font-bold text-orange-700"><i class="fa-solid fa-user-clock mr-1"></i>${esc(t('ordGuestT'))}</p><p>${esc(t('ordGuest'))}</p><p class="text-xs text-slate-500">${esc(t('ordGuestN'))}</p>`:'');
   renderMyRpt();
-  $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):(gst?`<div class="text-center py-10 space-y-3"><i class="fa-solid fa-box-open text-5xl text-slate-300"></i><p class="font-semibold text-slate-500">${t('noOrders')}</p><p class="text-sm text-slate-400 max-w-md mx-auto">${esc(t('ordGuestEmpty'))}</p><button onclick="authBtnClick()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2 rounded-xl text-sm"><i class="fa-solid fa-user-plus mr-1"></i>${esc(t('ordGuestCta'))}</button></div>`:`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`);
+  $('ordList').innerHTML=L.length?L.map(o=>ordCard(o,adm)).join(''):(gst?`<div class="text-center py-10 space-y-3"><i class="fa-solid fa-box-open text-5xl text-slate-300"></i><p class="font-semibold text-slate-500">${t('trkNoneYet')}</p><p class="text-sm text-slate-400 max-w-md mx-auto">${esc(t('ordGuestEmpty'))}</p><button onclick="authBtnClick()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2 rounded-xl text-sm"><i class="fa-solid fa-user-plus mr-1"></i>${esc(t('ordGuestCta'))}</button></div>`:`<p class="text-center text-slate-400 py-12">${t('noOrders')}</p>`);
+  {const tb=$('trkBox');if(tb)tb.classList.toggle('hid',!!adm);const ti=$('trkIn');if(ti)ti.placeholder=t('trkPh');renderTrk()}
   setTimeout(initMaps,30)}
-function finishOrder(id){const o=orders.find(x=>x.id===id);if(!o||(session&&session.role==='admin')||o.status!=='Dikirim'||!ownsO(o))return;
+function finishOrder(id){const o=orders.find(x=>x.id===id);if(!o||(session&&session.role==='admin')||o.status!=='Dikirim'||!canFin(o))return;
   if(!confirm(t('confirmDone')))return;const dts=tm();o.status='Selesai';o.doneTs=dts;o.doneBy='customer';(o.log=o.log||[]).push({s:'Selesai',t:dts});sv('orders',orders);renderOrders();toast('\u2713 '+o.id+': '+t('stDone'));addNotif('fa-circle-check',{f:'ordStatus',a:[o.id,'Selesai']})}
 
 /* ============ PETA KURIR (Leaflet + OpenStreetMap) ============ */
@@ -1778,7 +1883,7 @@ async function getRoute(a,b){
   try{const ac=new AbortController(),to=setTimeout(()=>ac.abort(),7000);const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?overview=full&geometries=geojson`,{signal:ac.signal});clearTimeout(to);const j=await r.json();if(j.routes&&j.routes[0]&&j.routes[0].geometry.coordinates.length>1)return j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]])}catch(e){}
   const n=40;return Array.from({length:n+1},(_,i)=>[a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n])}
 const shipTs=o=>{const l=(o.log||[]).filter(x=>x.s==='Dikirim').pop();return l&&typeof l.t==='number'?l.t:Date.now()};
-function initMaps(){document.querySelectorAll('#ordList [id^="map-"]').forEach(el=>mapInit(el))}
+function initMaps(){document.querySelectorAll('#ordList [id^="map-"],#trkRes [id^="map-"]').forEach(el=>mapInit(el))}
 async function mapInit(el){
   const o=orders.find(x=>x.id===el.dataset.oid);if(!o)return;
   const info=$('mapInfo-'+mid(o)),gm='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(o.addr||'')+'&origin='+STORE_LL.join(',');
