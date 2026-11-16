@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.12/dist/motion.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.2.2/dist/bundles/anime.umd.min.js"></script>
 <style>
 body{font-family:Inter,system-ui,sans-serif}
 .hd{background:var(--gh)}
@@ -127,6 +129,13 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
 .gl-pills{display:grid;grid-template-columns:1fr 1fr;gap:.25rem;padding:.25rem;border-radius:.85rem;background:rgb(var(--o100))}
 .gl-pill{padding:.5rem;border-radius:.65rem;font-size:.8rem;font-weight:700;color:rgb(var(--o700));transition:.15s}
 .gl-pill.on{background:rgb(var(--o500));color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18)}html[data-theme=dark] .gl-pill.on{color:#0b0d0f}
+:root{--gc1:rgb(var(--o500));--gc2:#f59e0b;--gc3:#22c55e;--gc4:#3b82f6;--gc5:#a855f7}
+.gc-bar{transform-origin:left center}
+.gc-line{fill:none;stroke:var(--gc1);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.gc-dot{transform-box:fill-box;transform-origin:center}
+.gc-tip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;z-index:5;min-width:9rem;transform:translate(-50%,-115%);background:#fff;color:#3a2523;border:1px solid rgba(0,0,0,.1);border-radius:.5rem;padding:.5rem .65rem;font-size:.75rem;box-shadow:0 10px 25px rgba(0,0,0,.15)}
+html[data-theme=dark] .gc-tip{background:#1e293b;color:#e2e8f0;border-color:rgba(255,255,255,.12)}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
@@ -377,6 +386,11 @@ html[data-theme=dark] .gl-kick{color:#c8ff00}
     <div class="bg-white rounded-2xl p-5 border shadow-sm"><p class="text-xs uppercase text-slate-400 font-semibold" data-i="lowStock"></p><h3 id="aLow" class="text-2xl font-bold mt-1 text-red-600"></h3></div>
   </div>
   <div id="aLowBox" class="hid rounded-xl border-2 border-red-300 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold"></div>
+  <div class="grid lg:grid-cols-3 gap-4">
+    <div class="lg:col-span-2 bg-white rounded-2xl border shadow-sm p-5"><p class="font-bold"><i class="fa-solid fa-chart-area text-orange-500 mr-2"></i><span data-i="chRevT"></span></p><p class="text-xs text-slate-500" data-i="chRevD"></p><div id="gcArea" class="relative mt-3"></div></div>
+    <div class="bg-white rounded-2xl border shadow-sm p-5"><p class="font-bold"><i class="fa-solid fa-chart-pie text-orange-500 mr-2"></i><span data-i="chCatT"></span></p><p class="text-xs text-slate-500" data-i="chCatD"></p><div id="gcDonut" class="mt-3"></div></div>
+    <div class="lg:col-span-3 bg-white rounded-2xl border shadow-sm p-5"><p class="font-bold"><i class="fa-solid fa-ranking-star text-orange-500 mr-2"></i><span data-i="chTopT"></span></p><p class="text-xs text-slate-500" data-i="chTopD"></p><div id="gcTop" class="mt-3 space-y-3"></div></div>
+  </div>
   <form onsubmit="addProduct(event)" class="bg-white rounded-2xl p-5 border shadow-sm grid sm:grid-cols-6 gap-3 items-end">
     <div class="sm:col-span-2"><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pname"></label><input id="np" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pcat"></label><select id="nc" class="w-full mt-1 px-3 py-2 border rounded-lg"><option value="Jersey" data-i="cJersey"></option><option value="Sepatu" data-i="cSepatu"></option><option value="Aksesoris" data-i="cAksesoris"></option><option value="Alat" data-i="cAlat"></option></select></div>
@@ -2753,5 +2767,144 @@ if(document.body)start();else document.addEventListener('DOMContentLoaded',start
 })();
 </script>
 
+<script>
+/* ===== GARUDA STORE: Motion (motion.dev) + Anime.js + grafik gaya shadcn ===== */
+(function(){
+const M=window.Motion||{},A=window.anime||{};
+const RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const safe=f=>{try{return f()}catch(e){console.warn('[anim]',e)}};
+const SIG={};
+Object.assign(I.id,{chRevT:'Pendapatan 7 Hari Terakhir',chRevD:'Total nilai pesanan per hari',chCatT:'Penjualan per Kategori',chCatD:'Jumlah produk terjual',chTopT:'Produk Terlaris',chTopD:'5 produk dengan penjualan tertinggi',chNoData:'Belum ada data penjualan',chSold:'terjual',chRev:'Pendapatan',chTotal:'Total 7 hari'});
+Object.assign(I.en,{chRevT:'Revenue - Last 7 Days',chRevD:'Total order value per day',chCatT:'Sales by Category',chCatD:'Number of products sold',chTopT:'Best-Selling Products',chTopD:'Top 5 products by sales',chNoData:'No sales data yet',chSold:'sold',chRev:'Revenue',chTotal:'7-day total'});
+Object.assign(I.zh,{chRevT:'近7天收入',chRevD:'每日订单总额',chCatT:'分类销售',chCatD:'已售商品数量',chTopT:'热销商品',chTopD:'销量前5的商品',chNoData:'暂无销售数据',chSold:'已售',chRev:'收入',chTotal:'7天合计'});
+
+/* ---------- Motion: animasi masuk, modal, tombol ---------- */
+function enter(els,o){
+  o=o||{};if(RM||!M.animate)return;
+  [...els].forEach((el,i)=>safe(()=>{
+    const kf=o.flat?{opacity:[0,1]}:{opacity:[0,1],transform:['translateY(18px) scale(.97)','translateY(0px) scale(1)']};
+    const c=M.animate(el,kf,{duration:.45,delay:(o.delay||0)+Math.min(i,12)*.05,ease:[.22,1,.36,1]});
+    c.then(()=>{el.style.opacity='';el.style.transform=''});
+  }));
+}
+const _openM=openM;
+openM=function(id){
+  _openM.apply(this,arguments);
+  if(RM||!M.animate)return;
+  safe(()=>{const el=$(id),box=el&&el.firstElementChild;if(!box)return;
+    M.animate(el,{opacity:[0,1]},{duration:.2});
+    M.animate(box,{transform:['translateY(24px) scale(.95)','translateY(0px) scale(1)']},{duration:.35,ease:[.22,1,.36,1]}).then(()=>{box.style.transform=''});
+  });
+};
+document.addEventListener('pointerdown',e=>{
+  if(RM||!M.animate)return;
+  const b=e.target.closest&&e.target.closest('button');if(!b||b.disabled)return;
+  safe(()=>M.animate(b,{transform:['scale(1)','scale(.95)','scale(1)']},{duration:.25}).then(()=>{b.style.transform=''}));
+},true);
+
+/* ---------- Anime.js: hitung naik angka & kartu ringkasan ---------- */
+function countUp(el,to,fmt){
+  if(!el)return;
+  if(RM||!A.animate){el.textContent=fmt(to);el._cv=to;return}
+  const o={v:el._cv||0};el._cv=to;
+  A.animate(o,{v:to,duration:900,ease:'outExpo',onUpdate:()=>{el.textContent=fmt(Math.round(o.v))},onComplete:()=>{el.textContent=fmt(to)}});
+}
+function sumAnim(){
+  if(RM||!A.animate)return;
+  safe(()=>A.animate('#sumBest>div,#sumNew>div,#sumPromo>div',{opacity:[0,1],translateX:[-18,0],duration:600,delay:A.stagger(70),ease:'outExpo'}));
+}
+
+/* ---------- Grafik gaya shadcn (SVG murni) ---------- */
+const W=600,H=220,L=48,R=14,T=14,B=28,COL=['var(--gc1)','var(--gc2)','var(--gc3)','var(--gc4)','var(--gc5)'];
+const nice=m=>{if(m<=0)return 1;const e=Math.pow(10,Math.floor(Math.log10(m))),f=m/e;return(f<=1?1:f<=2?2:f<=5?5:10)*e};
+function days7(){
+  const out=[],d0=new Date();d0.setHours(0,0,0,0);
+  for(let i=6;i>=0;i--){const s=d0.getTime()-i*864e5;out.push({s,e:s+864e5,v:0,n:0})}
+  (orders||[]).forEach(o=>{if(typeof o.date!=='number')return;const b=out.find(x=>o.date>=x.s&&o.date<x.e);if(b){b.v+=o.total||0;b.n++}});
+  return out;
+}
+function drawArea(){
+  const box=$('gcArea');if(!box)return;
+  const D=days7(),sig='a'+lang+JSON.stringify(D.map(x=>[x.v,x.n]));
+  if(SIG.a===sig&&box.firstChild)return;SIG.a=sig;
+  const max=nice(Math.max(...D.map(x=>x.v))),iw=W-L-R,ih=H-T-B,loc=LOC(),cf=new Intl.NumberFormat(loc,{notation:'compact'});
+  const X=i=>L+i*iw/6,Y=v=>T+ih-(v/max)*ih;
+  let ln='M'+X(0)+','+Y(D[0].v);
+  for(let i=1;i<7;i++){const mx=(X(i-1)+X(i))/2;ln+=` C${mx},${Y(D[i-1].v)} ${mx},${Y(D[i].v)} ${X(i)},${Y(D[i].v)}`}
+  const ar=ln+` L${X(6)},${T+ih} L${X(0)},${T+ih} Z`;
+  let grid='';for(let k=0;k<=4;k++){const y=T+ih*k/4;grid+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="currentColor" stroke-opacity=".12" stroke-dasharray="3 4"/><text x="${L-8}" y="${y+3}" text-anchor="end" font-size="10" fill="currentColor" fill-opacity=".55">${cf.format(max*(4-k)/4)}</text>`}
+  const xl=D.map((x,i)=>`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".55">${new Date(x.s).toLocaleDateString(loc,{weekday:'short'})}</text>`).join('');
+  const dots=D.map((x,i)=>`<circle class="gc-dot" cx="${X(i)}" cy="${Y(x.v)}" r="4" fill="var(--gc1)" stroke="#fff" stroke-width="2"/>`).join('');
+  const sum=D.reduce((s,x)=>s+x.v,0);
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" class="w-full h-auto" style="touch-action:pan-y"><defs><linearGradient id="gcg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="var(--gc1)" stop-opacity=".45"/><stop offset="95%" stop-color="var(--gc1)" stop-opacity=".02"/></linearGradient></defs>${grid}${xl}<path class="gc-fill" d="${ar}" fill="url(#gcg)"/><path class="gc-line" pathLength="1" d="${ln}" style="stroke-dasharray:1"/><line class="gc-cur" y1="${T}" y2="${T+ih}" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 3" style="opacity:0"/>${dots}<rect class="gc-hit" x="${L}" y="0" width="${iw}" height="${H}" fill="transparent"/></svg><div class="gc-tip"></div><p class="text-xs text-slate-500 mt-2">${t('chTotal')}: <b>${Rp(sum)}</b></p>`;
+  const svg=box.querySelector('svg'),tip=box.querySelector('.gc-tip'),cur=box.querySelector('.gc-cur'),hit=box.querySelector('.gc-hit'),dts=box.querySelectorAll('.gc-dot');
+  const mv=e=>{
+    const r=svg.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,x=(cx-r.left)/r.width*W;
+    const i=Math.max(0,Math.min(6,Math.round((x-L)/iw*6))),d=D[i];
+    cur.setAttribute('x1',X(i));cur.setAttribute('x2',X(i));cur.style.opacity=1;
+    tip.innerHTML=`<div class="font-semibold mb-1">${new Date(d.s).toLocaleDateString(loc,{weekday:'long',day:'numeric',month:'long'})}</div><div class="flex items-center gap-2"><span style="width:10px;height:10px;border-radius:2px;background:var(--gc1);display:inline-block"></span><span style="opacity:.7">${t('chRev')}</span><b class="ml-auto pl-3">${Rp(d.v)}</b></div><div style="opacity:.7;margin-top:2px">${d.n} ${t('orders')}</div>`;
+    const px=X(i)/W*r.width;tip.style.left=Math.min(Math.max(px,80),r.width-80)+'px';tip.style.top=(Y(d.v)/H*r.height)+'px';tip.style.opacity=1;
+    dts.forEach((c,k)=>c.setAttribute('r',k===i?6:4));
+  };
+  const lv=()=>{tip.style.opacity=0;cur.style.opacity=0;dts.forEach(c=>c.setAttribute('r',4))};
+  hit.addEventListener('mousemove',mv);hit.addEventListener('touchstart',mv,{passive:true});hit.addEventListener('touchmove',mv,{passive:true});
+  hit.addEventListener('mouseleave',lv);hit.addEventListener('touchend',lv);
+  if(!RM&&A.animate)safe(()=>{
+    A.animate(box.querySelector('.gc-line'),{strokeDashoffset:[1,0],duration:1300,ease:'inOutQuad'});
+    A.animate(box.querySelector('.gc-fill'),{opacity:[0,1],duration:1100,delay:350,ease:'outQuad'});
+    A.animate(dts,{opacity:[0,1],scale:[0,1],duration:500,delay:A.stagger(110,{start:500}),ease:'outBack'});
+  });
+}
+function drawDonut(){
+  const box=$('gcDonut');if(!box)return;
+  const m={};P.forEach(p=>{m[p.cat]=(m[p.cat]||0)+(p.sold||0)});
+  const E=Object.entries(m).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]),tot=E.reduce((s,e)=>s+e[1],0),sig='d'+lang+JSON.stringify(E);
+  if(SIG.d===sig&&box.firstChild)return;SIG.d=sig;
+  if(!tot){box.innerHTML=`<p class="text-center text-slate-400 py-10 text-sm">${t('chNoData')}</p>`;return}
+  let acc=0;
+  const segs=E.map((e,i)=>{const f=e[1]/tot*100,s=`<circle class="gc-seg" data-f="${f}" cx="60" cy="60" r="44" fill="none" stroke="${COL[i%5]}" stroke-width="18" pathLength="100" stroke-dasharray="0 100" stroke-dashoffset="${-acc}" transform="rotate(-90 60 60)"/>`;acc+=f;return s}).join('');
+  const leg=E.map((e,i)=>`<div class="flex items-center gap-2 text-sm"><span style="width:10px;height:10px;border-radius:2px;background:${COL[i%5]};display:inline-block"></span><span class="flex-1 truncate">${esc(catName(e[0]))}</span><b>${e[1]}</b><span class="text-xs text-slate-400 w-10 text-right">${Math.round(e[1]/tot*100)}%</span></div>`).join('');
+  box.innerHTML=`<svg viewBox="0 0 120 120" class="w-40 h-40 mx-auto"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-opacity=".08" stroke-width="18"/>${segs}<text x="60" y="62" text-anchor="middle" font-size="20" font-weight="700" fill="currentColor">${tot}</text><text x="60" y="75" text-anchor="middle" font-size="7" fill="currentColor" fill-opacity=".6">${t('chSold')}</text></svg><div class="mt-4 space-y-1.5">${leg}</div>`;
+  const sg=[...box.querySelectorAll('.gc-seg')],setP=p=>sg.forEach(c=>{const f=+c.dataset.f,g=sg.length>1?.8:0;c.setAttribute('stroke-dasharray',`${Math.max(f-g,0)*p} 100`)});
+  if(RM||!A.animate)return setP(1);
+  const o={p:0};safe(()=>A.animate(o,{p:1,duration:1100,ease:'outExpo',onUpdate:()=>setP(o.p),onComplete:()=>setP(1)}));
+}
+function drawTop(){
+  const box=$('gcTop');if(!box)return;
+  const L5=[...P].sort((a,b)=>(b.sold||0)-(a.sold||0)).slice(0,5),sig='t'+lang+JSON.stringify(L5.map(p=>[p.id,p.sold]));
+  if(SIG.t===sig&&box.firstChild)return;SIG.t=sig;
+  const mx=Math.max(1,...L5.map(p=>p.sold||0));
+  box.innerHTML=L5.map((p,i)=>`<div class="flex items-center gap-3 text-sm"><span class="w-28 sm:w-48 truncate">${esc(pname(p))}</span><div class="flex-1 h-7 rounded-md overflow-hidden" style="background:rgba(127,127,127,.12)"><div class="gc-bar h-full rounded-md flex items-center justify-end pr-2 text-xs font-bold text-white" style="width:${Math.max(8,(p.sold||0)/mx*100)}%;background:${COL[i%5]}">${p.sold||0}</div></div></div>`).join('');
+  if(!RM&&A.animate)safe(()=>A.animate(box.querySelectorAll('.gc-bar'),{scaleX:[0,1],duration:900,delay:A.stagger(90),ease:'outExpo'}));
+}
+function renderCharts(){
+  safe(()=>{
+    const fm=x=>x;
+    countUp($('aRev'),orders.reduce((s,o)=>s+(o.total||0),0),Rp);
+    countUp($('aOrd'),orders.length,fm);
+    countUp($('aProd'),P.length,fm);
+    countUp($('aLow'),P.filter(p=>p.stock<minStock(p)).length,fm);
+    drawArea();drawDonut();drawTop();
+  });
+}
+
+/* ---------- Sambungkan ke fungsi toko yang sudah ada ---------- */
+const _renderAdmin=renderAdmin;
+renderAdmin=function(){_renderAdmin.apply(this,arguments);renderCharts()};
+const _show=show;
+show=function(v){
+  if(v==='admin'){['a','d','t'].forEach(k=>delete SIG[k]);['aRev','aOrd','aProd','aLow'].forEach(id=>{const e=$(id);if(e)e._cv=0})}
+  const r=_show.apply(this,arguments);
+  requestAnimationFrame(()=>{
+    const cv=curView,sec=$('v-'+cv);if(sec)enter([sec],{flat:true});
+    if(cv==='home'){enter(document.querySelectorAll('#homeGrid>.pcard'),{delay:.1});sumAnim()}
+    if(cv==='katalog')enter(document.querySelectorAll('#katGrid>.pcard'));
+  });
+  return r;
+};
+safe(()=>applyLang());
+requestAnimationFrame(()=>{enter(document.querySelectorAll('#homeGrid>.pcard'),{delay:.1});sumAnim()});
+})();
+</script>
 </body>
 </html>
