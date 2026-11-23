@@ -405,7 +405,7 @@ main{padding-top:1.6rem!important}
 #katGrid>p{color:rgba(255,255,255,.7)!important}
 
 /* ---------- filter kategori = tab halaman awal ---------- */
-#chips .bu-tab{font-size:.82rem}
+#chips .bu-tab,#chips2 .bu-tab{font-size:.82rem}
 
 /* ---------- hero beranda ---------- */
 .gs-hero{position:relative;overflow:hidden;border-radius:1.2rem;background:var(--gp);color:#fff;padding:3rem 2rem;min-height:300px;display:flex;align-items:center;border-bottom:4px solid rgb(var(--o500));box-shadow:0 12px 30px rgba(0,0,0,.4)}
@@ -459,7 +459,7 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
   <div class="bu-nav" id="buNav"><div class="bu-w bu-nav-in">
     <a class="bu-brand" onclick="lpTop()"><img data-slot="logo" class="js-logo bu-logo" alt="Garuda Store"><span><b>GARUDA STORE</b><small data-i="lpOfficial"></small></span></a>
     <nav class="bu-menu" id="buMenu">
-      <a class="on" onclick="lpTop()" data-i="home"></a>
+      <a onclick="lpTop()" data-i="home"></a>
       <a onclick="lpEnter('katalog')" data-i="catalog"></a>
       <a onclick="lpEnter('katalog','promo')" data-i="lpMPromo"></a>
       <a onclick="lpEnter('about')" data-i="about"></a>
@@ -491,7 +491,7 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
   <section class="bu-sec"><div class="bu-w">
     <div class="bu-hd bu-rv"><h2 data-i="lpSor"></h2><a onclick="lpEnter('katalog')"><span data-i="lpAll"></span> &raquo;</a></div>
     <div class="bu-2 bu-rv">
-      <a class="bu-fc" onclick="lpEnter('katalog','Firm Ground')"><img data-slot="lpL" data-img="b1" alt=""><div><span data-i="lpC1"></span><i class="fa-solid fa-arrow-right-long"></i></div></a>
+      <a class="bu-fc" onclick="lpEnter('katalog','grp:bola')"><img data-slot="lpL" data-img="b1" alt=""><div><span data-i="lpC1"></span><i class="fa-solid fa-arrow-right-long"></i></div></a>
       <a class="bu-fc" onclick="lpEnter('katalog','Futsal')"><img data-slot="lpR" data-img="b10" alt=""><div><span data-i="lpC2"></span><i class="fa-solid fa-arrow-right-long"></i></div></a>
     </div>
   </div></section>
@@ -658,6 +658,7 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
     <h2 class="text-2xl font-bold"><i class="fa-solid fa-box-open text-orange-500 mr-2"></i><span data-i="catalog"></span> <span id="catCount" class="text-sm text-slate-400 font-normal"></span></h2>
     <div id="chips" class="flex flex-wrap gap-2 text-sm"></div>
   </div>
+  <div id="chips2" class="hid flex flex-wrap gap-2 text-sm"></div>
   <p id="qInfo" class="hid text-sm text-slate-600"></p><div id="katGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
 </section>
 
@@ -781,7 +782,8 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
   </div>
   <form onsubmit="addProduct(event)" class="bg-white rounded-2xl p-5 border shadow-sm grid sm:grid-cols-6 gap-3 items-end">
     <div class="sm:col-span-2"><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pname"></label><input id="np" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
-    <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pcat"></label><select id="nc" class="w-full mt-1 px-3 py-2 border rounded-lg"><option value="Firm Ground" data-i="cFirm Ground"></option><option value="Artificial Grass" data-i="cArtificial Grass"></option><option value="Futsal" data-i="cFutsal"></option><option value="Anak" data-i="cAnak"></option></select></div>
+    <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="brandL"></label><input id="nbr" required list="brandList" maxlength="30" autocomplete="off" oninput="updSkuHint('nc')" placeholder="Nike, Adidas..." class="w-full mt-1 px-3 py-2 border rounded-lg"><datalist id="brandList"></datalist></div>
+    <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="pcat"></label><select id="nc" class="w-full mt-1 px-3 py-2 border rounded-lg"><option value="Rumput Asli">Sepak Bola - Rumput Asli</option><option value="Rumput Sintetis">Sepak Bola - Rumput Sintetis</option><option value="Futsal">Futsal</option></select></div>
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="price"></label><input id="nh" type="number" min="0" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
     <div><label class="text-xs font-semibold text-slate-500 uppercase" data-i="stock"></label><input id="ns" type="number" min="0" required class="w-full mt-1 px-3 py-2 border rounded-lg"></div>
     <div class="sm:col-span-5"><label class="text-xs font-semibold text-slate-500 uppercase" data-i="photo"></label><input id="nf" type="file" accept="image/*" multiple onchange="picAdd('n',this)" class="block mt-1 text-sm"><div id="nGal" class="flex gap-2 flex-wrap mt-2"></div><p class="text-[11px] text-slate-400 mt-1" data-i="photoHint"></p><p class="text-[11px] font-semibold text-orange-600 mt-1"><i class="fa-solid fa-barcode mr-1"></i><span id="nSkuHint"></span></p></div><button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"><i class="fa-solid fa-plus mr-1"></i><span data-i="addProduct"></span></button>
@@ -973,7 +975,8 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
       <div class="grid sm:grid-cols-2 gap-3">
         <div><label class="lbl">SKU</label><input id="esku" required oninput="this.dataset.auto='0'" class="inp"></div>
         <div><label class="lbl" data-i="pname"></label><input id="ename" required class="inp"></div>
-        <div><label class="lbl" data-i="pcat"></label><select id="ecat" class="inp"><option value="Firm Ground" data-i="cFirm Ground"></option><option value="Artificial Grass" data-i="cArtificial Grass"></option><option value="Futsal" data-i="cFutsal"></option><option value="Anak" data-i="cAnak"></option></select></div>
+        <div><label class="lbl" data-i="brandL"></label><input id="ebrand" required list="brandList" maxlength="30" autocomplete="off" oninput="updSkuHint('ecat')" class="inp"></div>
+        <div><label class="lbl" data-i="pcat"></label><select id="ecat" class="inp"><option value="Rumput Asli">Sepak Bola - Rumput Asli</option><option value="Rumput Sintetis">Sepak Bola - Rumput Sintetis</option><option value="Futsal">Futsal</option></select></div>
         <div><label class="lbl" data-i="stock"></label><input id="estock" type="number" min="0" required class="inp"></div>
         <div><label class="lbl" data-i="price"></label><input id="eprice" type="number" min="0" required class="inp"></div>
         <div><label class="lbl" data-i="oldPrice"></label><input id="eold" type="number" min="0" class="inp"></div>
@@ -1251,18 +1254,18 @@ const IMG={
 };
 const src=p=>p.img&&p.img.startsWith("data:")?p.img:(IMG[p.img]||IMG.noimg);
 const DEF=[
-{id:101,sku:"FG-001",name:"Striker Pro FG Merah-Hitam",cat:"Firm Ground",price:1299000,old:1599000,stock:20,sold:64,img:"b1",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Upper ringan dengan stud kokoh, cengkeraman mantap saat sprint dan berbelok. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,3],["41",0,null,4],["42",0,null,5],["43",0,null,4],["44",0,null,2],["45",0,null,1]]}},
-{id:102,sku:"FG-002",name:"Striker Elite FG Putih-Merah",cat:"Firm Ground",price:1850000,old:0,stock:12,sold:41,img:"b2",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Seri elite dengan bantalan tumit empuk dan kontrol bola maksimal. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,0],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1],["45",0,null,1]]}},
-{id:103,sku:"FG-003",name:"Velocity FG Hitam-Neon",cat:"Firm Ground",price:1150000,old:1400000,stock:19,sold:55,img:"b3",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Desain ramping untuk pemain cepat, tampil mencolok dengan aksen neon. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
-{id:104,sku:"FG-004",name:"Titan Control FG Emas-Hitam",cat:"Firm Ground",price:899000,old:0,stock:15,sold:33,img:"b5",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Sepatu serbaguna dengan penopang kaki yang stabil untuk gelandang dan bek. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
-{id:105,sku:"AG-001",name:"Terra AG Biru",cat:"Artificial Grass",price:749000,old:899000,stock:19,sold:47,img:"b4",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
-{id:106,sku:"AG-002",name:"Terra Pro AG Hijau",cat:"Artificial Grass",price:989000,old:0,stock:15,sold:29,img:"b8",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Versi pro dengan upper lebih lentur dan sol yang responsif. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
-{id:107,sku:"AG-003",name:"Rapid AG Oranye",cat:"Artificial Grass",price:649000,old:799000,stock:22,sold:38,img:"b7",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Pilihan hemat untuk latihan rutin dan main mingguan. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,4],["44",0,null,3],["45",0,null,2]]}},
-{id:108,sku:"FUT-001",name:"Arena Futsal Putih-Biru",cat:"Futsal",price:559000,old:0,stock:19,sold:52,img:"b10",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Ringan dan nyaman untuk bermain berjam-jam. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,2],["39",0,null,3],["40",0,null,4],["41",0,null,4],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
-{id:109,sku:"FUT-002",name:"Arena Pro Futsal Abu-Hitam",cat:"Futsal",price:799000,old:950000,stock:15,sold:36,img:"b6",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Versi pro dengan penguat sisi untuk manuver cepat. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,1],["39",0,null,2],["40",0,null,3],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
-{id:110,sku:"FUT-003",name:"Court Maroon Futsal",cat:"Futsal",price:499000,old:0,stock:16,sold:21,img:"b9",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Warna maroon elegan dengan harga bersahabat. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,2],["39",0,null,2],["40",0,null,3],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
-{id:111,sku:"KID-001",name:"Junior Strap FG Pink-Putih",cat:"Anak",price:399000,old:499000,stock:19,sold:44,img:"sepatu",d:"Sepatu sepak bola anak yang ringan dan mudah dipakai, cocok untuk latihan di sekolah maupun SSB. Dilengkapi strap pengunci agar mudah dipakai dan terasa pas. Ukuran 30 sampai 38 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["30",0,null,1],["31",0,null,2],["32",0,null,2],["33",0,null,3],["34",0,null,3],["35",0,null,3],["36",0,null,2],["37",0,null,2],["38",0,null,1]]}},
-{id:112,sku:"KID-002",name:"Junior Flash AG Tosca",cat:"Anak",price:359000,old:0,stock:20,sold:27,img:"b12",d:"Sepatu sepak bola anak yang ringan dan mudah dipakai, cocok untuk latihan di sekolah maupun SSB. Cocok untuk rumput sintetis dan lapangan latihan. Ukuran 30 sampai 38 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["30",0,null,1],["31",0,null,2],["32",0,null,3],["33",0,null,3],["34",0,null,3],["35",0,null,3],["36",0,null,2],["37",0,null,2],["38",0,null,1]]}}
+{id:101,sku:"FG-001",name:"Striker Pro FG Merah-Hitam",brand:"Striker",cat:"Rumput Asli",price:1299000,old:1599000,stock:20,sold:64,img:"b1",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Upper ringan dengan stud kokoh, cengkeraman mantap saat sprint dan berbelok. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,3],["41",0,null,4],["42",0,null,5],["43",0,null,4],["44",0,null,2],["45",0,null,1]]}},
+{id:102,sku:"FG-002",name:"Striker Elite FG Putih-Merah",brand:"Striker",cat:"Rumput Asli",price:1850000,old:0,stock:12,sold:41,img:"b2",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Seri elite dengan bantalan tumit empuk dan kontrol bola maksimal. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,0],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1],["45",0,null,1]]}},
+{id:103,sku:"FG-003",name:"Velocity FG Hitam-Neon",brand:"Velocity",cat:"Rumput Asli",price:1150000,old:1400000,stock:19,sold:55,img:"b3",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Desain ramping untuk pemain cepat, tampil mencolok dengan aksen neon. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
+{id:104,sku:"FG-004",name:"Titan Control FG Emas-Hitam",brand:"Titan",cat:"Rumput Asli",price:899000,old:0,stock:15,sold:33,img:"b5",d:"Sepatu sepak bola FG (Firm Ground) untuk lapangan rumput alami yang padat. Sepatu serbaguna dengan penopang kaki yang stabil untuk gelandang dan bek. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
+{id:105,sku:"AG-001",name:"Terra AG Biru",brand:"Terra",cat:"Rumput Sintetis",price:749000,old:899000,stock:19,sold:47,img:"b4",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
+{id:106,sku:"AG-002",name:"Terra Pro AG Hijau",brand:"Terra",cat:"Rumput Sintetis",price:989000,old:0,stock:15,sold:29,img:"b8",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Versi pro dengan upper lebih lentur dan sol yang responsif. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,1],["40",0,null,2],["41",0,null,3],["42",0,null,3],["43",0,null,3],["44",0,null,2],["45",0,null,1]]}},
+{id:107,sku:"AG-003",name:"Rapid AG Oranye",brand:"Rapid",cat:"Rumput Sintetis",price:649000,old:799000,stock:22,sold:38,img:"b7",d:"Sepatu sepak bola AG (Artificial Grass) untuk lapangan rumput sintetis, stud pendek dan merata sehingga nyaman di kaki. Pilihan hemat untuk latihan rutin dan main mingguan. Ukuran 39 sampai 45 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["39",0,null,2],["40",0,null,3],["41",0,null,4],["42",0,null,4],["43",0,null,4],["44",0,null,3],["45",0,null,2]]}},
+{id:108,sku:"FUT-001",name:"Arena Futsal Putih-Biru",brand:"Arena",cat:"Futsal",price:559000,old:0,stock:19,sold:52,img:"b10",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Ringan dan nyaman untuk bermain berjam-jam. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,2],["39",0,null,3],["40",0,null,4],["41",0,null,4],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
+{id:109,sku:"FUT-002",name:"Arena Pro Futsal Abu-Hitam",brand:"Arena",cat:"Futsal",price:799000,old:950000,stock:15,sold:36,img:"b6",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Versi pro dengan penguat sisi untuk manuver cepat. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,1],["39",0,null,2],["40",0,null,3],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
+{id:110,sku:"FUT-003",name:"Court Maroon Futsal",brand:"Court",cat:"Futsal",price:499000,old:0,stock:16,sold:21,img:"b9",d:"Sepatu futsal bersol karet datar dengan grip kuat untuk lapangan indoor. Warna maroon elegan dengan harga bersahabat. Ukuran 38 sampai 44 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["38",0,null,2],["39",0,null,2],["40",0,null,3],["41",0,null,3],["42",0,null,3],["43",0,null,2],["44",0,null,1]]}},
+{id:111,sku:"KID-001",name:"Junior Strap FG Pink-Putih",brand:"Junior",cat:"Rumput Asli",price:399000,old:499000,stock:19,sold:44,img:"sepatu",d:"Sepatu sepak bola anak yang ringan dan mudah dipakai, cocok untuk latihan di sekolah maupun SSB. Dilengkapi strap pengunci agar mudah dipakai dan terasa pas. Ukuran 30 sampai 38 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["30",0,null,1],["31",0,null,2],["32",0,null,2],["33",0,null,3],["34",0,null,3],["35",0,null,3],["36",0,null,2],["37",0,null,2],["38",0,null,1]]}},
+{id:112,sku:"KID-002",name:"Junior Flash AG Tosca",brand:"Junior",cat:"Rumput Sintetis",price:359000,old:0,stock:20,sold:27,img:"b12",d:"Sepatu sepak bola anak yang ringan dan mudah dipakai, cocok untuk latihan di sekolah maupun SSB. Cocok untuk rumput sintetis dan lapangan latihan. Ukuran 30 sampai 38 (ukuran Indonesia).",opts:{l:"sizeIndo",list:[["30",0,null,1],["31",0,null,2],["32",0,null,3],["33",0,null,3],["34",0,null,3],["35",0,null,3],["36",0,null,2],["37",0,null,2],["38",0,null,1]]}}
 ];
 /* ===== Terjemahan nama & deskripsi produk bawaan (nama toko & nama orang tidak diterjemahkan) ===== */
 const PTR={
@@ -1279,8 +1282,10 @@ const PTR={
 "KID-001":{en:["Junior Strap FG Pink-White","Light and easy-to-wear kids' football boots, great for school and academy training. Comes with a locking strap for easy wear and a snug fit. Sizes 30 to 38 (Indonesian sizing)."],zh:["Junior 魔术贴 FG 粉白","轻便易穿的儿童足球鞋，适合学校和青训训练。带固定魔术贴，易穿且贴脚。尺码 30 至 38（印尼尺码）。"]},
 "KID-002":{en:["Junior Flash AG Teal","Light and easy-to-wear kids' football boots, great for school and academy training. Suited to synthetic grass and training pitches. Sizes 30 to 38 (Indonesian sizing)."],zh:["Junior Flash AG 青色","轻便易穿的儿童足球鞋，适合学校和青训训练。适合人造草和训练场地。尺码 30 至 38（印尼尺码）。"]}
 };
-/* ===== SKU: SPB = sepatu bola (Firm Ground), SPA = Artificial Grass, SPF = futsal, SPK = anak; diikuti 001, 002, ... ===== */
-const SKU_OLD={"FG-001":"SPB-001","FG-002":"SPB-002","FG-003":"SPB-003","FG-004":"SPB-004","AG-001":"SPA-001","AG-002":"SPA-002","AG-003":"SPA-003","FUT-001":"SPF-001","FUT-002":"SPF-002","FUT-003":"SPF-003","KID-001":"SPK-001","KID-002":"SPK-002"};
+/* ===== SKU: Sepak Bola Rumput Asli = SPB-(merk)-FG-001 | Sepak Bola Rumput Sintetis = SPB-(merk)-AG-001 | Futsal = SPF-(merk)-001 ===== */
+const SKU_OLD={"FG-001":"SPB-STR-FG-001","FG-002":"SPB-STR-FG-002","FG-003":"SPB-VEL-FG-001","FG-004":"SPB-TIT-FG-001","AG-001":"SPB-TER-AG-001","AG-002":"SPB-TER-AG-002","AG-003":"SPB-RAP-AG-001","FUT-001":"SPF-ARE-001","FUT-002":"SPF-ARE-002","FUT-003":"SPF-COU-001","KID-001":"SPB-JUN-FG-001","KID-002":"SPB-JUN-AG-001"};
+/* format SKU lama (SPB-001, SPA-001, SPF-001, SPK-001) -> SKU baru */
+const SKU_LEG={"SPB-001":"SPB-STR-FG-001","SPB-002":"SPB-STR-FG-002","SPB-003":"SPB-VEL-FG-001","SPB-004":"SPB-TIT-FG-001","SPA-001":"SPB-TER-AG-001","SPA-002":"SPB-TER-AG-002","SPA-003":"SPB-RAP-AG-001","SPF-001":"SPF-ARE-001","SPF-002":"SPF-ARE-002","SPF-003":"SPF-COU-001","SPK-001":"SPB-JUN-FG-001","SPK-002":"SPB-JUN-AG-001"};
 const SKU_BACK={};Object.keys(SKU_OLD).forEach(k=>SKU_BACK[SKU_OLD[k]]=k);
 Object.keys(SKU_OLD).forEach(k=>{if(PTR[k]){PTR[SKU_OLD[k]]=PTR[k];delete PTR[k]}});
 DEF.forEach(p=>{if(SKU_OLD[p.sku])p.sku=SKU_OLD[p.sku]});
@@ -1353,7 +1358,7 @@ async function backfillTr(){
   if(bfBusy||bfDone||typeof session==='undefined'||!session||session.role!=='admin')return;bfBusy=true;
   try{const e0=trErrCnt;let any=false;
     for(const p of P.slice()){if(await transProduct(p))any=true}
-    for(const c of allCats()){if(CAT_CODE[c])continue;if(!(SITE.ctr&&SITE.ctr[c]&&TL.every(L=>L===SITE.ctr[c].s||SITE.ctr[c][L])))await transCat(c,(SITE.ctr&&SITE.ctr[c]&&SITE.ctr[c].s)||'id')}
+    for(const c of allCats()){if(LEAF_CATS.includes(c))continue;if(!(SITE.ctr&&SITE.ctr[c]&&TL.every(L=>L===SITE.ctr[c].s||SITE.ctr[c][L])))await transCat(c,(SITE.ctr&&SITE.ctr[c]&&SITE.ctr[c].s)||'id')}
     if(any){try{sv('products6',P)}catch(x){}renderAll()}
     if(trErrCnt===e0)bfDone=true}catch(e){}
   bfBusy=false}
@@ -1369,34 +1374,68 @@ const cNameK=o=>(o.shipK==='toko'||o.ship==='Kurir Toko Garuda')?t('courToko'):c
 /* ===== Stok minimum: 8 pasang per produk (bisa diubah per produk di Dashboard Admin) ===== */
 const BIG_CATS=[],FAST_SOLD=20,ACC_MIN=10;
 function minStock(p){return(typeof p.min==='number'&&p.min>=0)?p.min:((BIG_CATS.includes(p.cat)&&p.sold>=FAST_SOLD)?25:8)}
-const SUPD={'Firm Ground':'Distributor Sepatu Sepak Bola','Artificial Grass':'Distributor Sepatu Sepak Bola','Futsal':'Distributor Sepatu Futsal','Anak':'Distributor Sepatu Anak'};
+const SUPD={'Rumput Asli':'Distributor Sepatu Sepak Bola','Rumput Sintetis':'Distributor Sepatu Sepak Bola','Futsal':'Distributor Sepatu Futsal'};
 
-const CAT_CODE={'Firm Ground':'SPB','Artificial Grass':'SPA','Futsal':'SPF','Anak':'SPK'};
-/* Awalan SKU: kategori bawaan -> kode tetap. Kategori lain -> pakai awalan yang sudah dipakai produk di kategori itu,
-   jika belum ada barulah dibuat awalan baru (3 huruf dari nama kategori, dijamin tidak bentrok). */
-function skuPrefix(cat,persist){
-  if(CAT_CODE[cat])return CAT_CODE[cat];
+/* ===== KATEGORI: hanya 2 -> Sepak Bola (Rumput Asli + Rumput Sintetis) dan Futsal ===== */
+const CAT_ASLI='Rumput Asli',CAT_SINT='Rumput Sintetis',CAT_FUT='Futsal';
+const LEAF_CATS=[CAT_ASLI,CAT_SINT,CAT_FUT];
+const CAT_TREE=[{k:'bola',i:'cgBola',subs:[CAT_ASLI,CAT_SINT]},{k:'futsal',i:'cgFutsal',subs:[CAT_FUT]}];
+const grpOf=c=>{const g=CAT_TREE.find(x=>x.subs.includes(c));return g?g.k:'bola'};
+const grpName=k=>{const g=CAT_TREE.find(x=>x.k===k);return g?t(g.i):k};
+/* kategori lama (Firm Ground / Artificial Grass / Anak / buatan sendiri) -> salah satu dari 3 kategori baru */
+function leafCat(c,p){
+  if(LEAF_CATS.includes(c))return c;
+  const M={'Firm Ground':CAT_ASLI,'Artificial Grass':CAT_SINT,'Futsal':CAT_FUT};if(M[c])return M[c];
+  const sk=(p&&p.sku)||'',tx=((p&&p.name)||'')+' '+(c||'');
+  if(/futsal/i.test(tx)||/^(SPF|FUT)-/.test(sk))return CAT_FUT;
+  if(/artificial|sintetis|\bAG\b/i.test(tx)||/^(SPA|AG)-/.test(sk)||/-AG-\d+$/.test(sk))return CAT_SINT;
+  return CAT_ASLI}
+/* ===== SKU ===== */
+const SKU_RE={[CAT_ASLI]:/^SPB-([A-Z0-9]+)-FG-(\d+)$/,[CAT_SINT]:/^SPB-([A-Z0-9]+)-AG-(\d+)$/,[CAT_FUT]:/^SPF-([A-Z0-9]+)-(\d+)$/};
+const skuBrandCode=(sku)=>{for(const c of LEAF_CATS){const m=SKU_RE[c].exec(sku||'');if(m)return m[1]}return null};
+const BRAND_SKIP=/^(sepatu|bola|sepak|futsal|football|boots?|shoes?|anak|kids?|new|baru|kaos|kaki|jersey|tas|sarung|tangan|pelindung)$/i;
+function guessBrand(p){
+  const w=String((p&&p.name)||'').trim().split(/\s+/).filter(x=>/[A-Za-z0-9]/.test(x));
+  const f=w.find(x=>!BRAND_SKIP.test(x))||w[0]||'Garuda';
+  return f.charAt(0).toUpperCase()+f.slice(1)}
+/* kode merk: 3 huruf pertama nama merk (Nike -> NIK). Kalau bentrok dengan merk lain otomatis dipanjangkan (NIKE, NIKEA, ...) */
+function brandCode(brand,persist,list){
+  list=list||P;
+  const nm=String(brand||'').trim().replace(/\s+/g,' ');if(!nm)return 'MRK';
   let S={};try{S=SITE||{}}catch(e){}
-  const codes=S.codes||{};if(codes[cat])return codes[cat];
-  const pre=x=>(/^([A-Z0-9]{2,5})-/.exec(x||'')||[])[1];
-  const cnt={};P.filter(p=>p.cat===cat).forEach(p=>{const k=pre(p.sku);if(k&&!/^NEW$/.test(k))cnt[k]=(cnt[k]||0)+1});
-  const ex=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];if(ex)return ex;
-  const used=new Set([...Object.values(CAT_CODE),...Object.values(codes),...P.map(p=>pre(p.sku)).filter(Boolean)]);
-  let L=String(cat).normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase();if(L.length<3)L=(L+'KAT').slice(0,3);
-  const cands=[L.slice(0,3)];for(let i=3;i<L.length;i++)cands.push(L.slice(0,2)+L[i]);for(let d=1;d<100;d++)cands.push(L.slice(0,2)+d);
-  const c=cands.find(x=>!used.has(x))||('K'+(Date.now()%1000));
-  if(persist){try{SITE.codes=Object.assign({},SITE.codes||{},{[cat]:c});siteSave()}catch(e){}}
+  const key=nm.toLowerCase(),map=S.bcodes||{};
+  if(map[key])return map[key];
+  const same=list.find(x=>x&&x.brand&&String(x.brand).trim().toLowerCase()===key&&skuBrandCode(x.sku));
+  if(same)return skuBrandCode(same.sku);
+  const owner={};
+  Object.keys(map).forEach(k=>owner[map[k]]=k);
+  list.forEach(x=>{if(!x||!x.brand)return;const c=skuBrandCode(x.sku);if(c&&!owner[c])owner[c]=String(x.brand).trim().toLowerCase()});
+  let base=nm.normalize('NFD').replace(/[^A-Za-z0-9]/g,'').toUpperCase()||'MRK';if(base.length<3)base=(base+'XXX').slice(0,3);
+  const cands=[];for(let n=3;n<=Math.min(base.length,8);n++)cands.push(base.slice(0,n));for(let d=1;d<100;d++)cands.push(base.slice(0,3)+d);
+  const c=cands.find(x=>!owner[x]||owner[x]===key)||('K'+(Date.now()%1000));
+  if(persist){try{SITE.bcodes=Object.assign({},SITE.bcodes||{},{[key]:c});siteSave()}catch(e){}}
   return c}
-function nextSku(cat,persist,exId){
-  const pf=skuPrefix(cat,persist),re=new RegExp('^'+pf+'-(\\d+)$');let n=0;
-  P.forEach(p=>{if(p.id===exId)return;const m=re.exec(p.sku||'');if(m)n=Math.max(n,+m[1])});
-  let sku;do{n++;sku=pf+'-'+String(n).padStart(3,'0')}while(P.some(p=>p.id!==exId&&p.sku===sku));
+function skuPrefix(cat,brand,persist,list){
+  const bc=brandCode(brand,persist,list);
+  return cat===CAT_FUT?'SPF-'+bc:'SPB-'+bc+'-'+(cat===CAT_SINT?'AG':'FG')}
+function nextSku(cat,brand,persist,exId,list){
+  list=list||P;
+  const pf=skuPrefix(cat,brand,persist,list),re=new RegExp('^'+pf+'-(\\d+)$');let n=0;
+  list.forEach(p=>{if(!p||p.id===exId)return;const m=re.exec(p.sku||'');if(m)n=Math.max(n,+m[1])});
+  let sku;do{n++;sku=pf+'-'+String(n).padStart(3,'0')}while(list.some(p=>p&&p.id!==exId&&p.sku===sku));
   return sku}
+/* migrasi data tersimpan: kategori lama -> kategori baru, isi merk, SKU lama -> format baru */
 function migSku(list){
   if(!Array.isArray(list))return list;
-  list.forEach(p=>{if(p&&SKU_OLD[p.sku]&&!list.some(x=>x!==p&&x.sku===SKU_OLD[p.sku]))p.sku=SKU_OLD[p.sku]});
-  list.forEach(p=>{if(p&&/^NEW-\d+$/.test(p.sku||'')){try{p.sku=nextSku(p.cat,false,p.id)}catch(e){}}});
+  const DEFBR={};DEF.forEach(d=>DEFBR[d.sku]=d.brand);
+  list.forEach(p=>{if(!p)return;p.cat=leafCat(p.cat,p);if(!p.brand)p.brand=DEFBR[SKU_OLD[p.sku]||SKU_LEG[p.sku]||p.sku]||guessBrand(p)});
+  list.forEach(p=>{if(!p)return;
+    const nw=SKU_OLD[p.sku]||SKU_LEG[p.sku];
+    if(nw&&!list.some(x=>x&&x!==p&&x.sku===nw)){p.sku=nw;return}
+    /* hanya SKU format lama (mis. SPB-005, KID-003, NEW-4) yang diganti; SKU yang diketik manual oleh admin tidak disentuh */
+    if(!SKU_RE[p.cat].test(p.sku||'')&&/^[A-Z0-9]{2,6}-\d+$/.test(p.sku||'')){try{p.sku=nextSku(p.cat,p.brand,false,p.id,list)}catch(e){}}});
   return list}
+function fixStkSku(){try{STK.forEach(x=>{const p=P.find(q=>q.id===x.pid);if(p&&x.sku!==p.sku)x.sku=p.sku})}catch(e){}}
 let P=ld('products6',DEF), cart=ld('cart',[]), orders=ld('orders',[]), notifs=ld('notifs',[]), users=ld('users',[]);P=migSku(P);
 users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});
 let session=ld('session',null); // {role:'admin'|'user'|'guest', name}
@@ -1404,7 +1443,7 @@ let session=ld('session',null); // {role:'admin'|'user'|'guest', name}
 (function(){let adm=false;try{adm=sessionStorage.getItem('gs_adm')==='1'}catch(e){}
   if(!session||(session.role==='admin'&&!adm)){session={role:'guest',name:'Tamu'};sv('session',session)}})();
 let cur=null, qty=1, coItems=[], pay='QRIS', curView='home', catF='all';
-let RPT=ld('reports',[]),ACC=ld('access',[]),PBG=ld('promobg',null),STK=ld('stockin',[]),MOD=ld('mod',{});
+let RPT=ld('reports',[]),ACC=ld('access',[]),PBG=ld('promobg',null),STK=ld('stockin',[]),MOD=ld('mod',{});fixStkSku();
 
 const Rp=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n);
 const $=id=>document.getElementById(id);
@@ -1537,7 +1576,7 @@ function applyLang(){
 function badge(p){return p.old?`<span class="bu-off">-${Math.round((1-p.price/p.old)*100)}%</span>`:''}
 function card(p){return `<div onclick="openProd(${p.id})" class="card pcard cursor-pointer bg-white rounded-xl overflow-hidden border relative">
   <div class="pimg"><img src="${src(p)}" alt="${esc(pname(p))}" loading="lazy">${badge(p)}${p.stock<=0?`<span class="absolute inset-0 bg-white/70 flex items-center justify-center font-extrabold text-red-600">${t('soldOut')}</span>`:''}</div>
-  <div class="pbody"><p class="gs-ptag">${esc(catName(p.cat))}</p><p class="text-sm font-semibold line-clamp-2 h-10">${esc(pname(p))}</p>
+  <div class="pbody"><p class="gs-ptag">${esc(catFull(p.cat))}</p><p class="text-sm font-semibold line-clamp-2 h-10">${esc(pname(p))}</p>
   <p class="text-orange-600 font-bold mt-1">${Rp(p.price)}</p>${p.old?`<p class="text-xs text-slate-400 line-through">${Rp(p.old)}</p>`:''}
   ${rateHTML(p)}<p class="text-xs text-slate-400 mt-1">${p.sold} ${t('sold')}</p></div></div>`}
 function mini(p){return `<div onclick="openProd(${p.id})" class="flex items-center gap-3 p-2 rounded-lg hover:bg-orange-50 cursor-pointer"><img src="${src(p)}" alt="" class="w-12 h-12 object-contain bg-white border rounded-lg"><div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${esc(pname(p))}</p><p class="text-xs text-slate-400">${p.sold} ${t('sold')}</p></div><span class="text-sm font-bold text-orange-600">${Rp(p.price)}</span></div>`}
@@ -1546,7 +1585,7 @@ function renderHome(){
   $('sumNew').innerHTML=[...P].sort((a,b)=>b.id-a.id).slice(0,3).map(mini).join('');
   $('sumPromo').innerHTML=P.filter(p=>p.old).slice(0,3).map(mini).join('');
   $('homeGrid').innerHTML=[...P].sort((a,b)=>b.sold-a.sold).slice(0,8).map(card).join('');
-  if($('homeCats'))$('homeCats').innerHTML=allCats().map(c=>`<a class="bu-ct" data-c="${esc(c)}" onclick="show('katalog',this.dataset.c)"><i class="fa-solid ${GS_IC[c]||'fa-tag'}"></i><b>${esc(catName(c))}</b><small>${P.filter(p=>p.cat===c).length}</small></a>`).join('');
+  if($('homeCats'))$('homeCats').innerHTML=CAT_TREE.map(g=>`<a class="bu-ct" data-c="grp:${g.k}" onclick="show('katalog',this.dataset.c)"><i class="fa-solid ${GS_IC[g.k]||'fa-tag'}"></i><b>${esc(grpName(g.k))}</b><small>${P.filter(p=>g.subs.includes(p.cat)).length}</small></a>`).join('');
 }
 function filtered(){
   const q=nz($('q').value);
@@ -1554,20 +1593,24 @@ function filtered(){
   if(catF==='best')r=[...r].sort((a,b)=>b.sold-a.sold);
   else if(catF==='new')r=[...r].sort((a,b)=>b.id-a.id);
   else if(catF==='promo')r=r.filter(p=>p.old);
-  else if(/^grp:/.test(catF)){const g=(window.GS_GRP||{})[catF.slice(4)]||[];r=r.filter(p=>g.includes(p.cat))}
+  else if(/^grp:/.test(catF)){const g=(CAT_TREE.find(x=>x.k===catF.slice(4))||{subs:[]}).subs;r=r.filter(p=>g.includes(p.cat))}
   else if(catF!=='all')r=r.filter(p=>p.cat===catF);
   return r;
 }
 function renderKatalog(){
-  const chips=[['all',t('all')],['best',t('best')],['new',t('newest')],['promo',t('promoP')],...allCats().map(c=>[c,catName(c)])];
-  $('chips').innerHTML=chips.map(c=>`<button data-c="${esc(c[0])}" onclick="catF=this.dataset.c;renderKatalog()" class="bu-tab${catF===c[0]?' on':''}">${c[1]}</button>`).join('');
+  const chips=[['all',t('all')],['best',t('best')],['new',t('newest')],['promo',t('promoP')],...CAT_TREE.map(g=>['grp:'+g.k,grpName(g.k)])];
+  const actG=/^grp:/.test(catF)?catF.slice(4):(LEAF_CATS.includes(catF)?grpOf(catF):null);
+  $('chips').innerHTML=chips.map(c=>{const on=(/^grp:/.test(c[0]))?(actG===c[0].slice(4)):catF===c[0];return `<button data-c="${esc(c[0])}" onclick="catF=this.dataset.c;renderKatalog()" class="bu-tab${on?' on':''}">${c[1]}</button>`}).join('');
+  {const c2=$('chips2'),g=CAT_TREE.find(x=>x.k===actG);
+   if(c2){if(g&&g.subs.length>1){const sub=[['grp:'+g.k,t('catAllSub').replace('{0}',grpName(g.k))],...g.subs.map(c=>[c,catName(c)])];
+     c2.innerHTML=sub.map(c=>`<button data-c="${esc(c[0])}" onclick="catF=this.dataset.c;renderKatalog()" class="bu-tab${catF===c[0]?' on':''}">${c[1]}</button>`).join('');c2.classList.remove('hid')}else{c2.innerHTML='';c2.classList.add('hid')}}}
   const r=filtered();$('catCount').textContent=`(${r.length})`;if($('qm'))$('qm').value=$('q').value;
   {const qv=$('q').value.trim(),qi=$('qInfo');qi.classList.toggle('hid',!qv);qi.innerHTML=qv?`${t('qFor')} <b>"${esc(qv)}"</b> \u00b7 ${r.length} ${t('qFound')} <button onclick="$('q').value='';renderKatalog()" class="text-orange-600 underline ml-2">${t('qClear')}</button>`:''}
   $('katGrid').innerHTML=r.length?r.map(card).join(''):`<p class="col-span-full text-center text-slate-400 py-12">${t('noResult')}</p>`;
 }
 const nz=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\u4e00-\u9fff\s]/g,' ').split(/\s+/).filter(Boolean);
 /* cocok pada NAMA (semua bahasa), KATEGORI, SKU - deskripsi tidak ikut dicari */
-function matchQ(p,q){const hay=[p.name,pname(p),p.ne||'',p.nz||'',...Object.values(p.tr||{}).map(x=>(x&&x.n)||''),p.cat,catName(p.cat),p.sku].join(' '),w=nz(hay),h=hay.toLowerCase();return q.every(k=>w.some(x=>x.startsWith(k))||(/[\u4e00-\u9fff]/.test(k)&&h.includes(k)))}
+function matchQ(p,q){const hay=[p.name,pname(p),p.ne||'',p.nz||'',...Object.values(p.tr||{}).map(x=>(x&&x.n)||''),p.cat,catName(p.cat),catFull(p.cat),p.brand||'',p.sku].join(' '),w=nz(hay),h=hay.toLowerCase();return q.every(k=>w.some(x=>x.startsWith(k))||(/[\u4e00-\u9fff]/.test(k)&&h.includes(k)))}
 function doSearch(){catF='all';show('katalog')}
 function liveSearch(){catF='all';if(curView!=='katalog')show('katalog');else renderKatalog()}
 function renderAll(){renderHome();renderKatalog();renderCart();if(curView==='admin')renderAdmin();if(curView==='orders')renderOrders();if(curView==='stockin')renderStockIn()}
@@ -1614,9 +1657,10 @@ function renderVarPics(){const box=$('eVarImgs');if(!box)return;const nm=varName
 async function varPicAdd(i,inp){const n=varNames()[i],f=inp.files[0];if(!n||!f)return;try{VIMG[n]=await readImg(f,640)}catch(e){}inp.value='';renderVarPics()}
 function varPicDel(i){const n=varNames()[i];if(n)delete VIMG[n];renderVarPics()}
 function updSkuHint(id){
-  if(id==='ecat'){const p=P.find(x=>x.id===+$('eid').value),sk=$('esku'),ec=$('ecat');if(!p||!sk||!ec)return;
-    if(ec.value===p.cat)sk.value=p.sku;else if(sk.dataset.auto!=='0')sk.value=nextSku(ec.value,false,p.id)}
-  else{const h=$('nSkuHint'),c=$('nc');if(h&&c&&c.value!=='__new')h.textContent=t('skuAuto')+': '+nextSku(c.value,false)}}
+  if(id==='ecat'){const p=P.find(x=>x.id===+$('eid').value),sk=$('esku'),ec=$('ecat'),eb=$('ebrand');if(!p||!sk||!ec)return;
+    const br=(eb?eb.value.trim():'')||p.brand||'',same=ec.value===p.cat&&br.toLowerCase()===String(p.brand||'').toLowerCase();
+    if(same)sk.value=p.sku;else if(sk.dataset.auto!=='0')sk.value=nextSku(ec.value,br,false,p.id)}
+  else{const h=$('nSkuHint'),c=$('nc'),b=$('nbr');if(h&&c)h.textContent=t('skuAuto')+': '+nextSku(c.value,b?b.value.trim():'',false)}}
 Object.assign(I.id,{"photoHint":"Foto pertama = foto utama. Bisa lebih dari 1 (maks. 6) untuk sudut/pov lain. Klik ★ untuk jadikan utama, × untuk hapus.","photoMain":"Utama","photoMax":"Maksimal 6 foto per produk","skuAuto":"SKU otomatis"});
 Object.assign(I.en,{"photoHint":"First photo = main photo. You can add more than one (max 6) for other angles. Click ★ to set as main, × to remove.","photoMain":"Main","photoMax":"Maximum 6 photos per product","skuAuto":"Auto SKU"});
 Object.assign(I.zh,{"photoHint":"第一张为主图。可添加多张（最多6张）展示不同角度。点击 ★ 设为主图，× 删除。","photoMain":"主图","photoMax":"每个商品最多6张照片","skuAuto":"自动 SKU"});
@@ -1628,7 +1672,7 @@ Object.assign(I.en,{varImg:"Image per Option/Variant",varImgHint:"Upload a dedic
 Object.assign(I.zh,{varImg:"每个规格的图片",varImgHint:"为每个选项上传专属图片。买家选择该规格时会看到对应图片。留空则使用商品主图。",varImgUp:"上传",varImgOwn:"规格专属图片",varImgDefault:"使用主图"});
 function openProdRefresh(){
   renderGallery();
-  $('pCat').textContent=catName(cur.cat);$('pName').textContent=pname(cur);
+  $('pCat').textContent=catFull(cur.cat)+(cur.brand?' \u00b7 '+cur.brand:'');$('pName').textContent=pname(cur);
   {const u=unit(cur,pv);$('pPrice').textContent=Rp(u.price);$('pOld').textContent=cur.old?Rp(u.old):''}
   $('pDesc').textContent=pdesc(cur);renderRate();
   $('pVarBox').classList.toggle('hid',!cur.opts);
@@ -1721,8 +1765,8 @@ const VC_MAX=20000,INS_FEE=2500,XXL_FEE=10000;
 const ADM={'QRIS':0,'Transfer Bank':1500,'E-Wallet':1500,'COD':2000};
 const admFee=m=>ADM[m]||0;
 let CO={ship:null,pay:null,ins:false,vc:null,vcErr:'',agree:false};
-const WSKU={};
-const WCAT={'Firm Ground':1.1,'Artificial Grass':1.1,'Futsal':.9,'Anak':.8};
+const WSKU={'SPB-JUN-FG-001':.8,'SPB-JUN-AG-001':.8};
+const WCAT={'Rumput Asli':1.1,'Rumput Sintetis':1.1,'Futsal':.9};
 const wOf=p=>WSKU[p.sku]||WCAT[p.cat]||.5;
 const isOpen=id=>!$(id).classList.contains('hid');
 function zoneOf(){
@@ -1904,7 +1948,7 @@ function closeOk(goNotif){closeM('m-ok');if(goNotif){window.scrollTo({top:0,beha
 function show(v,f){
   if((v==='admin'||v==='stockin')&&!(session&&session.role==='admin'))v='auth';
   const changed=curView!==v;
-  curView=v;if(f)catF=f;
+  curView=v;if(f)catF=({'Firm Ground':CAT_ASLI,'Artificial Grass':CAT_SINT,'Anak':'grp:bola'})[f]||f;
   ['home','katalog','about','orders','auth','admin','stockin'].forEach(x=>$('v-'+x).classList.toggle('hid',x!==v));
   if(v==='katalog')renderKatalog();if(v==='admin')renderAdmin();if(v==='stockin')renderStockIn();if(v==='orders')renderOrders();
   if(changed)addNotif('fa-clock-rotate-left',{f:'visit',a:[v]});
@@ -2322,24 +2366,26 @@ function closeMedia(){closeM('m-media');$('mediaBox').innerHTML=''}
 /* ============ PRODUK (admin) ============ */
 async function addProduct(e){
   e.preventDefault();
-  const id=Math.max(0,...P.map(p=>p.id))+1,cat=$('nc').value,pl=PIC.n.slice();
-  const sku=nextSku(cat,true);
-  P.push({id,sku,name:$('np').value,cat,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img:pl[0]||'noimg',imgs:pl.slice(1),d:'',src:lang});
+  const id=Math.max(0,...P.map(p=>p.id))+1,cat=$('nc').value,pl=PIC.n.slice(),brand=normBrand($('nbr').value);
+  if(!brand)return toast(t('brandReq'));
+  const sku=nextSku(cat,brand,true);
+  P.push({id,sku,brand,name:$('np').value,cat,price:+$('nh').value,old:0,stock:+$('ns').value,sold:0,img:pl[0]||'noimg',imgs:pl.slice(1),d:'',src:lang});
   try{sv('products6',P)}catch(x){}
-  const nm=$('np').value;e.target.reset();PIC.n=[];renderPics('n');renderAll();toast(t('prodAdded')+' ('+sku+')');addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});transAndSave(P.find(x=>x.id===id));
+  const nm=$('np').value;e.target.reset();PIC.n=[];renderPics('n');fillBrandList();updSkuHint('nc');renderAll();toast(t('prodAdded')+' ('+sku+')');addNotif('fa-wand-magic-sparkles',{f:'newProd',a:[nm]});transAndSave(P.find(x=>x.id===id));
 }
 function readImg(f,mx){mx=mx||480;return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.8))};im.onerror=no;im.src=r.result};r.onerror=no;r.readAsDataURL(f)})}
 function editProduct(id){
   const p=P.find(x=>x.id===id);if(!p)return;
-  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');VIMG={};if(p.opts)p.opts.list.forEach(x=>{if(x[2])VIMG[x[0]]=x[2]});renderVarPics();$('esku').dataset.auto='1';
+  $('eid').value=id;$('esku').value=p.sku;$('ename').value=p.name;fillCatSelects();$('ecat').value=p.cat;$('ebrand').value=p.brand||'';$('eprice').value=p.price;$('eold').value=p.old||0;$('estock').value=p.stock;$('edesc').value=p.d||'';$('eopts').value=p.opts?p.opts.list.map(x=>typeof x[3]==='number'?x[0]+'='+x[3]:x[0]).join(', '):'';$('estock').disabled=!!(p.opts&&p.opts.list.some(x=>typeof x[3]==='number'));$('ef').value='';PIC.e=pics(p);renderPics('e');VIMG={};if(p.opts)p.opts.list.forEach(x=>{if(x[2])VIMG[x[0]]=x[2]});renderVarPics();$('esku').dataset.auto='1';
   $('emin').value=typeof p.min==='number'?p.min:'';
   openM('m-edit');
 }
 async function saveEdit(e){
   e.preventDefault();const p=P.find(x=>x.id===+$('eid').value);if(!p)return;
-  let sku=$('esku').value.trim();if(!sku||$('esku').dataset.auto!=='0'&&$('ecat').value!==p.cat)sku=nextSku($('ecat').value,true,p.id);if(P.some(x=>x.id!==p.id&&x.sku===sku))return toast(t('skuUsed'));
+  const brNew=normBrand($('ebrand').value);if(!brNew)return toast(t('brandReq'));
+  let sku=$('esku').value.trim();const chg=$('ecat').value!==p.cat||brNew.toLowerCase()!==String(p.brand||'').toLowerCase();if(!sku||$('esku').dataset.auto!=='0'&&chg)sku=nextSku($('ecat').value,brNew,true,p.id);if(P.some(x=>x.id!==p.id&&x.sku===sku))return toast(t('skuUsed'));
   p.img=PIC.e[0]||'noimg';p.imgs=PIC.e.slice(1);
-  const _on=p.name,_od=p.d||'';p.sku=sku;p.name=$('ename').value.trim();p.cat=$('ecat').value;p.price=+$('eprice').value;p.old=Math.max(0,+$('eold').value||0);if(p.old<=p.price)p.old=0;p.stock=+$('estock').value;p.d=$('edesc').value.trim();
+  const _on=p.name,_od=p.d||'';p.sku=sku;p.brand=brNew;p.name=$('ename').value.trim();p.cat=$('ecat').value;p.price=+$('eprice').value;p.old=Math.max(0,+$('eold').value||0);if(p.old<=p.price)p.old=0;p.stock=+$('estock').value;p.d=$('edesc').value.trim();
   const mv=$('emin').value.trim();if(mv===''||isNaN(+mv))delete p.min;else p.min=Math.max(0,Math.floor(+mv));
   if(p.name!==_on){p.src=lang;delete p.ne;delete p.nz}if((p.d||'')!==_od){p.dsrc=lang;delete p.de;delete p.dz}
   {const nm=$('eopts').value.split(',').map(s=>s.trim()).filter(Boolean);
@@ -2353,22 +2399,25 @@ function delProduct(id){if(!confirm(t('confDel')))return;{const d=P.find(p=>p.id
 
 /* ============ SINKRONISASI ANTAR TAB (admin <-> pelanggan/tamu) ============ */
 function onStorage(e){if(e.key&&e.key.indexOf('gs_')!==0)return;
-  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);STK=ld('stockin',STK);MOD=ld('mod',MOD);P=migSku(ld('products6',P));PBG=ld('promobg',PBG);
+  NF=ld('notifs2',NF);normNF();RV=ld('reviews',RV);{const o=JSON.stringify(SITE.tx||{});SITE=(RV&&RV._site)||{};applySite();fillCatSelects();if(JSON.stringify(SITE.tx||{})!==o)applyLang()}orders=ld('orders',orders);users=ld('users',users);users.forEach(u=>{if(!u.vs)u.vs=u.v?[u.v]:[]});ACC=ld('access',ACC);RPT=ld('reports',RPT);STK=ld('stockin',STK);MOD=ld('mod',MOD);P=migSku(ld('products6',P));fixStkSku();PBG=ld('promobg',PBG);
   renderNotif();renderAll();applyPromoBg();checkAccess()}
 
 
 
 /* ============ KELOLA TAMPILAN (khusus admin, tersinkron ke semua device) ============ */
 /* Pengaturan disimpan di dalam data 'reviews' (RV._site) supaya tabel Supabase tidak perlu diubah. */
-const DEF_CATS=['Firm Ground','Artificial Grass','Futsal','Anak'];
-var GS_IC={'Firm Ground':'fa-futbol','Artificial Grass':'fa-seedling','Futsal':'fa-shoe-prints','Anak':'fa-child'};
+const DEF_CATS=LEAF_CATS;
+var GS_IC={'Rumput Asli':'fa-futbol','Rumput Sintetis':'fa-seedling','Futsal':'fa-shoe-prints',bola:'fa-futbol',futsal:'fa-shoe-prints'};
+const catFull=c=>{const g=CAT_TREE.find(x=>x.subs.includes(c)&&x.subs.length>1);return g?t(g.i)+' - '+catName(c):catName(c)};
 let editMode=false;
-function allCats(){const x=DEF_CATS.slice();[...(SITE.cats||[]),...P.map(p=>p.cat)].forEach(c=>{if(c&&x.indexOf(c)<0)x.push(c)});return x}
+function allCats(){return LEAF_CATS.slice()}
 function siteSave(){if(Array.isArray(RV))RV={};RV._site=SITE;sv('reviews',RV)}
+const normBrand=b=>{b=String(b||'').trim().replace(/\s+/g,' ');const ex=P.find(x=>x.brand&&String(x.brand).trim().toLowerCase()===b.toLowerCase());return ex?String(ex.brand).trim():b};
+function fillBrandList(){const dl=$('brandList');if(!dl)return;const b={};P.forEach(p=>{if(p.brand)b[String(p.brand).trim().toLowerCase()]=String(p.brand).trim()});dl.innerHTML=Object.values(b).sort().map(x=>`<option value="${esc(x)}">`).join('')}
 function fillCatSelects(){['nc','ecat'].forEach(id=>{const sel=$(id);if(!sel)return;const v=sel.value;
-  sel.innerHTML=allCats().map(c=>`<option value="${esc(c)}">${esc(catName(c))}</option>`).join('')+'<option value="__new">'+esc(H('+ Kategori baru...'))+'</option>';
-  if(v&&v!=='__new'&&[...sel.options].some(o=>o.value===v))sel.value=v;
-  sel.onchange=()=>{if(sel.value==='__new'){const n=(prompt(H('Nama kategori baru:'))||'').trim();if(n)addCat(n,id);else sel.selectedIndex=0}updSkuHint(id)}});updSkuHint('nc')}
+  sel.innerHTML=allCats().map(c=>`<option value="${esc(c)}">${esc(catFull(c))}</option>`).join('');
+  if(v&&[...sel.options].some(o=>o.value===v))sel.value=v;
+  sel.onchange=()=>updSkuHint(id)});fillBrandList();updSkuHint('nc')}
 function addCat(n,sel){n=n.trim().slice(0,30);if(!n)return;const ex=allCats().find(c=>c.toLowerCase()===n.toLowerCase());
   if(!ex){SITE.cats=(SITE.cats||[]).concat(n);siteSave();transCat(n,lang)}fillCatSelects();if(sel&&$(sel))$(sel).value=ex||n;renderKatalog();renderSitePanel();toast(H(ex?'Kategori sudah ada':'Kategori ditambahkan'))}
 function delCat(c){SITE.cats=(SITE.cats||[]).filter(x=>x!==c);siteSave();fillCatSelects();if(catF===c)catF='all';renderKatalog();renderSitePanel()}
@@ -2427,9 +2476,8 @@ function renderSitePanel(){const m=$('sBody');if(!m)return;const used=c=>P.filte
   ${imgPanelHTML()}
   <div><p class="lbl">Gambar di katalog</p><select onchange="SITE.fit=this.value;siteSave();applySite()" class="inp"><option value="cover" ${SITE.fit!=='contain'?'selected':''}>Penuh dan rapi (dipotong pas ke card)</option><option value="contain" ${SITE.fit==='contain'?'selected':''}>Utuh (tidak dipotong, ada ruang kosong)</option></select>
   <p class="text-xs text-slate-500 mt-2">Foto produk ditambah atau diganti lewat Dashboard Admin: form Tambah Produk dan tombol edit di tabel produk.</p></div>
-  <div><p class="lbl">Kategori produk</p><div class="flex flex-wrap gap-2 mt-2">${allCats().map(c=>`<span class="px-3 py-1 rounded-full border bg-slate-50 text-xs font-semibold">${esc(catName(c))} <span class="text-slate-400">(${used(c)})</span>${ex.indexOf(c)>=0&&!used(c)?` <button onclick="delCat(this.dataset.c)" data-c="${esc(c)}" class="text-red-600 ml-1" title="Hapus">&times;</button>`:''}</span>`).join('')}</div>
-  <div class="flex gap-2 mt-3"><input id="newCat" class="inp" placeholder="Nama kategori baru, contoh: Kaos Kaki" maxlength="30"><button onclick="addCat($('newCat').value)" class="bg-green-500 text-white font-bold px-4 rounded-lg whitespace-nowrap">Tambah</button></div>
-  <p class="text-xs text-slate-500 mt-2">Kategori bawaan tidak bisa dihapus. Kategori tambahan bisa dihapus selama belum dipakai produk.</p></div>
+  <div><p class="lbl">Kategori produk</p><div class="flex flex-wrap gap-2 mt-2">${CAT_TREE.map(g=>`<span class="px-3 py-1 rounded-full border bg-slate-50 text-xs font-semibold">${esc(grpName(g.k))}${g.subs.length>1?': '+g.subs.map(c=>esc(catName(c))+' <span class="text-slate-400">('+used(c)+')</span>').join(' · '):' <span class="text-slate-400">('+used(g.subs[0])+')</span>'}</span>`).join('')}</div>
+  <p class="text-xs text-slate-500 mt-2">Kategori dikunci hanya 2: Sepak Bola (Rumput Asli &amp; Rumput Sintetis) dan Futsal. SKU dibuat otomatis: SPB-(merk)-FG-001, SPB-(merk)-AG-001, SPF-(merk)-001.</p></div>
   <p class="text-xs text-slate-500">Semua perubahan tersimpan otomatis dan muncul di semua device dalam sekitar 10 detik.</p></div>`;trDom($('m-site'))}
 
 Object.assign(I.id,{
@@ -3165,13 +3213,13 @@ function drawArea(){
 }
 function drawDonut(){
   const box=$('gcDonut');if(!box)return;
-  const m={};P.forEach(p=>{m[p.cat]=(m[p.cat]||0)+(p.sold||0)});
+  const m={};P.forEach(p=>{const k=grpOf(p.cat);m[k]=(m[k]||0)+(p.sold||0)});
   const E=Object.entries(m).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]),tot=E.reduce((s,e)=>s+e[1],0),sig='d'+lang+JSON.stringify(E);
   if(SIG.d===sig&&box.firstChild)return;SIG.d=sig;
   if(!tot){box.innerHTML=`<p class="text-center text-slate-400 py-10 text-sm">${t('chNoData')}</p>`;return}
   let acc=0;
   const segs=E.map((e,i)=>{const f=e[1]/tot*100,s=`<circle class="gc-seg" data-f="${f}" cx="60" cy="60" r="44" fill="none" stroke="${COL[i%5]}" stroke-width="18" pathLength="100" stroke-dasharray="0 100" stroke-dashoffset="${-acc}" transform="rotate(-90 60 60)"/>`;acc+=f;return s}).join('');
-  const leg=E.map((e,i)=>`<div class="flex items-center gap-2 text-sm"><span style="width:10px;height:10px;border-radius:2px;background:${COL[i%5]};display:inline-block"></span><span class="flex-1 truncate">${esc(catName(e[0]))}</span><b>${e[1]}</b><span class="text-xs text-slate-400 w-10 text-right">${Math.round(e[1]/tot*100)}%</span></div>`).join('');
+  const leg=E.map((e,i)=>`<div class="flex items-center gap-2 text-sm"><span style="width:10px;height:10px;border-radius:2px;background:${COL[i%5]};display:inline-block"></span><span class="flex-1 truncate">${esc(grpName(e[0]))}</span><b>${e[1]}</b><span class="text-xs text-slate-400 w-10 text-right">${Math.round(e[1]/tot*100)}%</span></div>`).join('');
   box.innerHTML=`<svg viewBox="0 0 120 120" class="w-40 h-40 mx-auto"><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-opacity=".08" stroke-width="18"/>${segs}<text x="60" y="62" text-anchor="middle" font-size="20" font-weight="700" fill="currentColor">${tot}</text><text x="60" y="75" text-anchor="middle" font-size="7" fill="currentColor" fill-opacity=".6">${t('chSold')}</text></svg><div class="mt-4 space-y-1.5">${leg}</div>`;
   const sg=[...box.querySelectorAll('.gc-seg')],setP=p=>sg.forEach(c=>{const f=+c.dataset.f,g=sg.length>1?.8:0;c.setAttribute('stroke-dasharray',`${Math.max(f-g,0)*p} 100`)});
   if(RM||!A.animate)return setP(1);
@@ -3259,7 +3307,7 @@ function lpCount(e){var to=+e.dataset.to||0,sf=e.dataset.sfx||'',t0=null;e._d=1;
   function st(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/1400);e.textContent=Math.round(to*(1-Math.pow(1-k,3))).toLocaleString('id-ID')+sf;if(k<1)requestAnimationFrame(st)}
   requestAnimationFrame(st)}
 /* ---------- kategori (2 kartu) & sorotan terbaru ---------- */
-window.GS_GRP={bola:['Firm Ground','Artificial Grass','Anak'],futsal:['Futsal']};
+window.GS_GRP={bola:['Rumput Asli','Rumput Sintetis'],futsal:['Futsal']};
 function offOf(p){return p.old?Math.round((1-p.price/p.old)*100):0}
 function lpCats(d){
   var G=window.GS_GRP,box=el('buCats');if(!box)return;
@@ -3362,7 +3410,7 @@ var BGDEF="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAw
 function defOf(s){return s.k==='lpBg'?BGDEF:((s.d&&IMG[s.d])||'')}
 var LPS=[
  {k:'lpBg',l:'Foto utama (hero) halaman awal',h:'Foto latar besar di bagian atas (disarankan foto lebar/landscape, mis. suporter atau lapangan)',max:1600,png:0,d:''},
- {k:'lpL',l:'Kartu sorotan kiri',h:'Gambar kartu Sepatu Firm Ground (disarankan foto produk)',max:900,png:1,d:'b1'},
+ {k:'lpL',l:'Kartu sorotan kiri',h:'Gambar kartu Sepatu Sepak Bola (disarankan foto produk)',max:900,png:1,d:'b1'},
  {k:'lpR',l:'Kartu sorotan kanan',h:'Gambar kartu Sepatu Futsal (disarankan foto produk)',max:900,png:1,d:'b10'},
  {k:'lpLogo2',l:'Logo tambahan (navbar kanan)',h:'Opsional. Kosong = tidak tampil. Logo kiri memakai logo toko.',max:400,png:1,d:''}
 ];
@@ -3428,40 +3476,40 @@ else window.addEventListener('load',function(){setTimeout(boot,0)});
 /* ===== Katalog sepatu sepak bola: teks, nama kategori, menu navbar ===== */
 (function(){
 Object.assign(I.id,{
- slogan:"Spesialis sepatu sepak bola: FG, AG, futsal, dan anak. Lengkap, nyaman, terpercaya",sectorV:"Perdagangan eceran sepatu sepak bola",
- search:"Cari sepatu bola, FG, AG, futsal...",promoTitle:"Promo Sepatu Bola Pilihan!",promoText:"Sepatu FG, AG, futsal, dan anak dengan harga spesial. Gratis ongkir se-Maros dan voucher untuk akun baru.",
- why1d:"Sepatu FG, AG, futsal, dan anak dalam satu toko",
+ slogan:"Spesialis sepatu sepak bola: rumput asli (FG), rumput sintetis (AG), dan futsal. Lengkap, nyaman, terpercaya",sectorV:"Perdagangan eceran sepatu sepak bola",
+ search:"Cari sepatu bola, FG, AG, futsal, merk...",promoTitle:"Promo Sepatu Bola Pilihan!",promoText:"Sepatu rumput asli (FG), rumput sintetis (AG), dan futsal dengan harga spesial. Gratis ongkir se-Maros dan voucher untuk akun baru.",
+ why1d:"Sepatu rumput asli, rumput sintetis, dan futsal dalam satu toko",
  glKick:"Spesialis Sepatu Sepak Bola",glSub:"Masuk untuk belanja sepatu sepak bola favoritmu.",
- cFirmGround:"Firm Ground","cFirm Ground":"Firm Ground","cArtificial Grass":"Artificial Grass",cFutsal:"Futsal",cAnak:"Anak",
- lpKick:"Spesialis Sepatu Sepak Bola \u00b7 Maros",lpSub2:"Sepatu sepak bola FG, AG, futsal, dan anak pilihan. Belanja mudah, aman, dan cepat dari rumah.",
- lpC1:"Sepatu Firm Ground",lpC2:"Sepatu Futsal",
- lpInfo:"Garuda Store adalah toko sepatu sepak bola di Maros, Sulawesi Selatan. Temukan sepatu FG, AG, futsal, dan anak dengan mudah dari rumah. Keuntungan belanja di Garuda Store:"});
+ "cRumput Asli":"Rumput Asli","cRumput Sintetis":"Rumput Sintetis",cFutsal:"Futsal",cgBola:"Sepak Bola",cgFutsal:"Futsal",catAllSub:"Semua {0}",brandL:"Merk",brandReq:"Merk produk wajib diisi.",
+ lpKick:"Spesialis Sepatu Sepak Bola \u00b7 Maros",lpSub2:"Sepatu sepak bola rumput asli (FG), rumput sintetis (AG), dan futsal pilihan. Belanja mudah, aman, dan cepat dari rumah.",
+ lpC1:"Sepatu Sepak Bola",lpC2:"Sepatu Futsal",
+ lpInfo:"Garuda Store adalah toko sepatu sepak bola di Maros, Sulawesi Selatan. Temukan sepatu rumput asli (FG), rumput sintetis (AG), dan futsal dengan mudah dari rumah. Keuntungan belanja di Garuda Store:"});
 Object.assign(I.en,{
- slogan:"Football boot specialist: FG, AG, futsal and kids. Complete, comfortable, trusted",sectorV:"Retail of football boots",
- search:"Search football boots, FG, AG, futsal...",promoTitle:"Featured Football Boot Deals!",promoText:"FG, AG, futsal and kids' boots at special prices. Free shipping in Maros and a voucher for new accounts.",
- why1d:"FG, AG, futsal and kids' boots in one store",
+ slogan:"Football boot specialist: natural grass (FG), artificial grass (AG) and futsal. Complete, comfortable, trusted",sectorV:"Retail of football boots",
+ search:"Search football boots, FG, AG, futsal, brand...",promoTitle:"Featured Football Boot Deals!",promoText:"Natural grass (FG), artificial grass (AG) and futsal shoes at special prices. Free shipping in Maros and a voucher for new accounts.",
+ why1d:"Natural grass, artificial grass and futsal shoes in one store",
  glKick:"Football Boot Specialist",glSub:"Sign in to shop your favourite football boots.",
- "cFirm Ground":"Firm Ground","cArtificial Grass":"Artificial Grass",cFutsal:"Futsal",cAnak:"Kids",
- lpKick:"Football Boot Specialist \u00b7 Maros",lpSub2:"Selected FG, AG, futsal and kids' football boots. Easy, safe and fast shopping from home.",
- lpC1:"Firm Ground Boots",lpC2:"Futsal Shoes",
- lpInfo:"Garuda Store is a football boot shop in Maros, South Sulawesi. Find FG, AG, futsal and kids' boots easily from home. Why shop at Garuda Store:"});
+ "cRumput Asli":"Natural Grass","cRumput Sintetis":"Artificial Grass",cFutsal:"Futsal",cgBola:"Football",cgFutsal:"Futsal",catAllSub:"All {0}",brandL:"Brand",brandReq:"Product brand is required.",
+ lpKick:"Football Boot Specialist \u00b7 Maros",lpSub2:"Selected natural grass (FG), artificial grass (AG) and futsal shoes. Easy, safe and fast shopping from home.",
+ lpC1:"Football Boots",lpC2:"Futsal Shoes",
+ lpInfo:"Garuda Store is a football boot shop in Maros, South Sulawesi. Find natural grass (FG), artificial grass (AG) and futsal shoes easily from home. Why shop at Garuda Store:"});
 Object.assign(I.zh,{
- slogan:"足球鞋专家：FG、AG、五人制和儿童款，齐全、舒适、值得信赖",sectorV:"足球鞋零售",
- search:"搜索足球鞋、FG、AG、五人制...",promoTitle:"精选足球鞋优惠！",promoText:"FG、AG、五人制和儿童足球鞋特价。马罗斯市内免运费，新账号可获优惠券。",
- why1d:"FG、AG、五人制和儿童足球鞋，尽在一家店",
+ slogan:"足球鞋专家：天然草（FG）、人造草（AG）和五人制，齐全、舒适、值得信赖",sectorV:"足球鞋零售",
+ search:"搜索足球鞋、FG、AG、五人制、品牌...",promoTitle:"精选足球鞋优惠！",promoText:"天然草（FG）、人造草（AG）和五人制球鞋特价。马罗斯市内免运费，新账号可获优惠券。",
+ why1d:"天然草、人造草和五人制球鞋，尽在一家店",
  glKick:"足球鞋专家",glSub:"登录后即可选购您喜爱的足球鞋。",
- "cFirm Ground":"硬地 FG","cArtificial Grass":"人造草 AG",cFutsal:"五人制",cAnak:"儿童",
- lpKick:"足球鞋专家 \u00b7 马罗斯",lpSub2:"精选 FG、AG、五人制和儿童足球鞋。在家轻松、安全、快速购物。",
- lpC1:"硬地 FG 球鞋",lpC2:"五人制球鞋",
- lpInfo:"Garuda Store 是位于南苏拉威西省马罗斯的足球鞋专卖店。在家轻松选购 FG、AG、五人制和儿童足球鞋。在 Garuda Store 购物的优势："});
+ "cRumput Asli":"天然草 FG","cRumput Sintetis":"人造草 AG",cFutsal:"五人制",cgBola:"足球",cgFutsal:"五人制",catAllSub:"全部{0}",brandL:"品牌",brandReq:"必须填写商品品牌。",
+ lpKick:"足球鞋专家 \u00b7 马罗斯",lpSub2:"精选天然草（FG）、人造草（AG）和五人制球鞋。在家轻松、安全、快速购物。",
+ lpC1:"足球鞋",lpC2:"五人制球鞋",
+ lpInfo:"Garuda Store 是位于南苏拉威西省马罗斯的足球鞋专卖店。在家轻松选购天然草（FG）、人造草（AG）和五人制球鞋。在 Garuda Store 购物的优势："});
 
-Object.assign(I.id,{lpG1:"Sepak Bola",lpG2:"Futsal",lpG1d:"Sepatu FG, AG, dan sepatu bola anak",lpG2d:"Sepatu futsal untuk lapangan indoor",lpGBtn:"Lihat Koleksi",lpItems:"produk",
+Object.assign(I.id,{lpG1:"Sepak Bola",lpG2:"Futsal",lpG1d:"Sepatu rumput asli (FG) dan rumput sintetis (AG)",lpG2d:"Sepatu futsal untuk lapangan indoor",lpGBtn:"Lihat Koleksi",lpItems:"produk",
   lpSpK:"Baru Datang",lpSpT:"Sorotan Terbaru",lpSpS:"Sepatu pilihan yang lagi banyak dicari. Amankan pasangan favoritmu sebelum kehabisan!",lpNew:"Terbaru",lpHot:"Terlaris",lpDeal:"Diskon Terbesar",lpSee:"Lihat Produk",
   lpFMenu:"Menu",lpFContact:"Kontak & Alamat",lpFAddr:"Alamat",lpFCoord:"Koordinat",lpFType:"Usaha",lpFSvc:"Layanan",lpFMap:"Buka di Google Maps"});
-Object.assign(I.en,{lpG1:"Football",lpG2:"Futsal",lpG1d:"FG, AG and kids' football boots",lpG2d:"Futsal shoes for indoor courts",lpGBtn:"View Collection",lpItems:"products",
+Object.assign(I.en,{lpG1:"Football",lpG2:"Futsal",lpG1d:"Natural grass (FG) and artificial grass (AG) boots",lpG2d:"Futsal shoes for indoor courts",lpGBtn:"View Collection",lpItems:"products",
   lpSpK:"New Arrival",lpSpT:"Latest Highlights",lpSpS:"Popular picks everyone is looking for. Grab your favourite pair before it sells out!",lpNew:"New",lpHot:"Best Seller",lpDeal:"Biggest Discount",lpSee:"View Product",
   lpFMenu:"Menu",lpFContact:"Contact & Address",lpFAddr:"Address",lpFCoord:"Coordinates",lpFType:"Business",lpFSvc:"Services",lpFMap:"Open in Google Maps"});
-Object.assign(I.zh,{lpG1:"足球",lpG2:"五人制",lpG1d:"FG、AG 和儿童足球鞋",lpG2d:"室内场地五人制球鞋",lpGBtn:"查看系列",lpItems:"件商品",
+Object.assign(I.zh,{lpG1:"足球",lpG2:"五人制",lpG1d:"天然草（FG）和人造草（AG）足球鞋",lpG2d:"室内场地五人制球鞋",lpGBtn:"查看系列",lpItems:"件商品",
   lpSpK:"新品到货",lpSpT:"最新精选",lpSpS:"热门精选球鞋，抢先入手，售完即止！",lpNew:"新品",lpHot:"热销",lpDeal:"最大折扣",lpSee:"查看商品",
   lpFMenu:"菜单",lpFContact:"联系方式与地址",lpFAddr:"地址",lpFCoord:"坐标",lpFType:"业务",lpFSvc:"服务",lpFMap:"在谷歌地图中打开"});
 
@@ -3471,9 +3519,12 @@ var _al=applyLang;applyLang=function(){var r=_al.apply(this,arguments);try{gsLg(
 /* menu navbar: tandai halaman aktif, buka/tutup di HP */
 window.gsMenuSync=function(v){var m=document.getElementById('gsMenu');if(!m)return;m.classList.remove('open');
   var k=(v==='katalog'&&catF==='promo')?'promo':v;
+  if(document.documentElement.classList.contains('lp-open'))k=null;
   m.querySelectorAll('a[data-v]').forEach(function(a){a.classList.toggle('on',a.dataset.v===k)})};
 window.gsBurger=function(){document.getElementById('gsMenu').classList.toggle('open')};
 document.addEventListener('click',function(e){if(!e.target.closest('#gsMenu,#gsBurger')){var m=document.getElementById('gsMenu');if(m)m.classList.remove('open')}});
+/* halaman awal dibuka/ditutup -> perbarui menu aktif */
+['lpOpen','lpClose'].forEach(function(n){var f=window[n];if(typeof f!=='function')return;window[n]=function(){var r=f.apply(this,arguments);try{gsMenuSync(curView)}catch(e){}return r}});
 try{applyLang();gsMenuSync(curView);gsLg()}catch(e){}
 })();
 </script>
