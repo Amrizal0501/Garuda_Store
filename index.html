@@ -925,6 +925,28 @@ html[data-theme=dark] .gs-ft{background:#0b0d0f;border-top-color:#c8ff00}
   </div>
 </div>
 
+<!-- ============ MODAL: EDIT PROFIL ============ -->
+<div id="m-profile" class="hid fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto">
+    <div class="hd text-white px-6 py-4 flex justify-between rounded-t-2xl"><h3 class="font-bold text-lg"><i class="fa-solid fa-user-pen mr-2"></i><span data-i="editProf"></span></h3><button type="button" onclick="closeM('m-profile')" class="text-2xl">&times;</button></div>
+    <form onsubmit="saveProfile(event)" class="p-6 space-y-4">
+      <div><label class="lbl" data-i="username"></label><input id="pfUser" required maxlength="30" autocomplete="username" class="inp"><p class="text-[11px] text-slate-400 mt-1"><i class="fa-solid fa-circle-info mr-1"></i><span data-i="pfUserNote"></span></p></div>
+      <div><label class="lbl" data-i="phoneL"></label><div id="pfPhBox"></div></div>
+      <div><label class="lbl"><span data-i="emailL"></span> <span class="text-slate-400 font-normal normal-case" data-i="optL"></span></label><input id="pfEmail" type="email" autocomplete="email" placeholder="nama@email.com" class="inp"><p id="pfEmailNote" class="hid text-[11px] text-slate-400 mt-1"><i class="fa-brands fa-google mr-1"></i><span data-i="pfEmailG"></span></p></div>
+      <div class="border-t pt-3"><p class="text-xs font-bold text-slate-500 uppercase mb-1"><i class="fa-solid fa-location-dot text-orange-500 mr-1"></i><span data-i="addrTitle"></span></p><div id="pfAddrBox" class="space-y-3"></div></div>
+      <div id="pfPwBox" class="border-t pt-3 space-y-3">
+        <p class="text-xs font-bold text-slate-500 uppercase"><i class="fa-solid fa-key text-orange-500 mr-1"></i><span data-i="pfPwTitle"></span></p>
+        <p class="text-[11px] text-slate-400 -mt-2" data-i="pfPwHint"></p>
+        <div><label class="lbl" data-i="pfPwCur"></label><div class="relative"><input id="pfPc" type="password" autocomplete="current-password" class="inp pr-11"><button type="button" onclick="eye('pfPc',this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-eye"></i></button></div></div>
+        <div><label class="lbl" data-i="pfPwNew"></label><div class="relative"><input id="pfPn" type="password" autocomplete="new-password" class="inp pr-11"><button type="button" onclick="eye('pfPn',this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-eye"></i></button></div></div>
+        <div><label class="lbl" data-i="confirm"></label><div class="relative"><input id="pfPn2" type="password" autocomplete="new-password" class="inp pr-11"><button type="button" onclick="eye('pfPn2',this)" class="absolute right-3 top-3 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-eye"></i></button></div></div>
+      </div>
+      <p id="pferr" class="text-red-600 text-sm hid"></p>
+      <div class="flex justify-end gap-2 pt-2 border-t"><button type="button" onclick="closeM('m-profile')" class="px-5 py-2.5 rounded-xl border font-semibold text-slate-600 hover:bg-slate-50" data-i="cancel"></button><button class="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold" data-i="save"></button></div>
+    </form>
+  </div>
+</div>
+
 <!-- ============ MODAL: BANTUAN ============ -->
 <div id="m-help" class="hid fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-50 p-4">
   <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
@@ -1203,7 +1225,7 @@ function kvq(path,method,body,prefer){
   return fetch(SYNC_URL+'/rest/v1/kv'+path,{method:method||'GET',headers:h,body:body?JSON.stringify(body):undefined}).then(r=>{if(!r.ok)return r.text().then(x=>{throw new Error(r.status+' '+x.slice(0,140))});return r.status===204?null:r.text().then(x=>x?JSON.parse(x):null)});
 }
 const keepDone=(rem,loc)=>{if(!Array.isArray(rem)||!Array.isArray(loc))return loc;const m={};rem.forEach(o=>{if(o&&o.status==='Selesai')m[o.id]=o});return loc.map(o=>(o&&m[o.id]&&o.status!=='Selesai')?m[o.id]:o)};
-const mergeUsers=(a,b)=>{const m={};(a||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);(b||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);return Object.keys(m).map(q=>m[q])};
+const mergeUsers=(a,b)=>{const m={};(a||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);(b||[]).forEach(x=>m[String(x.u).toLowerCase()]=x);const L=Object.keys(m).map(q=>m[q]);return L.filter(x=>!L.some(y=>y!==x&&y.rts&&(y.prev||[]).some(p=>String(p).toLowerCase()===String(x.u).toLowerCase())&&(x.ts||0)<=y.rts))};
 function syncDirty(k){if(!SYNC_URL||SYNC_KEYS.indexOf(k)<0)return;syncDirtyKeys.add(k);try{localStorage.setItem('gs_syncDirty',JSON.stringify([...syncDirtyKeys]))}catch(e){}clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,700)}
 async function syncNow(){
   if(!SYNC_URL||syncBusy)return;syncBusy=true;
@@ -3851,6 +3873,219 @@ var _raX=renderAdmin;renderAdmin=function(){_raX.apply(this,arguments);try{admFi
 var _shX=show;show=function(){var r=_shX.apply(this,arguments);try{admSide()}catch(e){}return r};
 var _alX=applyLang;applyLang=function(){var r=_alX.apply(this,arguments);try{admSide();if(['admin','ship','acc','rpt','recap'].indexOf(curView)>-1){admFilt();shipFilt();accFilt();renderRecap()}}catch(e){}return r};
 try{applyLang()}catch(e){}
+</script>
+
+<script>
+/* ============ EDIT PROFIL AKUN PELANGGAN ============ */
+Object.assign(I.id,{editProf:"Edit Profil",pfUserNote:"Username harus unik (belum dipakai akun lain). Pesanan, voucher, dan ulasan Anda ikut pindah ke username baru.",pfUserEmpty:"Username tidak boleh kosong!",pfEmailG:"Email akun Google tidak bisa diubah.",pfPwTitle:"Ganti Password",pfPwHint:"Kosongkan bagian ini jika tidak ingin mengganti password.",pfPwCur:"Password Saat Ini",pfPwNew:"Password Baru",pwWrong:"Password saat ini salah!",profSaved:"Profil berhasil diperbarui"});
+Object.assign(I.en,{editProf:"Edit Profile",pfUserNote:"Username must be unique (not used by another account). Your orders, vouchers and reviews move to the new username.",pfUserEmpty:"Username cannot be empty!",pfEmailG:"A Google account email cannot be changed.",pfPwTitle:"Change Password",pfPwHint:"Leave this section empty if you do not want to change your password.",pfPwCur:"Current Password",pfPwNew:"New Password",pwWrong:"Current password is incorrect!",profSaved:"Profile updated successfully"});
+Object.assign(I.zh,{editProf:"编辑资料",pfUserNote:"用户名必须唯一（未被其他账号使用）。您的订单、优惠券和评价会转到新用户名。",pfUserEmpty:"用户名不能为空！",pfEmailG:"Google 账号的邮箱无法修改。",pfPwTitle:"修改密码",pfPwHint:"如不想修改密码，请留空此部分。",pfPwCur:"当前密码",pfPwNew:"新密码",pwWrong:"当前密码错误！",profSaved:"资料已更新"});
+
+function profUser(){return session&&session.role==='user'?users.find(function(x){return x.u===session.name}):null}
+
+function openProfile(){
+  var u=profUser();if(!u)return;
+  $('dd-acc').classList.add('hid');
+  $('pfUser').value=u.u;
+  waMount('pfPhBox','pf');waSet('pf',u.phone||'');
+  $('pfEmail').value=u.email||'';
+  $('pfEmail').disabled=!!u.g;
+  $('pfEmailNote').classList.toggle('hid',!u.g);
+  $('pfPwBox').classList.toggle('hid',!!u.g);
+  ['pfPc','pfPn','pfPn2'].forEach(function(i){$(i).value='';$(i).type='password'});
+  $('pferr').classList.add('hid');
+  resetAddr('pf');mountAddr('pfAddrBox','pf');if(u.addr)setAddr('pf',u.addr);
+  openM('m-profile');
+}
+
+/* pindahkan semua data yang berkunci username ke username baru */
+function renameUser(u,nw){
+  var old=u.u,o=mk(old),guest=function(v){return String(v).indexOf(GK)===0};
+  orders.forEach(function(x){if(x.owner&&!guest(x.owner)&&mk(x.owner)===o)x.owner=nw});
+  RPT.forEach(function(r){if(r.own&&!guest(r.own)&&mk(r.own)===o)r.own=nw});
+  ACC.forEach(function(r){if(mk(r.user)===o)r.user=nw});
+  Object.keys(RV).forEach(function(k){if(k==='_site'||!Array.isArray(RV[k]))return;RV[k].forEach(function(x){if(x&&mk(x.u)===o)x.u=nw})});
+  if(MOD[o]){var mo=MOD[o];delete MOD[o];MOD[mk(nw)]=mo}
+  NF.u=NF.u||{};
+  Object.keys(NF.u).forEach(function(k){if(mk(k)===o&&k!==nw){var a=NF.u[k];delete NF.u[k];NF.u[nw]=a.concat(NF.u[nw]||[])}});
+  [NF.g,NF.a].forEach(function(l){(l||[]).forEach(function(n){if(n.who&&n.who.r==='user'&&n.who.n&&mk(n.who.n)===o)n.who.n=nw})});
+  u.prev=(u.prev||[]).concat([old]);u.rts=Date.now();u.u=nw;
+  session.name=nw;
+  sv('orders',orders);sv('reports',RPT);sv('access',ACC);sv('reviews',RV);sv('mod',MOD);sv('notifs2',NF);
+}
+
+function saveProfile(e,re){
+  e.preventDefault();
+  if(SYNC_URL&&!re){var f=e.target;syncNow().then(function(){saveProfile({preventDefault:function(){},target:f},1)});return}
+  var u=profUser(),er=$('pferr');if(!u){closeM('m-profile');return}
+  var bad=function(m){er.textContent=m;er.classList.remove('hid')};
+  var nu=$('pfUser').value.trim();
+  if(!nu)return bad(t('pfUserEmpty'));
+  var ch=nu!==u.u;
+  if(ch&&(nu.indexOf(GK)===0||mk(nu)==='amrizal'||admList().some(function(a){return mk(a.u)===mk(nu)})||users.some(function(a){return a!==u&&mk(a.u)===mk(nu)})))return bad(t('userTaken'));
+  var ph=waGet('pf');if(!ph)return bad(t('phoneBad'));
+  var em=u.email||'';
+  if(!u.g){
+    em=$('pfEmail').value.trim();
+    if(em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return bad(t('emailBad'));
+    if(em&&users.some(function(a){return a!==u&&(a.email||'').toLowerCase()===em.toLowerCase()}))return bad(t('glEmailTaken'));
+  }
+  var ad=getAddr('pf');if(!ad)return bad(t('addrReq'));
+  var np=null,pc=$('pfPc').value,pn=$('pfPn').value,pn2=$('pfPn2').value;
+  if(!u.g&&(pc||pn||pn2)){
+    if(pc!==u.p)return bad(t('pwWrong'));
+    if(pn.length<3)return bad(t('pwShort'));
+    if(pn!==pn2)return bad(t('pwMismatch'));
+    np=pn;
+  }
+  if(ch)renameUser(u,nu);
+  u.phone=ph;u.email=em;u.addr=ad;if(np)u.p=np;
+  sv('users',users);
+  session.phone=ph;session.email=em;session.addr=ad;sv('session',session);
+  er.classList.add('hid');closeM('m-profile');
+  authLabel();renderAcc();
+  addNotif('fa-user-pen',{f:'t',a:['profSaved']});renderNotif();
+  try{renderAll()}catch(x){}
+  toast(t('profSaved'));
+}
+
+/* tombol "Edit Profil" di menu akun */
+var _raP=renderAcc;
+renderAcc=function(){
+  var r=_raP.apply(this,arguments);
+  try{
+    if(session&&session.role==='user'){
+      var b=document.querySelector('#dd-acc button[onclick^="switchAcc"]');
+      if(b)b.insertAdjacentHTML('beforebegin','<button type="button" onclick="openProfile()" class="w-full text-left px-4 py-3 border-t text-slate-700 font-semibold hover:bg-orange-50"><i class="fa-solid fa-user-pen mr-2 text-orange-500"></i>'+t('editProf')+'</button>');
+    }
+  }catch(e){}
+  return r;
+};
+
+/* ikut ganti bahasa saat modal sedang terbuka */
+var _rmP=remountAddr;
+remountAddr=function(){
+  _rmP.apply(this,arguments);
+  try{if($('m-profile').classList.contains('flex')){mountAddr('pfAddrBox','pf');waMount('pfPhBox','pf')}}catch(e){}
+};
+/* sesi di device lain yang masih memakai username lama ikut pindah ke username baru */
+var _alP=authLabel;
+authLabel=function(){
+  try{
+    if(session&&session.role==='user'&&!users.some(function(x){return mk(x.u)===mk(session.name)})){
+      var y=users.find(function(z){return (z.prev||[]).some(function(p){return mk(p)===mk(session.name)})});
+      if(y){session.name=y.u;sv('session',session)}
+    }
+  }catch(e){}
+  return _alP.apply(this,arguments);
+};
+try{applyLang()}catch(e){}
+</script>
+
+<style>
+/* lencana merah notifikasi di sidebar admin */
+.admside button .nbd{margin-left:auto;min-width:1.3rem;height:1.3rem;padding:0 .35rem;border-radius:9999px;background:#ef4444;color:#fff;font:700 .7rem/1.3rem system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px rgba(255,255,255,.55);animation:nbdPulse 1.6s ease-in-out infinite}
+@keyframes nbdPulse{50%{transform:scale(1.12)}}
+</style>
+<script>
+/* ============ NOTIFIKASI ADMIN: lencana merah di sidebar + masuk ke lonceng notifikasi ============ */
+/* jenis notifikasi -> menu sidebar yang terkait */
+var ANS={ordProc:'ship',inN:'stockin',restockN:'stockin',lowN:'admin',newProd:'admin',prodSaved:'admin',prodDel:'admin',promoSet:'admin',rpSent:'rpt',aRptSt:'rpt',aWarn:'rpt',aFrz:'rpt',aUnfrz:'rpt',exRep:'rpt',rvN:'rpt',regOk:'acc',accRes:'acc',accSentN:'acc'};
+var ANV=['admin','ship','acc','rpt','stockin','recap'];
+function nSec(n){var m=n&&n.m;if(!m||typeof m!=='object')return null;if(m.f==='ordStatus')return(m.a&&m.a[1]==='Selesai')?'recap':'ship';return ANS[m.f]||null}
+/* status dibaca dihitung per admin (admin lain tetap melihat notifikasi baru) */
+function admMe(){return session&&session.role==='admin'?mk(session.name):''}
+function admUnread(n){return !!n&&!n.rd&&(n.rb||[]).indexOf(admMe())<0}
+function admRead(n){if(!n.rb)n.rb=[];var me=admMe();if(n.rb.indexOf(me)<0)n.rb.push(me)}
+
+/* beri tanda "belum dibaca" pada aktivitas penting; admin pelaku tidak diberi lencana untuk aktivitasnya sendiri */
+function ansTag(n){
+  if(!n||!nSec(n))return false;
+  n.rd=false;
+  if(session&&session.role==='admin')n.rb=[admMe()];
+  return true;
+}
+var _anP=addNotif;
+addNotif=function(icon,m){
+  var g0=NF.g[0],a0=NF.a[0],r=_anP.apply(this,arguments),ch=false;
+  try{
+    if(NF.g[0]!==g0&&ansTag(NF.g[0]))ch=true;
+    if(NF.a[0]!==a0&&ansTag(NF.a[0]))ch=true;
+    if(ch){sv('notifs2',NF);renderNotif()}
+  }catch(e){}
+  return r;
+};
+var _naP=notifyAdmin;
+notifyAdmin=function(icon,m,o){
+  var g0=NF.g[0],a0=NF.a[0],r=_naP.apply(this,arguments),ch=false;
+  try{
+    if(NF.g[0]!==g0&&ansTag(NF.g[0]))ch=true;
+    if(NF.a[0]!==a0&&ansTag(NF.a[0]))ch=true;
+    if(ch){sv('notifs2',NF);renderNotif()}
+  }catch(e){}
+  return r;
+};
+
+/* lencana angka di tiap menu sidebar */
+function admBadges(){
+  var e=$('admSide');if(!e||!session||session.role!=='admin')return;
+  var cnt={};(NF.g||[]).forEach(function(n){if(admUnread(n)){var s=nSec(n);if(s)cnt[s]=(cnt[s]||0)+1}});
+  e.querySelectorAll('button[onclick^="show("]').forEach(function(b){
+    var m=/show\('(\w+)'\)/.exec(b.getAttribute('onclick')||'');if(!m)return;
+    var old=b.querySelector('.nbd');if(old)old.remove();
+    var c=cnt[m[1]];
+    if(c)b.insertAdjacentHTML('beforeend','<span class="nbd">'+(c>99?'99+':c)+'</span>');
+  });
+}
+var _asP=admSide;
+admSide=function(){var r=_asP.apply(this,arguments);try{admBadges()}catch(e){}return r};
+
+/* lonceng: hitung "belum dibaca" per admin, titik merah di daftar ikut per admin */
+var _rnP=renderNotif;
+renderNotif=function(){
+  var r=_rnP.apply(this,arguments);
+  try{
+    if(session&&session.role==='admin'){
+      var c=curArr().filter(admUnread).length,b=$('notifBadge');
+      b.textContent=c>99?'99+':c;b.classList.toggle('hid',!c);
+      admBadges();
+    }
+  }catch(e){}
+  return r;
+};
+var _niP=nItem;
+nItem=function(n,i,adm){
+  if(adm&&n)n=Object.assign({},n,{rd:!admUnread(n)});
+  return _niP.call(this,n,i,adm);
+};
+var _cnP=clickN;
+clickN=function(i){
+  if(!(session&&session.role==='admin'))return _cnP.apply(this,arguments);
+  var n=curArr()[i];if(!n)return;
+  admRead(n);sv('notifs2',NF);renderNotif();
+  var s=nSec(n);if(s){$('dd-notif').classList.add('hid');show(s)}
+};
+var _raN=readAll;
+readAll=function(){
+  if(!(session&&session.role==='admin'))return _raN.apply(this,arguments);
+  curArr().forEach(admRead);sv('notifs2',NF);renderNotif();
+};
+
+/* membuka menu sidebar = notifikasi menu itu dianggap sudah dilihat */
+var _shN=show;
+show=function(v){
+  var r=_shN.apply(this,arguments);
+  try{
+    if(session&&session.role==='admin'&&ANV.indexOf(v)>-1){
+      var ch=false;
+      [NF.g,NF.a].forEach(function(l){(l||[]).forEach(function(n){if(nSec(n)===v&&admUnread(n)){admRead(n);ch=true}})});
+      if(ch)sv('notifs2',NF);
+      renderNotif();
+    }
+  }catch(e){}
+  return r;
+};
+try{renderNotif();admSide()}catch(e){}
 </script>
 
 </body>
